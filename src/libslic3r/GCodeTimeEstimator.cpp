@@ -1200,6 +1200,7 @@ namespace Slic3r {
         // see: http://reprap.org/wiki/G-code#G4:_Dwell
         if ((dialect == gcfRepetier) ||
             (dialect == gcfMarlin) ||
+            (dialect == gcfKlipper) ||
             (dialect == gcfSmoothie) ||
             (dialect == gcfRepRap))
         {
