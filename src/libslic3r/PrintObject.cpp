@@ -515,6 +515,7 @@ bool PrintObject::invalidate_state_by_config_options(const std::vector<t_config_
             || opt_key == "support_material_xy_spacing"
             || opt_key == "support_material_spacing"
             || opt_key == "support_material_synchronize_layers"
+            || opt_key == "support_material_inflate_first_layer"
             || opt_key == "support_material_threshold"
             || opt_key == "support_material_with_sheath"
             || opt_key == "dont_support_bridges"
@@ -1577,7 +1578,9 @@ bool PrintObject::update_layer_height_profile(const ModelObject &model_object, c
     bool updated = false;
 
     if (layer_height_profile.empty()) {
-        layer_height_profile = model_object.layer_height_profile;
+        // use the constructor because the assignement is crashing on ASAN OsX
+        layer_height_profile = std::vector<coordf_t>(model_object.layer_height_profile);
+//        layer_height_profile = model_object.layer_height_profile;
         updated = true;
     }
 
