@@ -158,9 +158,9 @@ Flow Flow::new_from_spacing(float spacing, float nozzle_diameter, float height, 
     float width = float(bridge ?
         (spacing - BRIDGE_EXTRA_SPACING) : 
 #ifdef HAS_PERIMETER_LINE_OVERLAP
-        (spacing + PERIMETER_LINE_OVERLAP_FACTOR * height * (1. - 0.25 * PI));
+        (spacing + PERIMETER_LINE_OVERLAP_FACTOR);
 #else
-        (spacing + height * (1. - 0.25 * PI)));
+        spacing);
 #endif
     return Flow(width, bridge ? width : height, nozzle_diameter, bridge);
 }
@@ -173,10 +173,10 @@ float Flow::spacing() const
     if (this->bridge)
         return this->width + BRIDGE_EXTRA_SPACING;
     // rectangle with semicircles at the ends
-    float min_flow_spacing = this->width - this->height * (1. - 0.25 * PI);
+    float min_flow_spacing = this->width;
     float res = this->width - PERIMETER_LINE_OVERLAP_FACTOR * (this->width - min_flow_spacing);
 #else
-    float res = float(this->bridge ? (this->width + BRIDGE_EXTRA_SPACING) : (this->width - this->height * (1. - 0.25 * PI)));
+    float res = float(this->bridge ? (this->width + BRIDGE_EXTRA_SPACING) : this->width);
 #endif
 //    assert(res > 0.f);
 	if (res <= 0.f)
@@ -207,7 +207,7 @@ double Flow::mm3_per_mm() const
         // Area of a circle with dmr of this->width.
         float((this->width * this->width) * 0.25 * PI) :
         // Rectangle with semicircles at the ends. ~ h (w - 0.215 h)
-        float(this->height * (this->width - this->height * (1. - 0.25 * PI)));
+        float(this->height * this->width);
     //assert(res > 0.);
 	if (res <= 0.)
 		throw FlowErrorNegativeFlow();
