@@ -11,7 +11,7 @@ xs/MANIFEST.bak
 xs/assertlib*
 .init_bundle.ini
 local-lib
-/build2
+/build*
 /.vs/VSWorkspaceState.json
 /.vs/slnx.sqlite
 /.vs/PrusaSlicer/v16/ipch/AutoPCH/b8721eafade04e06/GCODEWRITER.ipch
