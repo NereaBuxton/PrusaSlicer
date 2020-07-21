@@ -2034,15 +2034,9 @@ void GCode::process_layer(
     // Map from extruder ID to <begin, end> index of skirt loops to be extruded with that extruder.
     std::map<unsigned int, std::pair<size_t, size_t>> skirt_loops_per_extruder;
 
-            if (!single_material_print && m600_before_extruder >= 0 && first_extruder_id != m600_before_extruder
-                // && !MMU1
-                ) {
-                //! FIXME_in_fw show message during print pause
-                if (print.config().gcode_flavor.value == gcfKlipper)
-                    gcode += "PAUSE\n";
-                else
-                    gcode += "M601\n"; // pause print
-                gcode += "M117 Change filament for Extruder " + std::to_string(m600_before_extruder) + "\n";
+    if (single_object_instance_idx == size_t(-1)) {
+        // Normal (non-sequential) print.
+        gcode += ProcessLayer::emit_custom_gcode_per_print_z(layer_tools.custom_gcode, first_extruder_id, print.config());
     }
     // Extrude skirt at the print_z of the raft layers and normal object layers
     // not at the print_z of the interlaced support material layers.
