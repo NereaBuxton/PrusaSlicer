@@ -12,14 +12,5 @@ xs/assertlib*
 .init_bundle.ini
 local-lib
 /build*
-/.vs/VSWorkspaceState.json
-/.vs/slnx.sqlite
-/.vs/PrusaSlicer/v16/ipch/AutoPCH/b8721eafade04e06/GCODEWRITER.ipch
-/.vs/PrusaSlicer/v16/Browse.VC.opendb
-/.vs/PrusaSlicer/v16/Browse.VC.db-wal
-/.vs/PrusaSlicer/v16/Browse.VC.db-shm
-/.vs/PrusaSlicer/v16/Browse.VC.db
-/.vs/PrusaSlicer/v16/.suo
-/.vs/ProjectSettings.json
-/.vs/CMake Overview
 /.vs/*
+/CMakeSettings.json
