@@ -158,7 +158,7 @@ Flow Flow::new_from_spacing(float spacing, float nozzle_diameter, float height, 
     float width = float(bridge ?
         (spacing - BRIDGE_EXTRA_SPACING) : 
 #ifdef HAS_PERIMETER_LINE_OVERLAP
-        (spacing + PERIMETER_LINE_OVERLAP_FACTOR);
+        (spacing + PERIMETER_LINE_OVERLAP_FACTOR));
 #else
         spacing);
 #endif
