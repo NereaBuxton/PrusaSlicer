@@ -14,3 +14,4 @@ local-lib
 /build*
 /.vs/*
 /CMakeSettings.json
+/deps/build*
