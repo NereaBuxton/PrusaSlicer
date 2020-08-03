@@ -2037,7 +2037,7 @@ const WipeTowerData& Print::wipe_tower_data(size_t extruders_cnt, double first_l
     if (! is_step_done(psWipeTower) && extruders_cnt !=0) {
 
         float width = float(m_config.wipe_tower_width);
-        float brim_spacing = float(nozzle_diameter * 1.25f - first_layer_height * (1. - M_PI_4));
+        float brim_spacing = float(nozzle_diameter * 1.25f);
 
         const_cast<Print*>(this)->m_wipe_tower_data.depth = (900.f/width) * float(extruders_cnt - 1);
         const_cast<Print*>(this)->m_wipe_tower_data.brim_width = 4.5f * brim_spacing;
