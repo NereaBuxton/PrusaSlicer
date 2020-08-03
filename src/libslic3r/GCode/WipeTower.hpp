@@ -275,12 +275,12 @@ private:
 	{
 		if ( layer_height < 0 )
 			return m_extrusion_flow;
-		return layer_height * ( m_perimeter_width - layer_height * (1.f-float(M_PI)/4.f)) / filament_area();
+		return layer_height * m_perimeter_width / filament_area();
 	}
 
 	// Calculates length of extrusion line to extrude given volume
 	float volume_to_length(float volume, float line_width, float layer_height) const {
-		return std::max(0.f, volume / (layer_height * (line_width - layer_height * (1.f - float(M_PI) / 4.f))));
+		return std::max(0.f, volume / (layer_height * line_width));
 	}
 
 	// Calculates depth for all layers and propagates them downwards
