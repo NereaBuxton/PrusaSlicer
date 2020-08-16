@@ -36,7 +36,7 @@ struct SurfaceFillParams
     // Don't connect the fill lines around the inner perimeter.
     bool        	dont_connect = false;
     // Don't adjust spacing to fill the space evenly.
-    bool        	dont_adjust = false;
+    bool        	dont_adjust = true;
 
     // width, height of extrusion, nozzle diameter, is bridge
     // For the output, for fill generator.
