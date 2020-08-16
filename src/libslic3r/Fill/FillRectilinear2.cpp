@@ -2502,7 +2502,7 @@ bool FillRectilinear2::fill_surface_by_lines(const Surface *surface, const FillP
     if (params.full_infill() && !params.dont_adjust) {
         line_spacing = this->_adjust_solid_spacing(bounding_box.size()(0), line_spacing);
         this->spacing = unscale<double>(line_spacing);
-    } else {
+    } //else {
         // extend bounding box so that our pattern will be aligned with other layers
         // Transform the reference point to the rotated coordinate system.
         Point refpt = rotate_vector.second.rotated(- rotate_vector.first);
@@ -2513,14 +2513,14 @@ bool FillRectilinear2::fill_surface_by_lines(const Surface *surface, const FillP
             bounding_box.min, 
             Point(line_spacing, line_spacing), 
             refpt));
-    }
+    //}
 
     // Intersect a set of euqally spaced vertical lines wiht expolygon.
     // n_vlines = ceil(bbox_width / line_spacing)
-    size_t  n_vlines = (bounding_box.max(0) - bounding_box.min(0) + line_spacing - 1) / line_spacing;
+    size_t  n_vlines = (bounding_box.max(0) - bounding_box.min(0) + line_spacing) / line_spacing;
 	coord_t x0 = bounding_box.min(0);
 	if (params.full_infill())
-		x0 += (line_spacing + coord_t(SCALED_EPSILON)) / 2;
+		x0 += line_spacing / 2;
 
 #ifdef SLIC3R_DEBUG
     static int iRun = 0;
