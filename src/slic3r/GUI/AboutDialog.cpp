@@ -273,6 +273,7 @@ AboutDialog::AboutDialog()
             "static constexpr double RESOLUTION = 0.001; <br />"
             "#define XYZF_NUM(val) PRECISION(val, 6) <br />"
             "#define E_NUM(val) PRECISION(val, 9) <br />"
+            "Made solid rectilinear fill aligned to grid, and removed EPSILON references in spacing adjustment, to fix problem caused by the following: <br />"
             "Experimentally removed some of <a href=\"https://manual.slic3r.org/advanced/flow-math\">Slic3r flow math</a>. <br /><br />"
             "Cherry-picked Klipper implementation from <a href=\"https://github.com/supermerill/SuperSlicer\">SuperSlicer</a> (PrusaSlicer fork, formerly Slic3r++). <br /><br />"
             "%4% &copy; 2016-2020 Prusa Research. <br />"
