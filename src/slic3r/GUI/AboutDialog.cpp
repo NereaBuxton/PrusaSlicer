@@ -289,7 +289,7 @@ AboutDialog::AboutDialog()
             "<html>"
             "<body bgcolor= %1% link= %2%>"
             "<font color=%3%>"
-            "n8_precision_minus_infill modifications: <br />"
+            "n8_precision_minus_infill_support modifications: <br />"
             "static constexpr double RESOLUTION = 0.001; <br />"
             "#define XYZF_NUM(val) PRECISION(val, 6) <br />"
             "#define E_NUM(val) PRECISION(val, 9) <br />"
