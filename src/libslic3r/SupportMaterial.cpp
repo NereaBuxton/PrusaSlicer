@@ -1072,7 +1072,7 @@ PrintObjectSupportMaterial::MyLayersPtr PrintObjectSupportMaterial::top_contact_
                             if (support_auto) {
                                 // Get the regions needing a suport, collapse very tiny spots.
                                 //FIXME cache the lower layer offset if this layer has multiple regions.
-    #if 1
+    #if 0
                                 diff_polygons = offset2(
                                     diff(layerm_polygons,
                                          offset2(lower_layer_polygons, - 0.5f * fw, lower_layer_offset + 0.5f * fw, SUPPORT_SURFACES_OFFSET_PARAMETERS)), 
