@@ -273,6 +273,7 @@ AboutDialog::AboutDialog()
             "static constexpr double RESOLUTION = 0.001; <br />"
             "#define XYZF_NUM(val) PRECISION(val, 6) <br />"
             "#define E_NUM(val) PRECISION(val, 9) <br />"
+            "Allow thin support regions, to fix areas missing from painted supports. <br />"
             "Made solid rectilinear fill aligned to grid, removed EPSILON references, and removed spacing adjustment. <br />"
             "Experimentally removed some of <a href=\"https://manual.slic3r.org/advanced/flow-math\">Slic3r flow math</a>. <br /><br />"
             "%4% &copy; 2016-2020 Prusa Research. <br />"
