@@ -2330,7 +2330,7 @@ std::string GCode::extrude_loop(ExtrusionLoop loop, std::string description, dou
     if (m_wipe.enable)
         m_wipe.path = paths.front().polyline;  // TODO: don't limit wipe to last path
 
-    // make a little move inwards before leaving loop
+#if 0// make a little move inwards before leaving loop
     if (paths.back().role() == erExternalPerimeter && m_layer != NULL && m_config.perimeters.value > 1 && paths.front().size() >= 2 && paths.back().polyline.points.size() >= 3) {
         // detect angle between last and first segment
         // the side depends on the original winding order of the polygon (left for contours, right for holes)
@@ -2363,7 +2363,7 @@ std::string GCode::extrude_loop(ExtrusionLoop loop, std::string description, dou
         // generate the travel move
         gcode += m_writer.travel_to_xy(this->point_to_gcode(pt), "move inwards before travel");
     }
-
+#endif
     return gcode;
 }
 
