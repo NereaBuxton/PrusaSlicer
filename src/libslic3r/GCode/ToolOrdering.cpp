@@ -292,7 +292,7 @@ void ToolOrdering::reorder_extruders(unsigned int last_extruder_id)
         // 1 based index
         ++ last_extruder_id;
 
-    for (LayerTools &lt : m_layer_tools) {
+    /*for (LayerTools &lt : m_layer_tools) {
         if (lt.extruders.empty())
             continue;
         if (lt.extruders.size() == 1 && lt.extruders.front() == 0)
@@ -311,7 +311,7 @@ void ToolOrdering::reorder_extruders(unsigned int last_extruder_id)
                 }
         }
         last_extruder_id = lt.extruders.back();
-    }
+    }*/
 
     // Reindex the extruders, so they are zero based, not 1 based.
     for (LayerTools &lt : m_layer_tools)
