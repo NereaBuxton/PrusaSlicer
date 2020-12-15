@@ -2965,7 +2965,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
     BoundingBox bbox_object(Point(-scale_(1.), -scale_(1.0)), Point(scale_(1.), scale_(1.)));
 
 //    const coordf_t link_max_length_factor = 3.;
-    const coordf_t link_max_length_factor = 0.;
+    const coordf_t link_max_length_factor = 0.25;
 
     float raft_angle_1st_layer  = 0.f;
     float raft_angle_base       = 0.f;
