@@ -3244,7 +3244,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                     extrusion_entities_append_paths(
                         base_layer.extrusions, 
                         to_polylines(std::move(to_infill_polygons)),
-                        erSupportMaterial, flow.mm3_per_mm(), flow.width, flow.height);
+                        erSupportMaterialInterface, flow.mm3_per_mm(), flow.width, flow.height);
                 }
                 fill_expolygons_generate_paths(
                     // Destination
