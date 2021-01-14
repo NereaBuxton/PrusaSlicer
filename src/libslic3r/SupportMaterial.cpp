@@ -482,16 +482,13 @@ public:
         bbox.align_to_grid(grid_resolution);
         m_grid.set_bbox(bbox);
         m_grid.create(*m_support_polygons, grid_resolution);
-#if 0
+#if 1
         if (m_grid.has_intersecting_edges()) {
             // EdgeGrid fails to produce valid signed distance function for self-intersecting polygons.
             m_support_polygons_rotated = simplify_polygons(*m_support_polygons);
             m_support_polygons  = &m_support_polygons_rotated;
             m_grid.set_bbox(bbox);
             m_grid.create(*m_support_polygons, grid_resolution);
-//            assert(! m_grid.has_intersecting_edges());
-            printf("SupportGridPattern: fixing polygons with intersection %s\n",
-                m_grid.has_intersecting_edges() ? "FAILED" : "SUCCEEDED");
         }
 #endif
         m_grid.calculate_sdf();
