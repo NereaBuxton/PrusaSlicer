@@ -2061,7 +2061,7 @@ void GCode::process_layer(
                     path.mm3_per_mm = mm3_per_mm;
                 }
                 //FIXME using the support_material_speed of the 1st object printed.
-                gcode += this->extrude_loop(loop, "skirt", m_config.support_material_speed.value);
+                gcode += this->extrude_loop(loop, "skirt", m_config.support_material_interface_speed.value);
             }
             m_avoid_crossing_perimeters.use_external_mp(false);
             // Allow a straight travel move to the first object point if this is the first layer (but don't in next layers).
