@@ -279,6 +279,8 @@ AboutDialog::AboutDialog()
             "%8%"
             "<br /><br />"
             "%9%"
+            "<br /><br />"
+            "<a href=\"https://github.com/n8bot/PrusaSlicer/tree/n8\">n8 modifications</a>"
             "</font>"
             "</body>"
             "</html>") % bgr_clr_str % text_clr_str % text_clr_str
