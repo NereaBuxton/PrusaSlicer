@@ -497,7 +497,7 @@ void PrintObjectSupportMaterial::generate(PrintObject &object)
     // Propagate top / bottom contact layers to generate interface layers 
     // and base interface layers (for soluble interface / non souble base only)
     auto [interface_layers, base_interface_layers] = this->generate_interface_layers(bottom_contacts, top_contacts, intermediate_layers, layer_storage);
-
+    this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.support_material_flow.width());
     BOOST_LOG_TRIVIAL(info) << "Support generator - Creating raft";
 
     // If raft is to be generated, the 1st top_contact layer will contain the 1st object layer silhouette with holes filled.
@@ -667,8 +667,8 @@ Polygons collect_slices_outer(const Layer &layer)
 struct SupportGridParams {
     SupportGridParams(const PrintObjectConfig &object_config, const Flow &support_material_flow) :
         style(object_config.support_material_style.value),
-        grid_resolution(object_config.support_material_spacing.value + support_material_flow.spacing()),
-        support_angle(Geometry::deg2rad(object_config.support_material_angle.value)),
+        grid_resolution(support_material_flow.spacing() * 4),
+        support_angle(Geometry::deg2rad(0)),
         extrusion_width(support_material_flow.spacing()),
         support_material_closing_radius(object_config.support_material_closing_radius.value),
         expansion_to_slice(coord_t(support_material_flow.scaled_spacing() / 2 + 5)),
@@ -2764,7 +2764,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
     ++ iRun;
 #endif /* SLIC3R_DEBUG */
 
-    this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+
 }
 
 void PrintObjectSupportMaterial::trim_support_layers_by_object(
