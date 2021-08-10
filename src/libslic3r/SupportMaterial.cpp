@@ -2042,7 +2042,7 @@ static inline PrintObjectSupportMaterial::MyLayer* detect_bottom_contacts(
     layer_new.bridging = !slicing_params.soluble_interface && object.config().thick_bridges;
     //FIXME how much to inflate the bottom surface, as it is being extruded with a bridging flow? The following line uses a normal flow.
     //FIXME why is the offset positive? It will be trimmed by the object later on anyway, but then it just wastes CPU clocks.
-    layer_new.polygons = offset(touching, float(support_params.support_material_flow.scaled_width()), SUPPORT_SURFACES_OFFSET_PARAMETERS);
+    layer_new.polygons = offset(touching, float(support_params.support_material_flow.scaled_width() * 2), SUPPORT_SURFACES_OFFSET_PARAMETERS);
 
     if (! slicing_params.soluble_interface) {
         // Walk the top surfaces, snap the top of the new bottom surface to the closest top of the top surface,
