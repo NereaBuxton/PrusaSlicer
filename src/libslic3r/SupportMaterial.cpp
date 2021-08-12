@@ -497,7 +497,9 @@ void PrintObjectSupportMaterial::generate(PrintObject &object)
     // Propagate top / bottom contact layers to generate interface layers 
     // and base interface layers (for soluble interface / non souble base only)
     auto [interface_layers, base_interface_layers] = this->generate_interface_layers(bottom_contacts, top_contacts, intermediate_layers, layer_storage);
-    this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.support_material_flow.width());
+    this->trim_support_layers_by_object(object, interface_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+    this->trim_support_layers_by_object(object, top_contacts, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+    this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.support_material_flow.width() + m_support_params.gap_xy);
     BOOST_LOG_TRIVIAL(info) << "Support generator - Creating raft";
 
     // If raft is to be generated, the 1st top_contact layer will contain the 1st object layer silhouette with holes filled.
@@ -3039,7 +3041,7 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
             layer_new.bridging   = intermediate_layer.bridging;
             // Merge top into bottom, unite them with a safety offset.
             append(bottom, std::move(top));
-            layer_new.polygons   = intersection(union_(offset(std::move(bottom),scale_(0.4))), intermediate_layer.polygons);
+            layer_new.polygons   = intersection(union_(offset(std::move(bottom),scale_(0.32))), intermediate_layer.polygons);
             // Subtract the interface from the base regions.
             intermediate_layer.polygons = diff(intermediate_layer.polygons, layer_new.polygons);
             if (subtract)
