@@ -104,8 +104,8 @@ public:
     GCodeFormatter(const GCodeFormatter&) = delete;
     GCodeFormatter& operator=(const GCodeFormatter&) = delete;
 
-    static constexpr const int XYZF_EXPORT_DIGITS = 3;
-    static constexpr const int E_EXPORT_DIGITS    = 5;
+    static constexpr const int XYZF_EXPORT_DIGITS = 6;
+    static constexpr const int E_EXPORT_DIGITS    = 9;
 
     void emit_axis(const char axis, const double v, size_t digits);
 
