@@ -309,6 +309,16 @@ void ToolOrdering::reorder_extruders(unsigned int last_extruder_id)
         // 1 based index
         ++ last_extruder_id;
 
+    for (LayerTools& lt : m_layer_tools) {
+        if (lt.extruders.empty())
+            continue;
+        if (lt.extruders.size() > 1)
+            std::reverse(lt.extruders.begin(), lt.extruders.end());
+
+        last_extruder_id = lt.extruders.back();
+    }
+
+    
     /*for (LayerTools &lt : m_layer_tools) {
         if (lt.extruders.empty())
             continue;
