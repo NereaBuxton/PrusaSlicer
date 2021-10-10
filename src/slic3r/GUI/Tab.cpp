@@ -1575,6 +1575,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("bridge_speed");
         optgroup->append_single_option_line("gap_fill_speed");
         optgroup->append_single_option_line("ironing_speed");
+        optgroup->append_single_option_line("skirt_speed");
 
         optgroup = page->new_optgroup(L("Speed for non-print moves"));
         optgroup->append_single_option_line("travel_speed");
