@@ -737,6 +737,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionFloat,              skirt_distance))
     ((ConfigOptionInt,                skirt_height))
     ((ConfigOptionInt,                skirts))
+    ((ConfigOptionFloat,              skirt_speed))
     ((ConfigOptionInts,               slowdown_below_layer_time))
     ((ConfigOptionFloat,              solid_infill_acceleration))
     ((ConfigOptionBool,               spiral_vase))
