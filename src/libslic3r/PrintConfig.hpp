@@ -504,6 +504,8 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionInt,                 support_material_threshold))
     ((ConfigOptionBool,                support_material_with_sheath))
     ((ConfigOptionFloatOrPercent,      support_material_xy_spacing))
+    ((ConfigOptionFloatOrPercent,      support_material_additional_xy_spacing))
+    ((ConfigOptionPercent,             support_material_minimum_width))
     ((ConfigOptionBool,                thick_bridges))
     ((ConfigOptionFloat,               xy_size_compensation))
     ((ConfigOptionBool,                wipe_into_objects))

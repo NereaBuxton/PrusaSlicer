@@ -132,6 +132,7 @@ public:
 	//	coordf_t	support_layer_height_max;
 
 		coordf_t	gap_xy;
+		coordf_t	gap_add_xy;
 
 	    float    				base_angle;
 	    float    				interface_angle;
