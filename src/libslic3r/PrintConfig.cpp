@@ -2511,6 +2511,27 @@ void PrintConfigDef::init_fff_params()
     // Default is half the external perimeter width.
     def->set_default_value(new ConfigOptionFloatOrPercent(50, true));
 
+    def = this->add("support_material_additional_xy_spacing", coFloatOrPercent);
+    def->label = L("Additional XY separation for base/sparse support");
+    def->category = L("Support material");
+    def->tooltip = L("Additional XY separation between an object base/sparse support. Only used if dense interfaces are used. If expressed as percentage "
+        "(for example 50%), it will be calculated over external perimeter width.");
+    def->sidetext = L("mm or %");
+    def->ratio_over = "external_perimeter_extrusion_width";
+    def->min = 0;
+    def->mode = comAdvanced;
+    // Default is half the external perimeter width.
+    def->set_default_value(new ConfigOptionFloatOrPercent(50, true));
+
+    def = this->add("support_material_minimum_width", coPercent);
+    def->label = L("Minimum support structure width");
+    def->category = L("Support material");
+    def->tooltip = L("Extrusion towers smaller than this width will be filtered out. Expressed as a percentage of the support material extrusion width.");
+    def->sidetext = L("%");
+    def->min = 100;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionPercent(200));
+
     def = this->add("support_material_angle", coFloat);
     def->label = L("Pattern angle");
     def->category = L("Support material");
