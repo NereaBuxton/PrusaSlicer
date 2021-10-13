@@ -776,7 +776,7 @@ void PrintObject::detect_surfaces_type()
                         ExPolygons upper_slices = interface_shells ? 
                             diff_ex(layerm->slices.surfaces, upper_layer->m_regions[region_id]->slices.surfaces, ApplySafetyOffset::Yes) :
                             diff_ex(layerm->slices.surfaces, upper_layer->lslices, ApplySafetyOffset::Yes);
-                        surfaces_append(top, opening_ex(upper_slices, offset), stTop);
+                        surfaces_append(top, upper_slices, stTop);
                     } else {
                         // if no upper layer, all surfaces of this one are solid
                         // we clone surfaces because we're going to clear the slices collection
@@ -800,9 +800,7 @@ void PrintObject::detect_surfaces_type()
                         // Any surface lying on the void is a true bottom bridge (an overhang)
                         surfaces_append(
                             bottom,
-                            opening_ex(
                                 diff_ex(layerm->slices.surfaces, lower_layer->lslices, ApplySafetyOffset::Yes),
-                                offset),
                             surface_type_bottom_other);
                         // if user requested internal shells, we need to identify surfaces
                         // lying on other slices not belonging to this region
@@ -811,12 +809,10 @@ void PrintObject::detect_surfaces_type()
                             // on something else, excluding those lying on our own region
                             surfaces_append(
                                 bottom,
-                                opening_ex(
                                     diff_ex(
                                         intersection(layerm->slices.surfaces, lower_layer->lslices), // supported
                                         lower_layer->m_regions[region_id]->slices.surfaces,
                                         ApplySafetyOffset::Yes),
-                                    offset),
                                 stBottom);
                         }
 #endif
