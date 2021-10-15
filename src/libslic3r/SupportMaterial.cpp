@@ -3186,19 +3186,19 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
                             const MyLayer &bottom_contact_layer = *bottom_contacts[idx_bottom_contact];
                             if (bottom_contact_layer.bottom_z - EPSILON > intermediate_layer.bottom_z)
                                 break;
-                            polygons_append(bottom_contact_layer.bottom_z - EPSILON > bottom_interface_z ? polygons_bottom_contact_projected_interface : polygons_bottom_contact_projected_base, bottom_contact_layer.polygons);
+                            polygons_append(bottom_contact_layer.print_z - EPSILON > bottom_interface_z ? polygons_bottom_contact_projected_interface : polygons_bottom_contact_projected_base, bottom_contact_layer.polygons);
                         }
                     }
                     MyLayer *interface_layer = nullptr;
                     if (! polygons_bottom_contact_projected_interface.empty() || ! polygons_top_contact_projected_interface.empty()) {
                         interface_layer = insert_layer(
-                            intermediate_layer, offset(polygons_bottom_contact_projected_interface, float(SCALED_EPSILON)), std::move(polygons_top_contact_projected_interface), nullptr,
+                            intermediate_layer, expand(polygons_bottom_contact_projected_interface, float(SCALED_EPSILON)), expand(std::move(polygons_top_contact_projected_interface), float(SCALED_EPSILON)), nullptr,
                             polygons_top_contact_projected_interface.empty() ? sltBottomInterface : sltTopInterface);
                         interface_layers[idx_intermediate_layer] = interface_layer;
                     }
                     if (! polygons_bottom_contact_projected_base.empty() || ! polygons_top_contact_projected_base.empty())
                         base_interface_layers[idx_intermediate_layer] = insert_layer(
-                            intermediate_layer, polygons_bottom_contact_projected_base, std::move(polygons_top_contact_projected_base), 
+                            intermediate_layer, expand(polygons_bottom_contact_projected_base, float(SCALED_EPSILON)), expand(std::move(polygons_top_contact_projected_base), float(SCALED_EPSILON)),
                             interface_layer ? &interface_layer->polygons : nullptr, sltBase);
                 }
             });
@@ -4080,8 +4080,8 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                 idx_layer_base_interface  = idx_higher_or_equal(base_interface_layers, idx_layer_base_interface,fun);
             }
             // Copy polygons from the layers.
-            if (idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
-                bottom_contact_layer.layer = bottom_contacts[idx_layer_bottom_contact];
+            //if (idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
+                //bottom_contact_layer.layer = bottom_contacts[idx_layer_bottom_contact];
             if (idx_layer_top_contact < top_contacts.size() && top_contacts[idx_layer_top_contact]->print_z < support_layer.print_z + EPSILON)
                 top_contact_layer.layer = top_contacts[idx_layer_top_contact];
             if (idx_layer_interface < interface_layers.size() && interface_layers[idx_layer_interface]->print_z < support_layer.print_z + EPSILON)
