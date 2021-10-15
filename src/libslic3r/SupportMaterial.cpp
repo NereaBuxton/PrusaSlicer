@@ -4082,8 +4082,8 @@ void PrintObjectSupportMaterial::generate_toolpaths(
             // Copy polygons from the layers.
             //if (idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
                 //bottom_contact_layer.layer = bottom_contacts[idx_layer_bottom_contact];
-            if (idx_layer_top_contact < top_contacts.size() && top_contacts[idx_layer_top_contact]->print_z < support_layer.print_z + EPSILON)
-                top_contact_layer.layer = top_contacts[idx_layer_top_contact];
+            //if (idx_layer_top_contact < top_contacts.size() && top_contacts[idx_layer_top_contact]->print_z < support_layer.print_z + EPSILON)
+            //    top_contact_layer.layer = top_contacts[idx_layer_top_contact];
             if (idx_layer_interface < interface_layers.size() && interface_layers[idx_layer_interface]->print_z < support_layer.print_z + EPSILON)
                 interface_layer.layer = interface_layers[idx_layer_interface];
             if (idx_layer_base_interface < base_interface_layers.size() && base_interface_layers[idx_layer_base_interface]->print_z < support_layer.print_z + EPSILON)
