@@ -2715,7 +2715,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                 // Use the precomputed layer_support_areas. "idx_object_layer_above": above means above since the last iteration, not above after this call.
                 idx_object_layer_above = idx_lower_or_equal(object.layers().begin(), object.layers().end(), idx_object_layer_above,
                     [&layer_intermediate](const Layer* layer) { return layer->print_z <= layer_intermediate.print_z + EPSILON; });
-
+#if 0
                 // Polygons to trim polygons_new.
                 Polygons polygons_trimming; 
 
@@ -2739,7 +2739,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         // Base is fully inside top. Trim base by top.
                         polygons_append(polygons_trimming, layer_top_overlapping.polygons);
                 }
-
+#endif //0
                 if (idx_object_layer_above < 0) {
                     // layer_support_areas are synchronized with object layers and they contain projections of the contact layers above them.
                     // This intermediate layer is not above any object layer, thus there is no information in layer_support_areas about
@@ -2751,11 +2751,11 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         if (contacts.print_z > first_layer_z + EPSILON)
                             break;
                         assert(contacts.bottom_z > layer_intermediate.print_z - EPSILON);
-                        polygons_append(polygons_new, contacts.polygons);
+                        polygons_append(polygons_new, expand(contacts.polygons, float(SCALED_EPSILON)));
                     }
                 } else
                     polygons_new = layer_support_areas[idx_object_layer_above];
-
+#if 0
                 // Trimming the base layer with any overlapping bottom layer.
                 // Following cases are recognized:
                 // 1) bottom.bottom_z >= base.top_z -> No overlap, no trimming needed.
@@ -2788,15 +2788,15 @@ void PrintObjectSupportMaterial::generate_base_layers(
                     svg.draw(to_polylines(polygons_trimming),           "red");
                 }
         #endif /* SLIC3R_DEBUG */
-
+#endif //0
                 // Trim the polygons, store them.
-//                if (polygons_trimming.empty())
+                //if (polygons_trimming.empty())
                     layer_intermediate.polygons = std::move(polygons_new);
-//                else
-//                    layer_intermediate.polygons = diff(
-//                        polygons_new,
-//                        polygons_trimming,
-//                        ApplySafetyOffset::Yes); // safety offset to merge the touching source polygons
+                //else
+                //    layer_intermediate.polygons = diff(
+                //        polygons_new,
+                //        polygons_trimming,
+                //        ApplySafetyOffset::Yes); // safety offset to merge the touching source polygons
                 layer_intermediate.layer_type = sltBase;
 
         #if 0
