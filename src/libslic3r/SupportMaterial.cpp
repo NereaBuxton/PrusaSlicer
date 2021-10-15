@@ -2690,11 +2690,12 @@ void PrintObjectSupportMaterial::generate_base_layers(
     if (top_contacts.empty())
         // No top contacts -> no intermediate layers will be produced.
         return;
-
+    auto smoothing_distance = m_support_params.support_material_interface_flow.scaled_spacing() * 1.5;
+    auto minimum_island_radius = m_support_params.support_material_interface_flow.scaled_spacing() / m_support_params.interface_density;
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
-        [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas](const tbb::blocked_range<size_t>& range) {
+        [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, minimum_island_radius](const tbb::blocked_range<size_t>& range) {
             // index -2 means not initialized yet, -1 means intialized and decremented to 0 and then -1.
             int idx_top_contact_above           = -2;
             int idx_bottom_contact_overlapping  = -2;
@@ -2791,7 +2792,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
 #endif //0
                 // Trim the polygons, store them.
                 //if (polygons_trimming.empty())
-                    layer_intermediate.polygons = std::move(polygons_new);
+                    layer_intermediate.polygons = smooth_outward(opening(std::move(polygons_new), minimum_island_radius, minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
                 //else
                 //    layer_intermediate.polygons = diff(
                 //        polygons_new,
