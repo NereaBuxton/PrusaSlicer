@@ -1560,7 +1560,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("support_material_interface_contact_loops", category_path + "interface-loops");
         optgroup->append_single_option_line("support_material_buildplate_only", category_path + "support-on-build-plate-only");
         optgroup->append_single_option_line("support_material_xy_spacing", category_path + "xy-separation-between-an-object-and-its-support");
-        optgroup->append_single_option_line("support_material_additional_xy_spacing", category_path + "xy-additional-separation-between-an-object-and-its-support");
+        optgroup->append_single_option_line("support_material_additional_xy_spacing");
         optgroup->append_single_option_line("dont_support_bridges", category_path + "dont-support-bridges");
         optgroup->append_single_option_line("support_material_synchronize_layers", category_path + "synchronize-with-object-layers");
 

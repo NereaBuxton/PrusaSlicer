@@ -2306,7 +2306,7 @@ PrintObjectSupportMaterial::MyLayersPtr PrintObjectSupportMaterial::bottom_conta
 #else
             // Consume the contact_polygons. The contact polygons are already expanded into a grid form, and they are a tiny bit smaller
             // than the grid cells.
-            //polygons_append(polygons_new,  std::move(*top_contact.contact_polygons));
+            polygons_append(polygons_new,  std::move(*top_contact.contact_polygons));
             if (top_contact.enforcer_polygons)
                 polygons_append(enforcers_new, std::move(*top_contact.enforcer_polygons));
 #endif
@@ -2693,7 +2693,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
         // No top contacts -> no intermediate layers will be produced.
         return;
     auto smoothing_distance = m_support_params.support_material_flow.scaled_width();
-    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() + scaled(m_support_params.gap_xy);
+    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() + scaled(m_support_params.gap_xy + (m_object_config->support_material_interface_layers > 0 || m_object_config->support_material_bottom_interface_layers > 0) ? m_support_params.gap_add_xy : 0.);
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
@@ -2794,7 +2794,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
 #endif //0
                 // Trim the polygons, store them.
                 //if (polygons_trimming.empty())
-                    layer_intermediate.polygons = smooth_outward(opening(std::move(polygons_new), minimum_island_radius, minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
+                    layer_intermediate.polygons = smooth_outward(opening(std::move(polygons_new), minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
                 //else
                 //    layer_intermediate.polygons = diff(
                 //        polygons_new,
