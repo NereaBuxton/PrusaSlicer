@@ -2693,7 +2693,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
         // No top contacts -> no intermediate layers will be produced.
         return;
     auto smoothing_distance = m_support_params.support_material_flow.scaled_width() * 1.5;
-    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() * 2 + m_support_params.gap_xy;
+    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() + m_support_params.gap_xy;
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
