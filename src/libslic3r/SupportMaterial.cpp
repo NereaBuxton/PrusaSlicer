@@ -2693,7 +2693,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
         // No top contacts -> no intermediate layers will be produced.
         return;
     auto smoothing_distance = m_support_params.support_material_flow.scaled_width() * 1.5;
-    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() + m_support_params.gap_xy;
+    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() * 2 + m_support_params.gap_xy;
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
@@ -3094,7 +3094,7 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
         if (num_base_interface_layers_top || num_base_interface_layers_bottom)
             base_interface_layers.assign(intermediate_layers.size(), nullptr);
         auto smoothing_distance              = m_support_params.support_material_flow.scaled_width() * 1.5;
-        auto minimum_island_radius           = m_support_params.support_material_flow.scaled_width() + m_support_params.gap_xy;
+        auto minimum_island_radius           = m_support_params.support_material_flow.scaled_width() * 2 + m_support_params.gap_xy;
         auto closing_distance                = smoothing_distance; // scaled<float>(m_object_config->support_material_closing_radius.value);
         tbb::spin_mutex layer_storage_mutex;
         // Insert a new layer into base_interface_layers, if intersection with base exists.
