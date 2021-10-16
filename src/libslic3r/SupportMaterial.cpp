@@ -352,6 +352,7 @@ PrintObjectSupportMaterial::PrintObjectSupportMaterial(const PrintObject *object
         bridge_flow_ratio += region.config().bridge_flow_ratio;
     }
     m_support_params.gap_xy = m_object_config->support_material_xy_spacing.get_abs_value(external_perimeter_width);
+    m_support_params.gap_add_xy = m_object_config->support_material_additional_xy_spacing.get_abs_value(external_perimeter_width);
     bridge_flow_ratio /= object->num_printing_regions();
 
     m_support_params.support_material_bottom_interface_flow = m_slicing_params.soluble_interface || ! m_object_config->thick_bridges ?
@@ -525,7 +526,8 @@ void PrintObjectSupportMaterial::generate(PrintObject &object)
     // Propagate top / bottom contact layers to generate interface layers 
     // and base interface layers (for soluble interface / non souble base only)
     auto [interface_layers, base_interface_layers] = this->generate_interface_layers(bottom_contacts, top_contacts, intermediate_layers, layer_storage);
-
+    if (!interface_layers.empty())
+        this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy + m_support_params.gap_add_xy);
     BOOST_LOG_TRIVIAL(info) << "Support generator - Creating raft";
 
     // If raft is to be generated, the 1st top_contact layer will contain the 1st object layer silhouette with holes filled.
@@ -2690,8 +2692,8 @@ void PrintObjectSupportMaterial::generate_base_layers(
     if (top_contacts.empty())
         // No top contacts -> no intermediate layers will be produced.
         return;
-    auto smoothing_distance = m_support_params.support_material_interface_flow.scaled_spacing() * 1.5;
-    auto minimum_island_radius = m_support_params.support_material_interface_flow.scaled_spacing() / m_support_params.interface_density;
+    auto smoothing_distance = m_support_params.support_material_flow.scaled_width() * 1.5;
+    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() + m_support_params.gap_xy;
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
@@ -2827,7 +2829,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
     ++ iRun;
 #endif /* SLIC3R_DEBUG */
 
-    //this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+    this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
 }
 
 void PrintObjectSupportMaterial::trim_support_layers_by_object(
@@ -3091,8 +3093,8 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
         interface_layers.assign(intermediate_layers.size(), nullptr);
         if (num_base_interface_layers_top || num_base_interface_layers_bottom)
             base_interface_layers.assign(intermediate_layers.size(), nullptr);
-        auto smoothing_distance              = m_support_params.support_material_interface_flow.scaled_spacing() * 1.5;
-        auto minimum_island_radius           = m_support_params.support_material_interface_flow.scaled_spacing() / m_support_params.interface_density;
+        auto smoothing_distance              = m_support_params.support_material_flow.scaled_width() * 1.5;
+        auto minimum_island_radius           = m_support_params.support_material_flow.scaled_width() + m_support_params.gap_xy;
         auto closing_distance                = smoothing_distance; // scaled<float>(m_object_config->support_material_closing_radius.value);
         tbb::spin_mutex layer_storage_mutex;
         // Insert a new layer into base_interface_layers, if intersection with base exists.
