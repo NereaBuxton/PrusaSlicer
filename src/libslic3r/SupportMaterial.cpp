@@ -2692,8 +2692,8 @@ void PrintObjectSupportMaterial::generate_base_layers(
     if (top_contacts.empty())
         // No top contacts -> no intermediate layers will be produced.
         return;
-    auto smoothing_distance = m_support_params.support_material_flow.scaled_width() * 1.5;
-    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() + m_support_params.gap_xy;
+    auto smoothing_distance = m_support_params.support_material_flow.scaled_width();
+    auto minimum_island_radius = m_support_params.support_material_flow.scaled_width() + scaled(m_support_params.gap_xy);
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
@@ -3093,9 +3093,9 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
         interface_layers.assign(intermediate_layers.size(), nullptr);
         if (num_base_interface_layers_top || num_base_interface_layers_bottom)
             base_interface_layers.assign(intermediate_layers.size(), nullptr);
-        auto smoothing_distance              = m_support_params.support_material_flow.scaled_width() * 1.5;
-        auto minimum_island_radius           = m_support_params.support_material_flow.scaled_width() * 2 + m_support_params.gap_xy + m_support_params.gap_add_xy;
-        auto closing_distance                = smoothing_distance; // scaled<float>(m_object_config->support_material_closing_radius.value);
+        auto smoothing_distance              = m_support_params.support_material_flow.scaled_width();
+        auto minimum_island_radius           = smoothing_distance * 2 + scaled(m_support_params.gap_xy);
+        auto closing_distance                = minimum_island_radius + scaled(m_support_params.gap_add_xy); // scaled<float>(m_object_config->support_material_closing_radius.value);
         tbb::spin_mutex layer_storage_mutex;
         // Insert a new layer into base_interface_layers, if intersection with base exists.
         auto insert_layer = [&layer_storage, &layer_storage_mutex, snug_supports, closing_distance, smoothing_distance, minimum_island_radius](
@@ -3106,7 +3106,7 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
             // Merge top / bottom interfaces. For snug supports, merge using closing distance and regularize (close concave corners).
             bottom = intersection(
                 snug_supports ?
-                    smooth_outward(closing(std::move(bottom), closing_distance + minimum_island_radius, closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance) :
+                    smooth_outward(closing(std::move(bottom), minimum_island_radius + closing_distance, minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance) :
                     union_safety_offset(std::move(bottom)),
                 intermediate_layer.polygons);
             if (! bottom.empty()) {
