@@ -767,7 +767,7 @@ void PrintObject::detect_surfaces_type()
                     Layer       *upper_layer = (idx_layer + 1 < this->layer_count()) ? m_layers[idx_layer + 1] : nullptr;
                     Layer       *lower_layer = (idx_layer > 0) ? m_layers[idx_layer - 1] : nullptr;
                     // collapse very narrow parts (using the safety offset in the diff is not enough)
-                    float        offset = layerm->flow(frExternalPerimeter).scaled_width() / 10.f;
+                    float        offset = layerm->flow(frExternalPerimeter).scaled_width() / 1000.f;
 
                     // find top surfaces (difference between current surfaces
                     // of current layer and upper one)
