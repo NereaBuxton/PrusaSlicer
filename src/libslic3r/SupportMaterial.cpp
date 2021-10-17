@@ -526,8 +526,13 @@ void PrintObjectSupportMaterial::generate(PrintObject &object)
     // Propagate top / bottom contact layers to generate interface layers 
     // and base interface layers (for soluble interface / non souble base only)
     auto [interface_layers, base_interface_layers] = this->generate_interface_layers(bottom_contacts, top_contacts, intermediate_layers, layer_storage);
-    if (!interface_layers.empty())
+    if (!interface_layers.empty()) {
         this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy + std::min(m_support_params.gap_add_xy, coordf_t(m_support_params.support_material_flow.width())));
+        this->trim_support_layers_by_object(object, interface_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+        if (!base_interface_layers.empty())
+            this->trim_support_layers_by_object(object, base_interface_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+    }
+
     BOOST_LOG_TRIVIAL(info) << "Support generator - Creating raft";
 
     // If raft is to be generated, the 1st top_contact layer will contain the 1st object layer silhouette with holes filled.
@@ -2754,7 +2759,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         if (contacts.print_z > first_layer_z + EPSILON)
                             break;
                         assert(contacts.bottom_z > layer_intermediate.print_z - EPSILON);
-                        polygons_append(polygons_new, expand(contacts.polygons, float(SCALED_EPSILON)));
+                        polygons_append(polygons_new, contacts.polygons);
                     }
                 } else
                     polygons_new = layer_support_areas[idx_object_layer_above];
@@ -3189,7 +3194,7 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
                             const MyLayer &bottom_contact_layer = *bottom_contacts[idx_bottom_contact];
                             if (bottom_contact_layer.bottom_z - EPSILON > intermediate_layer.bottom_z)
                                 break;
-                            polygons_append(bottom_contact_layer.print_z - EPSILON > bottom_interface_z ? polygons_bottom_contact_projected_interface : polygons_bottom_contact_projected_base, bottom_contact_layer.polygons);
+                            polygons_append(bottom_contact_layer.bottom_z - EPSILON > bottom_interface_z ? polygons_bottom_contact_projected_interface : polygons_bottom_contact_projected_base, bottom_contact_layer.polygons);
                         }
                     }
                     MyLayer *interface_layer = nullptr;
