@@ -2723,7 +2723,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                 // Use the precomputed layer_support_areas. "idx_object_layer_above": above means above since the last iteration, not above after this call.
                 idx_object_layer_above = idx_lower_or_equal(object.layers().begin(), object.layers().end(), idx_object_layer_above,
                     [&layer_intermediate](const Layer* layer) { return layer->print_z <= layer_intermediate.print_z + EPSILON; });
-#if 0
+#if 1
                 // Polygons to trim polygons_new.
                 Polygons polygons_trimming; 
 
@@ -2763,7 +2763,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                     }
                 } else
                     polygons_new = layer_support_areas[idx_object_layer_above];
-#if 0
+#if 1
                 // Trimming the base layer with any overlapping bottom layer.
                 // Following cases are recognized:
                 // 1) bottom.bottom_z >= base.top_z -> No overlap, no trimming needed.
@@ -4090,8 +4090,8 @@ void PrintObjectSupportMaterial::generate_toolpaths(
             // Copy polygons from the layers.
             //if (idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
                 //bottom_contact_layer.layer = bottom_contacts[idx_layer_bottom_contact];
-            //if (idx_layer_top_contact < top_contacts.size() && top_contacts[idx_layer_top_contact]->print_z < support_layer.print_z + EPSILON)
-            //    top_contact_layer.layer = top_contacts[idx_layer_top_contact];
+            if (idx_layer_top_contact < top_contacts.size() && top_contacts[idx_layer_top_contact]->print_z < support_layer.print_z + EPSILON)
+                top_contact_layer.layer = top_contacts[idx_layer_top_contact];
             if (idx_layer_interface < interface_layers.size() && interface_layers[idx_layer_interface]->print_z < support_layer.print_z + EPSILON)
                 interface_layer.layer = interface_layers[idx_layer_interface];
             if (idx_layer_base_interface < base_interface_layers.size() && base_interface_layers[idx_layer_base_interface]->print_z < support_layer.print_z + EPSILON)
