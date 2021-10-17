@@ -532,7 +532,8 @@ void PrintObjectSupportMaterial::generate(PrintObject &object)
         if (!base_interface_layers.empty())
             this->trim_support_layers_by_object(object, base_interface_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
     }
-
+    this->trim_support_layers_by_object(object, bottom_contacts, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+    this->trim_support_layers_by_object(object, top_contacts, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
     BOOST_LOG_TRIVIAL(info) << "Support generator - Creating raft";
 
     // If raft is to be generated, the 1st top_contact layer will contain the 1st object layer silhouette with holes filled.
@@ -943,7 +944,7 @@ public:
         }
         case smsSnug:
             // Merge the support polygons by applying morphological closing and inwards smoothing.
-            auto closing_distance   = scaled<float>(m_support_material_closing_radius);
+            auto closing_distance   = scaled<float>(0.01);
             auto smoothing_distance = scaled<float>(m_extrusion_width);
 #ifdef SLIC3R_DEBUG
             SVG::export_expolygons(debug_out_path("extract_support_from_grid_trimmed-%s-%d-%d-%lf.svg", step_name, iRun, layer_id, print_z),
@@ -2698,11 +2699,12 @@ void PrintObjectSupportMaterial::generate_base_layers(
         // No top contacts -> no intermediate layers will be produced.
         return;
     auto smoothing_distance = m_support_params.support_material_flow.scaled_width();
-    auto minimum_island_radius = smoothing_distance * 1.5; 
+    auto minimum_island_radius = smoothing_distance * 1.5;
+    auto closing_distance = scaled<float>(m_object_config->support_material_closing_radius.value);
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
-        [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, minimum_island_radius](const tbb::blocked_range<size_t>& range) {
+        [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, minimum_island_radius, closing_distance](const tbb::blocked_range<size_t>& range) {
             // index -2 means not initialized yet, -1 means intialized and decremented to 0 and then -1.
             int idx_top_contact_above           = -2;
             int idx_bottom_contact_overlapping  = -2;
@@ -2723,7 +2725,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                 // Use the precomputed layer_support_areas. "idx_object_layer_above": above means above since the last iteration, not above after this call.
                 idx_object_layer_above = idx_lower_or_equal(object.layers().begin(), object.layers().end(), idx_object_layer_above,
                     [&layer_intermediate](const Layer* layer) { return layer->print_z <= layer_intermediate.print_z + EPSILON; });
-#if 1
+
                 // Polygons to trim polygons_new.
                 Polygons polygons_trimming; 
 
@@ -2747,7 +2749,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         // Base is fully inside top. Trim base by top.
                         polygons_append(polygons_trimming, layer_top_overlapping.polygons);
                 }
-#endif //0
+
                 if (idx_object_layer_above < 0) {
                     // layer_support_areas are synchronized with object layers and they contain projections of the contact layers above them.
                     // This intermediate layer is not above any object layer, thus there is no information in layer_support_areas about
@@ -2763,7 +2765,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                     }
                 } else
                     polygons_new = layer_support_areas[idx_object_layer_above];
-#if 1
+
                 // Trimming the base layer with any overlapping bottom layer.
                 // Following cases are recognized:
                 // 1) bottom.bottom_z >= base.top_z -> No overlap, no trimming needed.
@@ -2796,10 +2798,10 @@ void PrintObjectSupportMaterial::generate_base_layers(
                     svg.draw(to_polylines(polygons_trimming),           "red");
                 }
         #endif /* SLIC3R_DEBUG */
-#endif //0
+
                 // Trim the polygons, store them.
                 //if (polygons_trimming.empty())
-                    layer_intermediate.polygons = smooth_outward(opening(std::move(polygons_new), minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
+                    layer_intermediate.polygons = smooth_outward(closing(opening(std::move(polygons_new), minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
                 //else
                 //    layer_intermediate.polygons = diff(
                 //        polygons_new,
