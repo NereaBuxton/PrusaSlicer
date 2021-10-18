@@ -1553,6 +1553,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("support_material_spacing", category_path + "pattern-spacing-0-inf");
         optgroup->append_single_option_line("support_material_angle", category_path + "pattern-angle");
         optgroup->append_single_option_line("support_material_closing_radius", category_path + "pattern-angle");
+        optgroup->append_single_option_line("support_material_minimum_width");
         optgroup->append_single_option_line("support_material_interface_layers", category_path + "interface-layers");
         optgroup->append_single_option_line("support_material_bottom_interface_layers", category_path + "interface-layers");
         optgroup->append_single_option_line("support_material_interface_pattern", category_path + "interface-pattern");

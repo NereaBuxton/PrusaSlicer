@@ -2699,7 +2699,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
         // No top contacts -> no intermediate layers will be produced.
         return;
     auto smoothing_distance = m_support_params.support_material_flow.scaled_width();
-    auto minimum_island_radius = smoothing_distance * 1.5;
+    auto minimum_island_radius = smoothing_distance * 0.5 * (m_object_config->support_material_minimum_width * 0.01);
     auto closing_distance = scaled<float>(m_object_config->support_material_closing_radius.value);
 
     bool single_dense_interface_bottom = m_object_config->support_material_bottom_interface_layers == 1 || (m_object_config->support_material_bottom_interface_layers == -1 && m_object_config->support_material_interface_layers == 1);

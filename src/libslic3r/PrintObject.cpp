@@ -558,6 +558,7 @@ bool PrintObject::invalidate_state_by_config_options(
             || opt_key == "support_material_style"
             || opt_key == "support_material_xy_spacing"
             || opt_key == "support_material_additional_xy_spacing"
+            || opt_key == "support_material_minimum_width"
             || opt_key == "support_material_spacing"
             || opt_key == "support_material_closing_radius"
             || opt_key == "support_material_synchronize_layers"
