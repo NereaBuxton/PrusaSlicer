@@ -526,7 +526,7 @@ void PrintObjectSupportMaterial::generate(PrintObject &object)
     // Propagate top / bottom contact layers to generate interface layers 
     // and base interface layers (for soluble interface / non souble base only)
     auto [interface_layers, base_interface_layers] = this->generate_interface_layers(bottom_contacts, top_contacts, intermediate_layers, layer_storage);
-    if (!interface_layers.empty()) {
+    if (!interface_layers.empty() || (m_object_config->support_material_bottom_interface_layers == 1 || m_object_config->support_material_interface_layers == 1)) {
         this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy + std::min(m_support_params.gap_add_xy, coordf_t(m_support_params.support_material_flow.width())));
         this->trim_support_layers_by_object(object, interface_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
         if (!base_interface_layers.empty())
@@ -2701,10 +2701,14 @@ void PrintObjectSupportMaterial::generate_base_layers(
     auto smoothing_distance = m_support_params.support_material_flow.scaled_width();
     auto minimum_island_radius = smoothing_distance * 1.5;
     auto closing_distance = scaled<float>(m_object_config->support_material_closing_radius.value);
+
+    bool single_dense_interface_bottom = m_object_config->support_material_bottom_interface_layers == 1 || (m_object_config->support_material_bottom_interface_layers == -1 && m_object_config->support_material_interface_layers == 1);
+    bool single_dense_interface_top = m_object_config->support_material_interface_layers == 1;
+
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
-        [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, minimum_island_radius, closing_distance](const tbb::blocked_range<size_t>& range) {
+        [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, minimum_island_radius, closing_distance, single_dense_interface_bottom, single_dense_interface_top](const tbb::blocked_range<size_t>& range) {
             // index -2 means not initialized yet, -1 means intialized and decremented to 0 and then -1.
             int idx_top_contact_above           = -2;
             int idx_bottom_contact_overlapping  = -2;
@@ -2745,7 +2749,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         break;
                     // Base must not overlap with top.bottom_z.
                     assert(! (layer_intermediate.print_z > layer_top_overlapping.bottom_z + EPSILON && layer_intermediate.bottom_z < layer_top_overlapping.bottom_z - EPSILON));
-                    if (layer_intermediate.print_z <= layer_top_overlapping.print_z + EPSILON && layer_intermediate.bottom_z >= layer_top_overlapping.bottom_z - EPSILON)
+                    if (single_dense_interface_top && layer_intermediate.print_z <= layer_top_overlapping.print_z + EPSILON && layer_intermediate.bottom_z >= layer_top_overlapping.bottom_z - EPSILON)
                         // Base is fully inside top. Trim base by top.
                         polygons_append(polygons_trimming, layer_top_overlapping.polygons);
                 }
@@ -2782,7 +2786,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         break; 
                     // Base must not overlap with bottom.top_z.
                     assert(! (layer_intermediate.print_z > layer_bottom_overlapping.print_z + EPSILON && layer_intermediate.bottom_z < layer_bottom_overlapping.print_z - EPSILON));
-                    if (layer_intermediate.print_z <= layer_bottom_overlapping.print_z + EPSILON && layer_intermediate.bottom_z >= layer_bottom_overlapping.bottom_print_z() - EPSILON)
+                    if (single_dense_interface_bottom && layer_intermediate.print_z <= layer_bottom_overlapping.print_z + EPSILON && layer_intermediate.bottom_z >= layer_bottom_overlapping.bottom_print_z() - EPSILON)
                         // Base is fully inside bottom. Trim base by bottom.
                         polygons_append(polygons_trimming, layer_bottom_overlapping.polygons);
                 }
@@ -2799,16 +2803,20 @@ void PrintObjectSupportMaterial::generate_base_layers(
                 }
         #endif /* SLIC3R_DEBUG */
 
-                // Trim the polygons, store them.
-                //if (polygons_trimming.empty())
+                if (single_dense_interface_top || single_dense_interface_bottom) {
+                    // Trim the polygons, store them.
+                    if (polygons_trimming.empty())
                     layer_intermediate.polygons = smooth_outward(closing(opening(std::move(polygons_new), minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
-                //else
-                //    layer_intermediate.polygons = diff(
-                //        polygons_new,
-                //        polygons_trimming,
-                //        ApplySafetyOffset::Yes); // safety offset to merge the touching source polygons
+                    else
+                        layer_intermediate.polygons = diff(
+                            smooth_outward(closing(opening(polygons_new, minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance),
+                            polygons_trimming,
+                            ApplySafetyOffset::Yes); // safety offset to merge the touching source polygons
+                }
+                else {
+                    layer_intermediate.polygons = smooth_outward(closing(opening(std::move(polygons_new), minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
+                }
                 layer_intermediate.layer_type = sltBase;
-
         #if 0
                     // coordf_t fillet_radius_scaled = scale_(m_object_config->support_material_spacing);
                     // Fillet the base polygons and trim them again with the top, interface and contact layers.
@@ -4090,8 +4098,8 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                 idx_layer_base_interface  = idx_higher_or_equal(base_interface_layers, idx_layer_base_interface,fun);
             }
             // Copy polygons from the layers.
-            //if (idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
-                //bottom_contact_layer.layer = bottom_contacts[idx_layer_bottom_contact];
+            if ((m_object_config->support_material_bottom_interface_layers == 1 || (m_object_config->support_material_bottom_interface_layers == -1 && m_object_config->support_material_interface_layers == 1)) && idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
+                bottom_contact_layer.layer = bottom_contacts[idx_layer_bottom_contact];
             if (idx_layer_top_contact < top_contacts.size() && top_contacts[idx_layer_top_contact]->print_z < support_layer.print_z + EPSILON)
                 top_contact_layer.layer = top_contacts[idx_layer_top_contact];
             if (idx_layer_interface < interface_layers.size() && interface_layers[idx_layer_interface]->print_z < support_layer.print_z + EPSILON)
