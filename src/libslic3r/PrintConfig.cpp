@@ -2525,14 +2525,19 @@ void PrintConfigDef::init_fff_params()
     // Default is half the external perimeter width.
     def->set_default_value(new ConfigOptionFloatOrPercent(50, true));
 
-    def = this->add("support_material_minimum_width", coPercent);
-    def->label = L("Minimum support structure width");
+    def = this->add("support_material_expand_or_filter", coPercent);
+    def->label = L("Expand or filter support structures");
     def->category = L("Support material");
-    def->tooltip = L("Extrusion towers smaller than this width will be filtered out. Expressed as a percentage of the support material extrusion width.");
-    def->sidetext = L("%");
-    def->min = 100;
-    def->mode = comAdvanced;
-    def->set_default_value(new ConfigOptionPercent(200));
+    def->tooltip = L("Expand or filter the support structures by width. Positive values expand structures, negative values reduce them. "
+        "Default of 0% ensures all requested areas are supported with minimum expansion of 1x extrusion width. "
+        "Value of +50% expands support structures further to 1.5x extrusion width. "
+        "Value of -100% reduces expansion of structures to 0, thereby filtering out support structures less than 1x extrusion width. "
+        "Value of -150% filters out structures less than 1.5x extrusion width. "
+        "Note: values below -100% filter out larger widths, without contracting the edge of structures. "
+        "Expressed as a percentage of the support material extrusion width.");
+    def->sidetext = L("% +/-");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionPercent(0));
 
     def = this->add("support_material_angle", coFloat);
     def->label = L("Pattern angle");

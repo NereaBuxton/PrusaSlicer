@@ -2712,17 +2712,28 @@ void PrintObjectSupportMaterial::generate_base_layers(
     if (top_contacts.empty())
         // No top contacts -> no intermediate layers will be produced.
         return;
-    auto smoothing_distance = m_support_params.support_material_flow.scaled_width();
-    auto minimum_island_radius = smoothing_distance * 0.5 * (m_object_config->support_material_minimum_width * 0.01);
+    auto support_width = m_support_params.support_material_flow.scaled_width();
+    auto gap = scaled<double>(m_support_params.gap_xy);
     auto closing_distance = scaled<float>(m_object_config->support_material_closing_radius.value);
+    
+    auto smoothing_distance = support_width;
+    
+    bool filter = m_object_config->support_material_expand_or_filter < -100;
 
-    bool single_dense_interface_bottom = m_object_config->support_material_bottom_interface_layers == 1 || (m_object_config->support_material_bottom_interface_layers == -1 && m_object_config->support_material_interface_layers == 1);
+    auto filter_or_expansion_width = 
+        filter ? 0.5 * support_width * (m_object_config->support_material_expand_or_filter * -0.01) + gap
+                : support_width * (m_object_config->support_material_expand_or_filter * 0.01);
+
+    bool single_dense_interface_bottom = m_object_config->support_material_bottom_interface_layers == 1
+        || (m_object_config->support_material_bottom_interface_layers == -1 && m_object_config->support_material_interface_layers == 1);
+
     bool single_dense_interface_top = m_object_config->support_material_interface_layers == 1;
 
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
-        [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, minimum_island_radius, closing_distance, single_dense_interface_bottom, single_dense_interface_top](const tbb::blocked_range<size_t>& range) {
+        [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, closing_distance,
+        single_dense_interface_bottom, single_dense_interface_top, filter, filter_or_expansion_width, support_width, gap](const tbb::blocked_range<size_t>& range) {
             // index -2 means not initialized yet, -1 means intialized and decremented to 0 and then -1.
             int idx_top_contact_above           = -2;
             int idx_bottom_contact_overlapping  = -2;
@@ -2820,16 +2831,43 @@ void PrintObjectSupportMaterial::generate_base_layers(
                 if (single_dense_interface_top || single_dense_interface_bottom) {
                     // Trim the polygons, store them.
                     if (polygons_trimming.empty())
-                    layer_intermediate.polygons = smooth_outward(closing(opening(std::move(polygons_new), minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
+                        layer_intermediate.polygons = 
+                            smooth_outward(
+                                closing(
+                                    opening(
+                                        std::move(polygons_new),
+                                        filter ? filter_or_expansion_width : 0,
+                                        filter ? filter_or_expansion_width : support_width + gap + filter_or_expansion_width,
+                                        SUPPORT_SURFACES_OFFSET_PARAMETERS),
+                                    closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
+                                smoothing_distance);
                     else
-                        layer_intermediate.polygons = diff(
-                            smooth_outward(closing(opening(polygons_new, minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance),
-                            polygons_trimming,
-                            ApplySafetyOffset::Yes); // safety offset to merge the touching source polygons
+                        layer_intermediate.polygons = 
+                            diff(
+                                smooth_outward(
+                                    closing(
+                                        opening(
+                                            polygons_new,
+                                            filter ? filter_or_expansion_width : 0,
+                                            filter ? filter_or_expansion_width : support_width + gap + filter_or_expansion_width,
+                                            SUPPORT_SURFACES_OFFSET_PARAMETERS),
+                                        closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
+                                    smoothing_distance),
+                                polygons_trimming,
+                                ApplySafetyOffset::Yes); // safety offset to merge the touching source polygons
                 }
-                else {
-                    layer_intermediate.polygons = smooth_outward(closing(opening(std::move(polygons_new), minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance);
-                }
+                else
+                    layer_intermediate.polygons =
+                        smooth_outward(
+                            closing(
+                                opening(
+                                    std::move(polygons_new),
+                                    filter ? filter_or_expansion_width : 0,
+                                    filter ? filter_or_expansion_width : support_width + gap + filter_or_expansion_width,
+                                    SUPPORT_SURFACES_OFFSET_PARAMETERS),
+                                closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
+                            smoothing_distance);
+
                 layer_intermediate.layer_type = sltBase;
         #if 0
                     // coordf_t fillet_radius_scaled = scale_(m_object_config->support_material_spacing);
