@@ -2719,6 +2719,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
     auto smoothing_distance = support_width;
     
     bool filter = m_object_config->support_material_expand_or_filter < -100;
+    bool filter_disabled = m_object_config->support_material_expand_or_filter == -100;
 
     auto filter_or_expansion_width = 
         filter ? 0.5 * support_width * (m_object_config->support_material_expand_or_filter * -0.01) + gap
@@ -2733,7 +2734,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
         [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, closing_distance,
-        single_dense_interface_bottom, single_dense_interface_top, filter, filter_or_expansion_width, support_width, gap](const tbb::blocked_range<size_t>& range) {
+        single_dense_interface_bottom, single_dense_interface_top, filter, filter_disabled, filter_or_expansion_width, support_width, gap](const tbb::blocked_range<size_t>& range) {
             // index -2 means not initialized yet, -1 means intialized and decremented to 0 and then -1.
             int idx_top_contact_above           = -2;
             int idx_bottom_contact_overlapping  = -2;
@@ -2837,7 +2838,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                                     opening(
                                         std::move(polygons_new),
                                         filter ? filter_or_expansion_width : 0,
-                                        filter ? filter_or_expansion_width : support_width + gap + filter_or_expansion_width,
+                                        filter ? filter_or_expansion_width : (filter_disabled ? 0 : support_width + gap + filter_or_expansion_width),
                                         SUPPORT_SURFACES_OFFSET_PARAMETERS),
                                     closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
                                 smoothing_distance);
@@ -2849,7 +2850,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                                         opening(
                                             polygons_new,
                                             filter ? filter_or_expansion_width : 0,
-                                            filter ? filter_or_expansion_width : support_width + gap + filter_or_expansion_width,
+                                            filter ? filter_or_expansion_width : (filter_disabled ? 0 : support_width + gap + filter_or_expansion_width),
                                             SUPPORT_SURFACES_OFFSET_PARAMETERS),
                                         closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
                                     smoothing_distance),
@@ -2863,7 +2864,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                                 opening(
                                     std::move(polygons_new),
                                     filter ? filter_or_expansion_width : 0,
-                                    filter ? filter_or_expansion_width : support_width + gap + filter_or_expansion_width,
+                                    filter ? filter_or_expansion_width : (filter_disabled ? 0 : support_width + gap + filter_or_expansion_width),
                                     SUPPORT_SURFACES_OFFSET_PARAMETERS),
                                 closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
                             smoothing_distance);
