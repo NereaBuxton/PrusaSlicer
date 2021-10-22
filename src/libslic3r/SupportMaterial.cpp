@@ -3983,8 +3983,8 @@ void PrintObjectSupportMaterial::generate_toolpaths(
     const coordf_t link_max_length_factor = 0.;
 
     float raft_angle_1st_layer  = 0.f;
-    float raft_angle_base       = 0.f;
-    float raft_angle_interface  = 0.f;
+    float raft_angle_base       = m_support_params.base_angle + 1.5708;
+    float raft_angle_interface  = m_support_params.interface_angle;
     if (m_slicing_params.base_raft_layers > 1) {
         // There are all raft layer types (1st layer, base, interface & contact layers) available.
         raft_angle_1st_layer  = m_support_params.interface_angle;
@@ -3993,9 +3993,9 @@ void PrintObjectSupportMaterial::generate_toolpaths(
     } else if (m_slicing_params.base_raft_layers == 1 || m_slicing_params.interface_raft_layers > 1) {
         // 1st layer, interface & contact layers available.
         raft_angle_1st_layer  = m_support_params.base_angle;
-        if (this->has_support())
+        //if (this->has_support())
             // Print 1st layer at 45 degrees from both the interface and base angles as both can land on the 1st layer.
-            raft_angle_1st_layer += 0.7854f;
+            //raft_angle_1st_layer += 0.7854f;
         raft_angle_interface  = m_support_params.interface_angle;
     } else if (m_slicing_params.interface_raft_layers == 1) {
         // Only the contact raft layer is non-empty, which will be printed as the 1st layer.
@@ -4138,8 +4138,8 @@ void PrintObjectSupportMaterial::generate_toolpaths(
         {
             SupportLayer &support_layer = *support_layers[support_layer_id];
             LayerCache   &layer_cache   = layer_caches[support_layer_id];
-            float         interface_angle_delta = m_object_config->support_material_style.value == smsSnug ? 
-                (support_layer.interface_id() & 1) ? float(- M_PI / 4.) : float(+ M_PI / 4.) :
+            float         interface_angle_delta = m_object_config->support_material_style.value == smsSnug ?
+                (support_layer.interface_id() & 1) ? float(M_PI / 2.) : 0 :
                 0;
 
             // Find polygons with the same print_z.
@@ -4273,7 +4273,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                 if (base_layer.layer->bottom_z < EPSILON) {
                     // Base flange (the 1st layer).
                     filler = filler_first_layer;
-                    filler->angle = Geometry::deg2rad(float(m_object_config->support_material_angle.value + 90.));
+                    filler->angle = Geometry::deg2rad(float(m_object_config->support_material_angle.value));
                     density = float(m_object_config->raft_first_layer_density.value * 0.01);
                     flow = m_support_params.first_layer_flow;
                     // use the proper spacing for first layer as we don't need to align
