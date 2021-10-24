@@ -3169,7 +3169,7 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
         if (num_base_interface_layers_top || num_base_interface_layers_bottom)
             base_interface_layers.assign(intermediate_layers.size(), nullptr);
         auto smoothing_distance              = m_support_params.support_material_flow.scaled_width();
-        auto minimum_island_radius           = smoothing_distance * 2 + scaled(m_support_params.gap_xy);
+        auto minimum_island_radius           = smoothing_distance * 3.25 + scaled(m_support_params.gap_xy);
         
         tbb::spin_mutex layer_storage_mutex;
         // Insert a new layer into base_interface_layers, if intersection with base exists.
