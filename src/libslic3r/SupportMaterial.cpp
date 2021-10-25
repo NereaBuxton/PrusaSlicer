@@ -3377,7 +3377,7 @@ static inline void fill_expolygons_with_sheath_generate_paths(
 
     double spacing = flow.scaled_spacing();
     // Clip the sheath path to avoid the extruder to get exactly on the first point of the loop.
-    double clip_length = spacing * 0.15;
+    //double clip_length = spacing * 0.15;
 
     for (ExPolygon &expoly : closing_ex(polygons, float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5*flow.scaled_width()))) {
         // Don't reorder the skirt and its infills.
@@ -3393,7 +3393,7 @@ static inline void fill_expolygons_with_sheath_generate_paths(
         for (size_t i = 0; i <= expoly.holes.size();  ++ i) {
             Polyline pl(i == 0 ? expoly.contour.points : expoly.holes[i - 1].points);
             pl.points.emplace_back(pl.points.front());
-            pl.clip_end(clip_length);
+            //pl.clip_end(clip_length);
             polylines.emplace_back(std::move(pl));
         }
         extrusion_entities_append_paths(out, polylines, role == erSupportMaterialInterface ? erSupportMaterialInterface : erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
