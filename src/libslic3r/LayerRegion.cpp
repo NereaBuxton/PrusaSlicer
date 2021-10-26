@@ -112,7 +112,7 @@ void LayerRegion::make_perimeters(const SurfaceCollection &slices, SurfaceCollec
 void LayerRegion::process_external_surfaces(const Layer *lower_layer, const Polygons *lower_layer_covered)
 {
     const bool      has_infill = this->region().config().fill_density.value > 0.;
-    const float		margin 	   = float(scale_(EXTERNAL_INFILL_MARGIN));
+    const float		margin 	   = float(this->flow(frPerimeter).scaled_spacing() * this->region().config().perimeters + this->flow(frSolidInfill).scaled_spacing() * 5.0);
 
 #ifdef SLIC3R_DEBUG_SLICE_PROCESSING
     export_region_fill_surfaces_to_svg_debug("3_process_external_surfaces-initial");
@@ -143,10 +143,10 @@ void LayerRegion::process_external_surfaces(const Layer *lower_layer, const Poly
             if (surface.is_top()) {
                 // Collect the top surfaces, inflate them and trim them by the bottom surfaces.
                 // This gives the priority to bottom surfaces.
-                surfaces_append(top, offset_ex(surface.expolygon, margin, EXTERNAL_SURFACES_OFFSET_PARAMETERS), surface);
+                surfaces_append(top, offset_ex(surface.expolygon, margin, ClipperLib::jtRound), surface);
             } else if (surface.surface_type == stBottom || (surface.surface_type == stBottomBridge && lower_layer == nullptr)) {
                 // Grown by 3mm.
-                surfaces_append(bottom, offset_ex(surface.expolygon, margin, EXTERNAL_SURFACES_OFFSET_PARAMETERS), surface);
+                surfaces_append(bottom, offset_ex(surface.expolygon, margin, ClipperLib::jtRound), surface);
             } else if (surface.surface_type == stBottomBridge) {
                 if (! surface.empty())
                     bridges.emplace_back(surface);

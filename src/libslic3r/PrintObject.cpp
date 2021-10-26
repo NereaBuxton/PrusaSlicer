@@ -1223,7 +1223,7 @@ void PrintObject::discover_vertical_shells()
 								if (! holes.empty())
 									holes = intersection(holes, cache.holes);
 								if (! cache.top_surfaces.empty()) {
-		                            polygons_append(shell, cache.top_surfaces);
+		                            polygons_append(shell, shrink(cache.top_surfaces, 3.25f * min_perimeter_infill_spacing)); // offset to counteract the other offset
 		                            // Running the union_ using the Clipper library piece by piece is cheaper 
 		                            // than running the union_ all at once.
 	                               shell = union_(shell);
@@ -1242,7 +1242,7 @@ void PrintObject::discover_vertical_shells()
 								if (! holes.empty())
 									holes = intersection(holes, cache.holes);
 								if (! cache.bottom_surfaces.empty()) {
-		                            polygons_append(shell, cache.bottom_surfaces);
+		                            polygons_append(shell, shrink(cache.bottom_surfaces, 3.25f * min_perimeter_infill_spacing)); // offset to counteract the other offset
 		                            // Running the union_ using the Clipper library piece by piece is cheaper 
 		                            // than running the union_ all at once.
 		                            shell = union_(shell);
@@ -1328,7 +1328,7 @@ void PrintObject::discover_vertical_shells()
 #if 1
                     // Intentionally inflate a bit more than how much the region has been shrunk, 
                     // so there will be some overlap between this solid infill and the other infill regions (mainly the sparse infill).
-                    shell = opening(union_(shell), 0.75f * min_perimeter_infill_spacing, 2.5f * min_perimeter_infill_spacing, ClipperLib::jtRound);
+                    shell = opening(union_(shell), 0.5f * min_perimeter_infill_spacing, 2.75f * min_perimeter_infill_spacing, ClipperLib::jtRound);
                     if (shell.empty())
                         continue;
 #else
