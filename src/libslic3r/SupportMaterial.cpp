@@ -4232,7 +4232,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                     // Filler and its parameters
                     filler_interface.get(), float(density),
                     // Extrusion parameters
-                    erSupportMaterialInterface, interface_flow, true, true);
+                    erSupportMaterialInterface, interface_flow, true, false);
             }
 
             // Base interface layers under soluble interfaces
