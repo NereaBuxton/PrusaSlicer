@@ -2157,7 +2157,7 @@ static inline PrintObjectSupportMaterial::MyLayer* detect_bottom_contacts(
         debug_out_path("support-bottom-contacts-%d-%lf.svg", iRun, layer_new.print_z),
         union_ex(layer_new.polygons));
 #endif /* SLIC3R_DEBUG */
-#if 0
+#if 1
     // Trim the already created base layers above the current layer intersecting with the new bottom contacts layer.
     //FIXME Maybe this is no more needed, as the overlapping base layers are trimmed by the bottom layers at the final stage?
     touching = expand(touching, float(SCALED_EPSILON));
@@ -2362,8 +2362,8 @@ PrintObjectSupportMaterial::MyLayersPtr PrintObjectSupportMaterial::bottom_conta
         Polygons &layer_support_area = layer_support_areas[layer_id];
         Polygons *layer_buildplate_covered = buildplate_covered.empty() ? nullptr : &buildplate_covered[layer_id];
         // Filtering the propagated support columns to two extrusions, overlapping by maximum 20%.
-        float column_propagation_filtering_radius = scaled<float>(0.8 * 0.5 * (m_support_params.support_material_flow.spacing() + m_support_params.support_material_flow.width()));
-        task_group.run([&grid_params, &overhangs_projection, &overhangs_projection_raw, &layer, &layer_support_area, layer_buildplate_covered, column_propagation_filtering_radius
+        //float column_propagation_filtering_radius = scaled<float>(0.8 * 0.5 * (m_support_params.support_material_flow.spacing() + m_support_params.support_material_flow.width()));
+        task_group.run([&grid_params, &overhangs_projection, &overhangs_projection_raw, &layer, &layer_support_area, layer_buildplate_covered//, column_propagation_filtering_radius
 #ifdef SLIC3R_DEBUG 
             , iRun, layer_id
 #endif /* SLIC3R_DEBUG */
@@ -2725,16 +2725,11 @@ void PrintObjectSupportMaterial::generate_base_layers(
         filter ? 0.5 * support_width * (m_object_config->support_material_expand_or_filter * -0.01) + gap
                 : support_width * (m_object_config->support_material_expand_or_filter * 0.01);
 
-    bool single_dense_interface_bottom = m_object_config->support_material_bottom_interface_layers == 1
-        || (m_object_config->support_material_bottom_interface_layers == -1 && m_object_config->support_material_interface_layers == 1);
-
-    bool single_dense_interface_top = m_object_config->support_material_interface_layers == 1;
-
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, intermediate_layers.size()),
         [&object, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_support_areas, smoothing_distance, closing_distance,
-        single_dense_interface_bottom, single_dense_interface_top, filter, filter_disabled, filter_or_expansion_width, support_width, gap](const tbb::blocked_range<size_t>& range) {
+        filter, filter_disabled, filter_or_expansion_width, support_width, gap](const tbb::blocked_range<size_t>& range) {
             // index -2 means not initialized yet, -1 means intialized and decremented to 0 and then -1.
             int idx_top_contact_above           = -2;
             int idx_bottom_contact_overlapping  = -2;
@@ -2775,7 +2770,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         break;
                     // Base must not overlap with top.bottom_z.
                     assert(! (layer_intermediate.print_z > layer_top_overlapping.bottom_z + EPSILON && layer_intermediate.bottom_z < layer_top_overlapping.bottom_z - EPSILON));
-                    if (single_dense_interface_top && layer_intermediate.print_z <= layer_top_overlapping.print_z + EPSILON && layer_intermediate.bottom_z >= layer_top_overlapping.bottom_z - EPSILON)
+                    if (layer_intermediate.print_z <= layer_top_overlapping.print_z + EPSILON && layer_intermediate.bottom_z >= layer_top_overlapping.bottom_z - EPSILON)
                         // Base is fully inside top. Trim base by top.
                         polygons_append(polygons_trimming, layer_top_overlapping.polygons);
                 }
@@ -2812,7 +2807,7 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         break; 
                     // Base must not overlap with bottom.top_z.
                     assert(! (layer_intermediate.print_z > layer_bottom_overlapping.print_z + EPSILON && layer_intermediate.bottom_z < layer_bottom_overlapping.print_z - EPSILON));
-                    if (single_dense_interface_bottom && layer_intermediate.print_z <= layer_bottom_overlapping.print_z + EPSILON && layer_intermediate.bottom_z >= layer_bottom_overlapping.bottom_print_z() - EPSILON)
+                    if (layer_intermediate.print_z <= layer_bottom_overlapping.print_z + EPSILON && layer_intermediate.bottom_z >= layer_bottom_overlapping.bottom_print_z() - EPSILON)
                         // Base is fully inside bottom. Trim base by bottom.
                         polygons_append(polygons_trimming, layer_bottom_overlapping.polygons);
                 }
@@ -2829,23 +2824,22 @@ void PrintObjectSupportMaterial::generate_base_layers(
                 }
         #endif /* SLIC3R_DEBUG */
 
-                if (single_dense_interface_top || single_dense_interface_bottom) {
-                    // Trim the polygons, store them.
-                    if (polygons_trimming.empty())
-                        layer_intermediate.polygons = 
+                // Trim the polygons, store them.
+                if (polygons_trimming.empty())
+                    layer_intermediate.polygons = 
+                        smooth_outward(
+                            closing(
+                                opening(
+                                    std::move(polygons_new),
+                                    filter ? filter_or_expansion_width : 0,
+                                    filter ? filter_or_expansion_width : (filter_disabled ? 0 : support_width + gap + filter_or_expansion_width),
+                                    SUPPORT_SURFACES_OFFSET_PARAMETERS),
+                                closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
+                            smoothing_distance);
+                else
+                    layer_intermediate.polygons = 
+                        diff(
                             smooth_outward(
-                                closing(
-                                    opening(
-                                        std::move(polygons_new),
-                                        filter ? filter_or_expansion_width : 0,
-                                        filter ? filter_or_expansion_width : (filter_disabled ? 0 : support_width + gap + filter_or_expansion_width),
-                                        SUPPORT_SURFACES_OFFSET_PARAMETERS),
-                                    closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
-                                smoothing_distance);
-                    else
-                        layer_intermediate.polygons = 
-                            diff(
-                                smooth_outward(
                                     closing(
                                         opening(
                                             polygons_new,
@@ -2856,18 +2850,6 @@ void PrintObjectSupportMaterial::generate_base_layers(
                                     smoothing_distance),
                                 polygons_trimming,
                                 ApplySafetyOffset::Yes); // safety offset to merge the touching source polygons
-                }
-                else
-                    layer_intermediate.polygons =
-                        smooth_outward(
-                            closing(
-                                opening(
-                                    std::move(polygons_new),
-                                    filter ? filter_or_expansion_width : 0,
-                                    filter ? filter_or_expansion_width : (filter_disabled ? 0 : support_width + gap + filter_or_expansion_width),
-                                    SUPPORT_SURFACES_OFFSET_PARAMETERS),
-                                closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS),
-                            smoothing_distance);
 
                 layer_intermediate.layer_type = sltBase;
         #if 0
@@ -3276,9 +3258,9 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
                         // Collect the top contact areas above this intermediate layer, below top_z.
                         for (int idx_bottom_contact = idx_bottom_contact_first; idx_bottom_contact < int(bottom_contacts.size()); ++ idx_bottom_contact) {
                             const MyLayer &bottom_contact_layer = *bottom_contacts[idx_bottom_contact];
-                            if (bottom_contact_layer.bottom_z - EPSILON > intermediate_layer.bottom_z)
+                            if (bottom_contact_layer.print_z - EPSILON > intermediate_layer.bottom_z)
                                 break;
-                            polygons_append(bottom_contact_layer.bottom_z - EPSILON > bottom_interface_z ? polygons_bottom_contact_projected_interface : polygons_bottom_contact_projected_base, bottom_contact_layer.polygons);
+                            polygons_append(bottom_contact_layer.print_z - EPSILON > bottom_interface_z ? polygons_bottom_contact_projected_interface : polygons_bottom_contact_projected_base, bottom_contact_layer.polygons);
                         }
                     }
                     MyLayer *interface_layer = nullptr;
@@ -4173,7 +4155,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                 idx_layer_base_interface  = idx_higher_or_equal(base_interface_layers, idx_layer_base_interface,fun);
             }
             // Copy polygons from the layers.
-            if ((m_object_config->support_material_bottom_interface_layers == 1 || (m_object_config->support_material_bottom_interface_layers == -1 && m_object_config->support_material_interface_layers == 1)) && idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
+            if (idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
                 bottom_contact_layer.layer = bottom_contacts[idx_layer_bottom_contact];
             if (idx_layer_top_contact < top_contacts.size() && top_contacts[idx_layer_top_contact]->print_z < support_layer.print_z + EPSILON)
                 top_contact_layer.layer = top_contacts[idx_layer_top_contact];
