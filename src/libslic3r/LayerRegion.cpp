@@ -112,7 +112,7 @@ void LayerRegion::make_perimeters(const SurfaceCollection &slices, SurfaceCollec
 void LayerRegion::process_external_surfaces(const Layer *lower_layer, const Polygons *lower_layer_covered)
 {
     const bool      has_infill = this->region().config().fill_density.value > 0.;
-    const float		margin 	   = float(this->flow(frPerimeter).scaled_spacing() * this->region().config().perimeters + this->flow(frSolidInfill).scaled_spacing() * 5.0);
+    const float		margin 	   = float(this->flow(frPerimeter).scaled_spacing() * this->region().config().perimeters + this->flow(frSolidInfill).scaled_spacing() * 4.0);
 
 #ifdef SLIC3R_DEBUG_SLICE_PROCESSING
     export_region_fill_surfaces_to_svg_debug("3_process_external_surfaces-initial");
