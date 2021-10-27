@@ -2735,8 +2735,6 @@ static void polylines_from_paths(const std::vector<MonotonicRegionLink> &path, c
 
 bool FillRectilinear::fill_surface_by_lines(const Surface *surface, const FillParams &params, float angleBase, float pattern_shift, Polylines &polylines_out)
 {
-    bool monotonic_infill = params.monotonic; // || params.density > 0.99;
-
     // At the end, only the new polylines will be rotated back.
     size_t n_polylines_out_initial = polylines_out.size();
 
@@ -2756,8 +2754,8 @@ bool FillRectilinear::fill_surface_by_lines(const Surface *surface, const FillPa
     ExPolygonWithOffset poly_with_offset(
         surface->expolygon, 
         - rotate_vector.first, 
-        float(scale_(monotonic_infill ? this->overlap - 1.49f * this->spacing : this->overlap - (0.5 - INFILL_OVERLAP_OVER_SPACING) * this->spacing)),
-        float(scale_(monotonic_infill ? this->overlap - 1.5f * this->spacing : this->overlap - 0.5f * this->spacing)));
+        float(scale_(this->overlap - (0.5 - INFILL_OVERLAP_OVER_SPACING) * this->spacing)),
+        float(scale_(this->overlap - 0.5f * this->spacing)));
     if (poly_with_offset.n_contours_inner == 0) {
         // Not a single infill line fits.
         //FIXME maybe one shall trigger the gap fill here?
@@ -2827,6 +2825,7 @@ bool FillRectilinear::fill_surface_by_lines(const Surface *surface, const FillPa
 #endif /* SLIC3R_DEBUG */
 
     //FIXME this is a hack to get the monotonic infill rolling. We likely want a smarter switch, likely based on user decison.
+    bool monotonic_infill = params.monotonic; // || params.density > 0.99;
     if (monotonic_infill) {
         // Sometimes the outer contour pinches the inner contour from both sides along a single vertical line.
         // This situation is not handled correctly by generate_montonous_regions().
@@ -2966,15 +2965,8 @@ Polylines FillRectilinear::fill_surface(const Surface *surface, const FillParams
 Polylines FillMonotonic::fill_surface(const Surface *surface, const FillParams &params)
 {
     FillParams params2 = params;
-    params2.monotonic = true;    
+    params2.monotonic = true;
     Polylines polylines_out;
-    ExPolygonWithOffset expo(surface->expolygon, 0, float(scale_(this->overlap - 0.5 * this->spacing)));
-    polylines_out.reserve(expo.polygons_outer.size());
-    for (size_t i = 0; i < expo.polygons_outer.size(); ++i) {
-        Polyline pl(expo.polygons_outer[i].points);
-        pl.points.emplace_back(pl.points.front());
-        polylines_out.emplace_back(std::move(pl));
-    }
     if (! fill_surface_by_lines(surface, params2, 0.f, 0.f, polylines_out))
         BOOST_LOG_TRIVIAL(error) << "FillMonotonous::fill_surface() failed to fill a region.";
     return polylines_out;
