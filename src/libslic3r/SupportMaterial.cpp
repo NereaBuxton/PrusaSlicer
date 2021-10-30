@@ -3165,7 +3165,7 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
         if (num_base_interface_layers_top || num_base_interface_layers_bottom)
             base_interface_layers.assign(intermediate_layers.size(), nullptr);
         auto smoothing_distance              = m_support_params.support_material_flow.scaled_width();
-        auto minimum_island_radius           = smoothing_distance * 3.25 + scaled(m_support_params.gap_xy);
+        auto minimum_island_radius           = smoothing_distance * 5.05 + scaled(m_support_params.gap_xy);
         
         tbb::spin_mutex layer_storage_mutex;
         // Insert a new layer into base_interface_layers, if intersection with base exists.
@@ -3177,7 +3177,7 @@ std::pair<PrintObjectSupportMaterial::MyLayersPtr, PrintObjectSupportMaterial::M
             // Merge top / bottom interfaces. For snug supports, merge using closing distance and regularize (close concave corners).
             bottom = intersection(
                 snug_supports ?
-                    smooth_outward(closing(std::move(bottom), minimum_island_radius * 2, minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance) :
+                    smooth_outward(opening(std::move(bottom), 0., minimum_island_radius, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance) :
                     union_safety_offset(std::move(bottom)),
                 intermediate_layer.polygons);
             if (! bottom.empty()) {
@@ -3378,11 +3378,31 @@ static inline void fill_expolygons_with_sheath_generate_paths(
             //pl.clip_end(clip_length);
             polylines.emplace_back(std::move(pl));
         }
-        extrusion_entities_append_paths(out, polylines, role == erSupportMaterialInterface ? erSupportMaterialInterface : erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
-        // Fill in the rest.
-        fill_expolygons_generate_paths(out, offset_ex(expoly, float(-0.5 * spacing)), filler, fill_params, density, role, flow);
-        if (no_sort && ! eec->empty())
-            dst.emplace_back(eec.release());
+        if (role == erSupportMaterialInterface) {
+            for (ExPolygon& expoly2 : closing_ex(expoly, float(SCALED_EPSILON), float(SCALED_EPSILON + 1.0 * flow.scaled_width()))) {
+                // Draw the inner perimeters.
+                polylines.reserve(polylines.size() + expoly2.holes.size() + 1);
+                for (size_t i = 0; i <= expoly2.holes.size(); ++i) {
+                    Polyline pl2(i == 0 ? expoly2.contour.points : expoly2.holes[i - 1].points);
+                    pl2.points.emplace_back(pl2.points.front());
+                    //pl.clip_end(clip_length);
+                    polylines.emplace_back(std::move(pl2));
+                }
+
+                extrusion_entities_append_paths(out, polylines, role == erSupportMaterialInterface ? erSupportMaterialInterface : erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
+                // Fill in the rest.
+                fill_expolygons_generate_paths(out, offset_ex(expoly2, float(-0.5 * spacing)), filler, fill_params, density, role, flow);
+                if (no_sort && !eec->empty())
+                    dst.emplace_back(eec.release());
+            }
+        }
+        else {
+            extrusion_entities_append_paths(out, polylines, role == erSupportMaterialInterface ? erSupportMaterialInterface : erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
+            // Fill in the rest.
+            fill_expolygons_generate_paths(out, offset_ex(expoly, float(-0.5 * spacing)), filler, fill_params, density, role, flow);
+            if (no_sort && !eec->empty())
+                dst.emplace_back(eec.release());
+        }
     }
 }
 
