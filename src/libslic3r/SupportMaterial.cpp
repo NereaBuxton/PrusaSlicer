@@ -528,7 +528,7 @@ void PrintObjectSupportMaterial::generate(PrintObject &object)
     // Propagate top / bottom contact layers to generate interface layers 
     // and base interface layers (for soluble interface / non souble base only)
     auto [interface_layers, base_interface_layers] = this->generate_interface_layers(bottom_contacts, top_contacts, intermediate_layers, layer_storage);
-    if (!interface_layers.empty() || (m_object_config->support_material_bottom_interface_layers == 1 || m_object_config->support_material_interface_layers == 1)) {
+    if (!interface_layers.empty()) {
         this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy + std::min(m_support_params.gap_add_xy, coordf_t(m_support_params.support_material_flow.width())));
         this->trim_support_layers_by_object(object, interface_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
         if (!base_interface_layers.empty())
@@ -2100,6 +2100,13 @@ static inline PrintObjectSupportMaterial::MyLayer* detect_bottom_contacts(
     if (touching.empty())
         return nullptr;
 
+    if (object.config().support_material_expand_or_filter > -100) {
+        auto support_width = support_params.support_material_flow.scaled_width();
+        auto gap = scaled<double>(support_params.gap_xy);
+        auto expansion_width = support_width * (object.config().support_material_expand_or_filter * 0.01);
+        touching = expand(touching, support_width + gap + expansion_width, SUPPORT_SURFACES_OFFSET_PARAMETERS);
+    }
+
     assert(layer.id() >= slicing_params.raft_layers());
     size_t layer_id  = layer.id() - slicing_params.raft_layers();
 
@@ -3388,13 +3395,13 @@ static inline void fill_expolygons_with_sheath_generate_paths(
                     //pl.clip_end(clip_length);
                     polylines.emplace_back(std::move(pl2));
                 }
+            }
 
                 extrusion_entities_append_paths(out, polylines, role == erSupportMaterialInterface ? erSupportMaterialInterface : erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
                 // Fill in the rest.
-                fill_expolygons_generate_paths(out, offset_ex(expoly2, float(-0.5 * spacing)), filler, fill_params, density, role, flow);
+                fill_expolygons_generate_paths(out, offset_ex(expoly, float(-1.5 * spacing)), filler, fill_params, density, role, flow);
                 if (no_sort && !eec->empty())
                     dst.emplace_back(eec.release());
-            }
         }
         else {
             extrusion_entities_append_paths(out, polylines, role == erSupportMaterialInterface ? erSupportMaterialInterface : erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
