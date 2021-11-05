@@ -652,6 +652,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloats,              retract_restart_extra_toolchange))
     ((ConfigOptionFloats,              retract_speed))
     ((ConfigOptionFloats,              retract_wipe_speed))
+    ((ConfigOptionBool,                reverse_tool_order))
     ((ConfigOptionString,              start_gcode))
     ((ConfigOptionStrings,             start_filament_gcode))
     ((ConfigOptionBool,                single_extruder_multi_material))
