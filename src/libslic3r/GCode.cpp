@@ -145,7 +145,7 @@ namespace Slic3r {
 
         /*  Reduce feedrate a bit; travel speed is often too high to move on existing material.
             Too fast = ripping of existing material; too slow = short wipe path, thus more blob.  */
-        double wipe_speed = gcodegen.config().external_perimeter_speed.value;
+        double wipe_speed = gcodegen.writer().extruder()->retract_wipe_speed();
 
         // get the retraction length
         double length = toolchange
