@@ -158,6 +158,8 @@ bool Print::invalidate_state_by_config_options(const ConfigOptionResolver & /* n
             || opt_key == "skirt_height"
             || opt_key == "draft_shield"
             || opt_key == "skirt_distance"
+            || opt_key == "skirt_extra_loops"
+            || opt_key == "skirt_extra_loop_layers"
             || opt_key == "min_skirt_length"
             || opt_key == "ooze_prevention"
             || opt_key == "wipe_tower_x"
