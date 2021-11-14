@@ -1522,6 +1522,10 @@ void TabPrint::build()
         optgroup->append_single_option_line("skirt_height", category_path + "skirt");
         optgroup->append_single_option_line("draft_shield", category_path + "skirt");
         optgroup->append_single_option_line("min_skirt_length", category_path + "skirt");
+        line = { L("Extra skirt base loops"), "" };
+        line.append_option(optgroup->get_option("skirt_extra_loops"));
+        line.append_option(optgroup->get_option("skirt_extra_loop_layers"));
+        optgroup->append_line(line);
 
         optgroup = page->new_optgroup(L("Brim"));
         optgroup->append_single_option_line("brim_type", category_path + "brim");

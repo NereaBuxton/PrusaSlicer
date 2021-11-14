@@ -739,6 +739,8 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionFloats,             retract_before_travel))
     ((ConfigOptionBools,              retract_layer_change))
     ((ConfigOptionFloat,              skirt_distance))
+    ((ConfigOptionInt,                skirt_extra_loops))
+    ((ConfigOptionInt,                skirt_extra_loop_layers))
     ((ConfigOptionInt,                skirt_height))
     ((ConfigOptionInt,                skirts))
     ((ConfigOptionFloat,              skirt_speed))

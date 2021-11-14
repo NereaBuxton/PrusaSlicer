@@ -2243,6 +2243,20 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->set_default_value(new ConfigOptionFloat(6));
 
+    def = this->add("skirt_extra_loops", coInt);
+    //def->label = L("Extra skirt base loops");
+    def->tooltip = L("Add extra loops to inside and outside of skirt for given number of layers.");
+    def->sidetext = L("loops");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInt(0));
+
+    def = this->add("skirt_extra_loop_layers", coInt);
+    def->label = L("for");
+    def->tooltip = L("Number of skirt layers to add extra loops to.");
+    def->sidetext = L("layers");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInt(1));
+
     def = this->add("skirt_height", coInt);
     def->label = L("Skirt height");
     def->tooltip = L("Height of skirt expressed in layers.");
