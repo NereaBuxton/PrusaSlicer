@@ -2595,7 +2595,10 @@ std::string GCode::extrude_loop(ExtrusionLoop loop, std::string description, dou
     for (ExtrusionPaths::iterator path = paths.begin(); path != paths.end(); ++path) {
 //    description += ExtrusionLoop::role_to_string(loop.loop_role());
 //    description += ExtrusionEntity::role_to_string(path->role);
-        path->simplify(SCALED_RESOLUTION);
+        path->simplify(
+            is_perimeter(paths.front().role()) || paths.front().role() == erSupportMaterialInterface ?
+            std::max(coord_t(SCALED_RESOLUTION), std::min(scaled(m_config.resolution.value), scaled(0.25 * EXTRUDER_CONFIG(nozzle_diameter)))) :
+            std::max(coord_t(SCALED_RESOLUTION * 20), std::min(scaled(m_config.resolution.value), scaled(0.25 * EXTRUDER_CONFIG(nozzle_diameter)))));
         gcode += this->_extrude(*path, description, speed);
     }
 
@@ -2649,7 +2652,9 @@ std::string GCode::extrude_multi_path(ExtrusionMultiPath multipath, std::string 
     for (ExtrusionPath path : multipath.paths) {
 //    description += ExtrusionLoop::role_to_string(loop.loop_role());
 //    description += ExtrusionEntity::role_to_string(path->role);
-        path.simplify(SCALED_RESOLUTION);
+        path.simplify(is_perimeter(path.role()) || path.role() == erSupportMaterialInterface ?
+            std::max(coord_t(SCALED_RESOLUTION), std::min(scaled(m_config.resolution.value), scaled(0.25 * EXTRUDER_CONFIG(nozzle_diameter)))) :
+            std::max(coord_t(SCALED_RESOLUTION * 20), std::min(scaled(m_config.resolution.value), scaled(0.25 * EXTRUDER_CONFIG(nozzle_diameter)))));
         gcode += this->_extrude(path, description, speed);
     }
     if (m_wipe.enable) {
@@ -2677,7 +2682,9 @@ std::string GCode::extrude_entity(const ExtrusionEntity &entity, std::string des
 std::string GCode::extrude_path(ExtrusionPath path, std::string description, double speed)
 {
 //    description += ExtrusionEntity::role_to_string(path.role());
-    path.simplify(SCALED_RESOLUTION);
+    path.simplify(is_perimeter(path.role()) || path.role() == erSupportMaterialInterface ?
+        std::max(coord_t(SCALED_RESOLUTION), std::min(scaled(m_config.resolution.value), scaled(0.25 * EXTRUDER_CONFIG(nozzle_diameter)))) :
+        std::max(coord_t(SCALED_RESOLUTION * 20), std::min(scaled(m_config.resolution.value), scaled(0.25 * EXTRUDER_CONFIG(nozzle_diameter)))));
     std::string gcode = this->_extrude(path, description, speed);
     if (m_wipe.enable) {
         m_wipe.path = std::move(path.polyline);
