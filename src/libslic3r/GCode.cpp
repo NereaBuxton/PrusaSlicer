@@ -2556,7 +2556,7 @@ std::string GCode::extrude_loop(ExtrusionLoop loop, std::string description, dou
     for (ExtrusionPaths::iterator path = paths.begin(); path != paths.end(); ++path) {
 //    description += ExtrusionLoop::role_to_string(loop.loop_role());
 //    description += ExtrusionEntity::role_to_string(path->role);
-        path->simplify(SCALED_RESOLUTION);
+        path->simplify(is_perimeter(paths.front().role()) || paths.front().role() == erSupportMaterialInterface ? SCALED_RESOLUTION : SCALED_RESOLUTION * 20);
         gcode += this->_extrude(*path, description, speed);
     }
 
@@ -2610,7 +2610,7 @@ std::string GCode::extrude_multi_path(ExtrusionMultiPath multipath, std::string 
     for (ExtrusionPath path : multipath.paths) {
 //    description += ExtrusionLoop::role_to_string(loop.loop_role());
 //    description += ExtrusionEntity::role_to_string(path->role);
-        path.simplify(SCALED_RESOLUTION);
+        path.simplify(is_perimeter(path.role()) || path.role() == erSupportMaterialInterface ? SCALED_RESOLUTION : SCALED_RESOLUTION * 20);
         gcode += this->_extrude(path, description, speed);
     }
     if (m_wipe.enable) {
@@ -2638,7 +2638,7 @@ std::string GCode::extrude_entity(const ExtrusionEntity &entity, std::string des
 std::string GCode::extrude_path(ExtrusionPath path, std::string description, double speed)
 {
 //    description += ExtrusionEntity::role_to_string(path.role());
-    path.simplify(SCALED_RESOLUTION);
+    path.simplify(is_perimeter(path.role()) || path.role() == erSupportMaterialInterface ? SCALED_RESOLUTION : SCALED_RESOLUTION * 20);
     std::string gcode = this->_extrude(path, description, speed);
     if (m_wipe.enable) {
         m_wipe.path = std::move(path.polyline);
