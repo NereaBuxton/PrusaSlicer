@@ -45,6 +45,7 @@ public:
     double retract_lift() const;
     int    retract_speed() const;
     int    deretract_speed() const;
+    int    retract_wipe_speed() const;
     double retract_restart_extra() const;
     double retract_length_toolchange() const;
     double retract_restart_extra_toolchange() const;

@@ -100,6 +100,11 @@ double Extruder::retract_before_wipe() const
     return std::min(1., std::max(0., m_config->retract_before_wipe.get_at(m_id) * 0.01));
 }
 
+int Extruder::retract_wipe_speed() const
+{
+    return int(floor(m_config->retract_wipe_speed.get_at(m_id) + 0.5));
+}
+
 double Extruder::retract_length() const
 {
     return m_config->retract_length.get_at(m_id);
