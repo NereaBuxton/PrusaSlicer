@@ -957,7 +957,7 @@ void PrintObject::process_external_surfaces()
 		}
 	    BOOST_LOG_TRIVIAL(debug) << "Collecting surfaces covered with extrusions in parallel - start";
 	    surfaces_covered.resize(m_layers.size() - 1, Polygons());
-    	auto unsupported_width = - float(scale_(0.3 * EXTERNAL_INFILL_MARGIN));
+    	auto unsupported_width = - float(scale_(0.9));
 	    tbb::parallel_for(
 	        tbb::blocked_range<size_t>(0, m_layers.size() - 1),
 	        [this, &surfaces_covered, &layer_expansions_and_voids, unsupported_width](const tbb::blocked_range<size_t>& range) {
@@ -1225,7 +1225,7 @@ void PrintObject::discover_vertical_shells()
 								if (! holes.empty())
 									holes = intersection(holes, cache.holes);
 								if (! cache.top_surfaces.empty()) {
-		                            polygons_append(shell, cache.top_surfaces);
+		                            polygons_append(shell, shrink(cache.top_surfaces, 1.3f * min_perimeter_infill_spacing)); // offset to counteract the other offset
 		                            // Running the union_ using the Clipper library piece by piece is cheaper 
 		                            // than running the union_ all at once.
 	                               shell = union_(shell);
@@ -1244,7 +1244,7 @@ void PrintObject::discover_vertical_shells()
 								if (! holes.empty())
 									holes = intersection(holes, cache.holes);
 								if (! cache.bottom_surfaces.empty()) {
-		                            polygons_append(shell, cache.bottom_surfaces);
+		                            polygons_append(shell, shrink(cache.bottom_surfaces, 1.3f * min_perimeter_infill_spacing)); // offset to counteract the other offset
 		                            // Running the union_ using the Clipper library piece by piece is cheaper 
 		                            // than running the union_ all at once.
 		                            shell = union_(shell);
@@ -1330,7 +1330,7 @@ void PrintObject::discover_vertical_shells()
 #if 1
                     // Intentionally inflate a bit more than how much the region has been shrunk, 
                     // so there will be some overlap between this solid infill and the other infill regions (mainly the sparse infill).
-                    shell = opening(union_(shell), 0.5f * min_perimeter_infill_spacing, 0.8f * min_perimeter_infill_spacing, ClipperLib::jtSquare);
+                    shell = opening(union_(shell), 0.5f * min_perimeter_infill_spacing, 0.8f * min_perimeter_infill_spacing, ClipperLib::jtRound);
                     if (shell.empty())
                         continue;
 #else
