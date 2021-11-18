@@ -2387,11 +2387,20 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 5 });
 
+    def = this->add("small_perimeter_length", coFloat);
+    def->label = L("Small perimeters length");
+    def->category = L("Speed");
+    def->tooltip = L("The threshold of length for a loop to be extruded at small perimeter speed.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionFloat(40));
+
     def = this->add("small_perimeter_speed", coFloatOrPercent);
     def->label = L("Small perimeters");
     def->category = L("Speed");
-    def->tooltip = L("This separate setting will affect the speed of perimeters having radius <= 6.5mm "
-                   "(usually holes). If expressed as percentage (for example: 80%) it will be calculated "
+    def->tooltip = L("This separate setting will affect the speed of perimeters having length <= small perimeters "
+                   "length (default 40 mm). If expressed as percentage (for example: 80%) it will be calculated "
                    "on the perimeters speed setting above. Set to zero for auto.");
     def->sidetext = L("mm/s or %");
     def->ratio_over = "perimeter_speed";
