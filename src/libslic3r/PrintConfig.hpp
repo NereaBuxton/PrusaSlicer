@@ -464,6 +464,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     // Force the generation of solid shells between adjacent materials/volumes.
     ((ConfigOptionBool,                interface_shells))
     ((ConfigOptionFloat,               layer_height))
+    ((ConfigOptionBool,                little_move_inwards))
     ((ConfigOptionFloat,               mmu_segmented_region_max_width))
     ((ConfigOptionBool,                optimize_island_extrusions))
     ((ConfigOptionFloat,               raft_contact_distance))
@@ -552,7 +553,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionEnum<IroningType>,    ironing_type))
     ((ConfigOptionPercent,              ironing_flowrate))
     ((ConfigOptionFloat,                ironing_spacing))
-    ((ConfigOptionFloat,                ironing_speed))    
+    ((ConfigOptionFloat,                ironing_speed))
     // Detect bridging perimeters
     ((ConfigOptionBool,                 overhangs))
     ((ConfigOptionInt,                  perimeter_extruder))
