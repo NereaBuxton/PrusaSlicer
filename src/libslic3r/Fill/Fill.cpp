@@ -142,7 +142,7 @@ std::vector<SurfaceFill> group_fills(const Layer &layer)
 		            is_bridge ?
 		                erBridgeInfill :
 		                (surface.is_solid() ?
-		                    (surface.is_top() ? erTopSolidInfill : erSolidInfill) :
+		                    ((surface.is_top() || surface.is_bottom()) ? erTopSolidInfill : erSolidInfill) :
 		                    erInternalInfill);
 		        params.bridge_angle = float(surface.bridge_angle);
 		        params.angle 		= float(Geometry::deg2rad(region_config.fill_angle.value));
@@ -351,6 +351,7 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
         // calculate flow spacing for infill pattern generation
         bool using_internal_flow = ! surface_fill.surface.is_solid() && ! surface_fill.params.bridge;
         double link_max_length = 0.;
+		bool with_sheath = m_object->config().infill_with_sheath && surface_fill.params.pattern != ipConcentric;
         if (! surface_fill.params.bridge) {
 #if 0
             link_max_length = layerm.region()->config().get_abs_value(surface.is_external() ? "external_fill_link_max_length" : "fill_link_max_length", flow.spacing());
@@ -372,9 +373,12 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
 		params.dont_adjust		 = false; //  surface_fill.params.dont_adjust;
         params.anchor_length     = surface_fill.params.anchor_length;
 		params.anchor_length_max = surface_fill.params.anchor_length_max;
-		params.resolution        = resolution;
+		params.resolution		 = resolution;
 
-        for (ExPolygon &expoly : surface_fill.expolygons) {
+		if (!this->m_object->config().solid_infill_adjust_spacing)
+			params.dont_adjust		 = true;
+
+        for (ExPolygon &expoly : with_sheath ? closing_ex(to_polygons(surface_fill.expolygons), float(SCALED_EPSILON), float(SCALED_EPSILON + surface_fill.params.flow.scaled_width())) : surface_fill.expolygons) {
 			// Spacing is modified by the filler to indicate adjustments. Reset it for each expolygon.
 			f->spacing = surface_fill.params.spacing;
 			surface_fill.surface.expolygon = std::move(expoly);
@@ -383,7 +387,7 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
 				polylines = f->fill_surface(&surface_fill.surface, params);
 			} catch (InfillFailedException &) {
 			}
-	        if (! polylines.empty()) {
+			if (! polylines.empty()) {
 		        // calculate actual flow from spacing (which might have been adjusted by the infill
 		        // pattern generator)
 		        double flow_mm3_per_mm = surface_fill.params.flow.mm3_per_mm();
@@ -407,6 +411,29 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
 		            surface_fill.params.extrusion_role,
 		            flow_mm3_per_mm, float(flow_width), surface_fill.params.flow.height());
 		    }
+		}
+		if (with_sheath) {
+			for (ExPolygon& expoly : closing_ex(to_polygons(surface_fill.expolygons), float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * surface_fill.params.flow.scaled_width()))) {
+				Polylines polylines;
+				polylines.reserve(expoly.holes.size() + 1);
+				for (size_t i = 0; i <= expoly.holes.size(); ++i) {
+					Polyline pl(i == 0 ? expoly.contour.points : expoly.holes[i - 1].points);
+					pl.points.emplace_back(pl.points.front());
+					pl.clip_end(f->loop_clipping);
+					polylines.emplace_back(std::move(pl));
+				}
+				if (!polylines.empty()) {
+					// Save into layer.
+					ExtrusionEntityCollection* eec = nullptr;
+					m_regions[surface_fill.region_id]->fills.entities.push_back(eec = new ExtrusionEntityCollection());
+					// Only concentric fills are not sorted.
+					eec->no_sort = f->no_sort();
+					extrusion_entities_append_paths(
+						eec->entities, std::move(polylines),
+						surface_fill.params.extrusion_role,
+						surface_fill.params.flow.mm3_per_mm(), float(surface_fill.params.flow.width()), surface_fill.params.flow.height());
+				}
+			}
 		}
     }
 
