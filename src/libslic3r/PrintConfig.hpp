@@ -471,6 +471,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionBool,                interface_shells))
     ((ConfigOptionFloat,               layer_height))
     ((ConfigOptionBool,                little_move_inwards))
+    ((ConfigOptionPercent,             loop_clipping_length))
     ((ConfigOptionFloat,               mmu_segmented_region_max_width))
     ((ConfigOptionBool,                optimize_island_extrusions))
     ((ConfigOptionFloat,               raft_contact_distance))
