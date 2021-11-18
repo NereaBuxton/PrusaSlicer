@@ -1520,6 +1520,15 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(80));
 
+    def = this->add("infill_with_sheath", coBool);
+    def->label = L("With sheath around infill");
+    def->category = L("Infill");
+    def->tooltip = L("Add a sheath (a single perimeter line) around all infill. This helps "
+        "sloped solid infill regions by providing loops to print against, avoiding curling. "
+        "It has the effect of adding an extra perimeter, printed at infill speeds/widths.");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionBool(false));
+
     def = this->add("inherits", coString);
     def->label = L("Inherits profile");
     def->tooltip = L("Name of the profile, from which this profile inherits.");
@@ -2407,6 +2416,17 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloatOrPercent(15, false));
+
+    def = this->add("solid_infill_adjust_spacing", coBool);
+    def->label = L("Auto-adjust solid infill spacing");
+    def->category = L("Infill");
+    def->tooltip = L("Calculate a new spacing to fill width with possibly integer number of lines, "
+                     "the first and last line being centered at the interval ends. "
+                     "This function possibly increases the spacing, never decreases, "
+                     "and for a narrow width the increase in spacing may become severe, "
+                     "therefore the adjustment is limited to 20% increase.");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionBool(true));
 
     def = this->add("solid_infill_below_area", coFloat);
     def->label = L("Solid infill threshold area");
