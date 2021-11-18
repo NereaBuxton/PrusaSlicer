@@ -376,6 +376,7 @@ PrintObjectSupportMaterial::PrintObjectSupportMaterial(const PrintObject *object
     m_support_params.interface_density  = std::min(1., m_support_params.support_material_interface_flow.spacing() / m_support_params.interface_spacing);
     m_support_params.support_spacing    = m_object_config->support_material_spacing.value + m_support_params.support_material_flow.spacing();
     m_support_params.support_density    = std::min(1., m_support_params.support_material_flow.spacing() / m_support_params.support_spacing);
+    m_support_params.support_loop_clipping_length = scaled(m_support_params.support_material_flow.nozzle_diameter()) * object->config().loop_clipping_length * 0.01;
     if (m_object_config->support_material_interface_layers.value == 0) {
         // No interface layers allowed, print everything with the base support pattern.
         m_support_params.interface_spacing = m_support_params.support_spacing;
@@ -3349,7 +3350,8 @@ static inline void fill_expolygons_with_sheath_generate_paths(
     ExtrusionRole            role,
     const Flow              &flow,
     bool                     with_sheath,
-    bool                     no_sort)
+    bool                     no_sort,
+    coordf_t                 support_clip_length)
 {
     if (polygons.empty())
         return;
@@ -3365,7 +3367,7 @@ static inline void fill_expolygons_with_sheath_generate_paths(
 
     double spacing = flow.scaled_spacing();
     // Clip the sheath path to avoid the extruder to get exactly on the first point of the loop.
-    double clip_length = spacing * 0.15;
+    coordf_t clip_length = support_clip_length;
 
     for (ExPolygon& expoly : closing_ex(polygons, float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * flow.scaled_width()))) {
         // Don't reorder the skirt and its infills.
@@ -4071,7 +4073,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                         filler, float(m_support_params.support_density),
                         // Extrusion parameters
                         erSupportMaterial, flow,
-                        m_support_params.with_sheath, false);
+                        m_support_params.with_sheath, false, m_support_params.support_loop_clipping_length);
                 }
             }
 
@@ -4104,7 +4106,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                 // Extrusion parameters
                 (support_layer_id < m_slicing_params.base_raft_layers) ? erSupportMaterial : erSupportMaterialInterface, flow, 
                 // sheath at first layer
-                support_layer_id == 0, support_layer_id == 0);
+                support_layer_id == 0, support_layer_id == 0, m_support_params.support_loop_clipping_length);
         }
     });
 
@@ -4259,7 +4261,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                     filler_interface.get(), float(density),
                     // Extrusion parameters
                     erSupportMaterialInterface, interface_flow,
-                    m_support_params.with_interface_sheath, true);
+                    m_support_params.with_interface_sheath, true, m_support_params.support_loop_clipping_length);
             }
 
             // Base interface layers under soluble interfaces
@@ -4320,7 +4322,7 @@ void PrintObjectSupportMaterial::generate_toolpaths(
                     filler, density,
                     // Extrusion parameters
                     erSupportMaterial, flow,
-                    sheath, no_sort);
+                    sheath, no_sort, m_support_params.support_loop_clipping_length);
 
             }
 
