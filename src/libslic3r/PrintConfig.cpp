@@ -1373,6 +1373,33 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
 
+    def = this->add("solid_infill_acceleration", coFloat);
+    def->label = L("Solid Infill");
+    def->tooltip = L("This is the acceleration your printer will use for solid (including top) infill. Set zero to disable "
+        "acceleration control for solid infill.");
+    def->sidetext = L("mm/s²");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("support_material_acceleration", coFloat);
+    def->label = L("Support Material");
+    def->tooltip = L("This is the acceleration your printer will use for support material. Set zero to disable "
+        "acceleration control for support material.");
+    def->sidetext = L("mm/s²");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("support_material_interface_acceleration", coFloat);
+    def->label = L("Support Material Interface");
+    def->tooltip = L("This is the acceleration your printer will use for support material interface. Set zero to disable "
+        "acceleration control for support material interface.");
+    def->sidetext = L("mm/s²");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionFloat(0));
+
     def = this->add("infill_every_layers", coInt);
     def->label = L("Combine infill every");
     def->category = L("Infill");
