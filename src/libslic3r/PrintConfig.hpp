@@ -485,6 +485,7 @@ PRINT_CONFIG_CLASS_DEFINE(
 //  ((ConfigOptionFloat,               seam_preferred_direction_jitter))
     ((ConfigOptionFloat,               slice_closing_radius))
     ((ConfigOptionEnum<SlicingMode>,   slicing_mode))
+    ((ConfigOptionFloat,               small_perimeter_length))
     ((ConfigOptionBool,                support_material))
     ((ConfigOptionFloatOrPercent,      support_material_additional_xy_spacing))
     // Automatic supports (generated based on support_material_threshold).
