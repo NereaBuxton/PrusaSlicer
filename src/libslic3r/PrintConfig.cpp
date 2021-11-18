@@ -1906,6 +1906,14 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionBool(false));
 
+    def = this->add("optimize_island_extrusions", coBool);
+    def->label = L("Optimize island extrusions");
+    def->category = L("Layers and Perimeters");
+    def->tooltip = L("Print perimeter, infill and ironing for each island at once. If disabled, "
+                     "extrusions will be grouped by role across object islands.");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionBool(true));
+
     def = this->add("optimize_tool_order", coBool);
     def->label = L("Optimize tool order");
     def->tooltip = L("Reorder extruders to minimize layer changes. Always enabled with 'Complete individual objects'");
