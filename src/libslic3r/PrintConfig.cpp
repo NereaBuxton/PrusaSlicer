@@ -1613,6 +1613,13 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionString(""));
 
+    def = this->add("little_move_inwards", coBool);
+    def->label = L("Little move inwards");
+    def->category = L("Layers and Perimeters");
+    def->tooltip = L("Make a little move inwards before leaving loop, before travel, and before any retraction.");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionBool(true));
+
     def = this->add("remaining_times", coBool);
     def->label = L("Supports remaining times");
     def->tooltip = L("Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute"
