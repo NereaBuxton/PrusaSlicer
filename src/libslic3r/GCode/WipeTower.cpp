@@ -145,7 +145,7 @@ public:
 			// This is left zero if it is a travel move.
             float width = e * m_filpar[0].filament_area / (len * m_layer_height);
 			// Correct for the roundings of a squished extrusion.
-			width += m_layer_height * float(1. - M_PI / 4.);
+			//width += m_layer_height * float(1. - M_PI / 4.);
 			if (m_extrusions.empty() || m_extrusions.back().pos != rotated_current_pos)
 				m_extrusions.emplace_back(WipeTower::Extrusion(rotated_current_pos, 0, m_current_tool));
 			m_extrusions.emplace_back(WipeTower::Extrusion(rot, width, m_current_tool));
@@ -1154,7 +1154,7 @@ WipeTower::ToolChangeResult WipeTower::finish_layer()
     // brim (first layer only)
     if (first_layer) {
         box_coordinates box = wt_box;
-        float spacing = m_perimeter_width - m_layer_height*float(1.-M_PI_4);
+        float spacing = m_perimeter_width;
         // How many perimeters shall the brim have?
         size_t loops_num = (m_wipe_tower_brim_width + spacing/2.f) / spacing;
 
