@@ -188,7 +188,7 @@ Flow Flow::with_cross_section(float area_new) const
 
 float Flow::rounded_rectangle_extrusion_spacing(float width, float height)
 {
-    auto out = width - height * float(1. - 0.25 * PI);
+    auto out = width;
     if (out <= 0.f)
         throw FlowErrorNegativeSpacing();
     return out;
@@ -196,7 +196,7 @@ float Flow::rounded_rectangle_extrusion_spacing(float width, float height)
 
 float Flow::rounded_rectangle_extrusion_width_from_spacing(float spacing, float height)
 {
-    return float(spacing + height * (1. - 0.25 * PI));
+    return spacing;
 }
 
 float Flow::bridge_extrusion_spacing(float dmr)
@@ -211,7 +211,7 @@ double Flow::mm3_per_mm() const
         // Area of a circle with dmr of this->width.
         float((m_width * m_width) * 0.25 * PI) :
         // Rectangle with semicircles at the ends. ~ h (w - 0.215 h)
-        float(m_height * (m_width - m_height * (1. - 0.25 * PI)));
+        float(m_height * m_width);
     //assert(res > 0.);
 	if (res <= 0.)
 		throw FlowErrorNegativeFlow();
