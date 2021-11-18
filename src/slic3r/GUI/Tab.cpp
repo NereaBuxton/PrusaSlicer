@@ -1855,7 +1855,8 @@ void TabFilament::add_filament_overrides_page()
                                         "filament_retract_before_travel",
                                         "filament_retract_layer_change",
                                         "filament_wipe",
-                                        "filament_retract_before_wipe"
+                                        "filament_retract_before_wipe",
+                                        "filament_retract_wipe_speed"
                                      })
         append_single_option_line(opt_key, extruder_idx);
 }
@@ -1881,7 +1882,8 @@ void TabFilament::update_filament_overrides_page()
                                             "filament_retract_before_travel",
                                             "filament_retract_layer_change",
                                             "filament_wipe",
-                                            "filament_retract_before_wipe"
+                                            "filament_retract_before_wipe",
+                                            "filament_retract_wipe_speed"
                                         };
 
     const int extruder_idx = 0; // #ys_FIXME
@@ -2759,6 +2761,7 @@ void TabPrinter::build_unregular_pages(bool from_initial_build/* = false*/)
             optgroup->append_single_option_line("retract_layer_change", wxEmptyString, extruder_idx);
             optgroup->append_single_option_line("wipe", wxEmptyString, extruder_idx);
             optgroup->append_single_option_line("retract_before_wipe", wxEmptyString, extruder_idx);
+            optgroup->append_single_option_line("retract_wipe_speed", wxEmptyString, extruder_idx);
 
             optgroup = page->new_optgroup(L("Retraction when tool is disabled (advanced settings for multi-extruder setups)"));
             optgroup->append_single_option_line("retract_length_toolchange", wxEmptyString, extruder_idx);
@@ -2937,12 +2940,15 @@ void TabPrinter::toggle_options()
 
         // some options only apply when not using firmware retraction
         vec.resize(0);
-        vec = { "retract_speed", "deretract_speed", "retract_before_wipe", "retract_restart_extra", "wipe" };
+        vec = { "retract_speed", "deretract_speed", "retract_before_wipe", "retract_restart_extra", "wipe", "retract_wipe_speed" };
         for (auto el : vec)
             toggle_option(el, retraction && !use_firmware_retraction, i);
 
         bool wipe = m_config->opt_bool("wipe", i);
-        toggle_option("retract_before_wipe", wipe, i);
+        vec.resize(0);
+        vec = { "retract_before_wipe", "retract_wipe_speed" };
+        for (auto el : vec)
+            toggle_option(el, wipe, i);
 
         if (use_firmware_retraction && wipe) {
             //wxMessageDialog dialog(parent(),
