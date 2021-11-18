@@ -140,6 +140,7 @@ public:
 	    coordf_t 				interface_density;
 	    coordf_t 				support_spacing;
 	    coordf_t 				support_density;
+		coordf_t				support_loop_clipping_length;
 
 	    InfillPattern           base_fill_pattern;
 	    InfillPattern           interface_fill_pattern;
