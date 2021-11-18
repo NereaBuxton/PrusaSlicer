@@ -1619,6 +1619,16 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionBool(true));
 
+    def = this->add("loop_clipping_length", coPercent);
+    def->label = L("Loop clipping length");
+    def->category = L("Layers and Perimeters");
+    def->tooltip = L("When extruding a closed loop, the loop is interrupted and shortened a bit to reduce the seam. "
+                     "Percent of nozzle diameter to clip loops.");
+    def->sidetext = L("%");
+    def->min = 0;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionPercent(15));
+
     def = this->add("remaining_times", coBool);
     def->label = L("Supports remaining times");
     def->tooltip = L("Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute"
