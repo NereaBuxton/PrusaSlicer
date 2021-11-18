@@ -2574,7 +2574,7 @@ std::string GCode::extrude_loop(ExtrusionLoop loop, std::string description, dou
     // if polyline was shorter than the clipping distance we'd get a null polyline, so
     // we discard it in that case
     double clip_length = m_enable_loop_clipping ?
-        scale_(EXTRUDER_CONFIG(nozzle_diameter)) * LOOP_CLIPPING_LENGTH_OVER_NOZZLE_DIAMETER :
+        scale_(EXTRUDER_CONFIG(nozzle_diameter)) * m_config.loop_clipping_length * 0.01 :
         0;
 
     // get paths
