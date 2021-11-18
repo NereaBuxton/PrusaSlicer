@@ -1592,6 +1592,7 @@ void TabPrint::build()
         optgroup = page->new_optgroup(L("Speed for print moves"));
         optgroup->append_single_option_line("perimeter_speed");
         optgroup->append_single_option_line("small_perimeter_speed");
+        optgroup->append_single_option_line("small_perimeter_length");
         optgroup->append_single_option_line("external_perimeter_speed");
         optgroup->append_single_option_line("infill_speed");
         optgroup->append_single_option_line("solid_infill_speed");
