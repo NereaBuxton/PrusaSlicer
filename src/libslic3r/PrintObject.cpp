@@ -595,6 +595,7 @@ bool PrintObject::invalidate_state_by_config_options(
                opt_key == "interface_shells"
             || opt_key == "infill_only_where_needed"
             || opt_key == "infill_every_layers"
+            || opt_key == "infill_with_sheath"
             || opt_key == "solid_infill_every_layers"
             || opt_key == "bottom_solid_min_thickness"
             || opt_key == "top_solid_layers"
@@ -602,6 +603,7 @@ bool PrintObject::invalidate_state_by_config_options(
             || opt_key == "solid_infill_below_area"
             || opt_key == "infill_extruder"
             || opt_key == "solid_infill_extruder"
+            || opt_key == "solid_infill_adjust_spacing"
             || opt_key == "infill_extrusion_width"
             || opt_key == "ensure_vertical_shell_thickness"
             || opt_key == "bridge_angle") {
@@ -969,7 +971,7 @@ void PrintObject::process_external_surfaces()
 		}
 	    BOOST_LOG_TRIVIAL(debug) << "Collecting surfaces covered with extrusions in parallel - start";
 	    surfaces_covered.resize(m_layers.size() - 1, Polygons());
-    	auto unsupported_width = - float(scale_(0.3 * EXTERNAL_INFILL_MARGIN));
+    	auto unsupported_width = - float(scale_(0.9));
 	    tbb::parallel_for(
 	        tbb::blocked_range<size_t>(0, m_layers.size() - 1),
 	        [this, &surfaces_covered, &layer_expansions_and_voids, unsupported_width](const tbb::blocked_range<size_t>& range) {
@@ -1137,6 +1139,8 @@ void PrintObject::discover_vertical_shells()
         //FIXME Improve the heuristics for a grain size.
         size_t grain_size = std::max(num_layers / 16, size_t(1));
 
+        bool infill_sheath = m_config.infill_with_sheath;
+
         if (! top_bottom_surfaces_all_regions) {
             // This is either a single material print, or a multi-material print and interface_shells are enabled, meaning that the vertical shell thickness
             // is calculated over a single material.
@@ -1171,7 +1175,7 @@ void PrintObject::discover_vertical_shells()
         BOOST_LOG_TRIVIAL(debug) << "Discovering vertical shells for region " << region_id << " in parallel - start : ensure vertical wall thickness";
         tbb::parallel_for(
             tbb::blocked_range<size_t>(0, num_layers, grain_size),
-            [this, region_id, &cache_top_botom_regions]
+            [this, region_id, &cache_top_botom_regions, infill_sheath]
             (const tbb::blocked_range<size_t>& range) {
                 // printf("discover_vertical_shells from %d to %d\n", range.begin(), range.end());
                 for (size_t idx_layer = range.begin(); idx_layer < range.end(); ++ idx_layer) {
@@ -1237,7 +1241,7 @@ void PrintObject::discover_vertical_shells()
 								if (! holes.empty())
 									holes = intersection(holes, cache.holes);
 								if (! cache.top_surfaces.empty()) {
-		                            polygons_append(shell, cache.top_surfaces);
+		                            polygons_append(shell, shrink(cache.top_surfaces, infill_sheath ? 3.0f * min_perimeter_infill_spacing : 1.3f * min_perimeter_infill_spacing)); // offset to counteract the other offset
 		                            // Running the union_ using the Clipper library piece by piece is cheaper 
 		                            // than running the union_ all at once.
 	                               shell = union_(shell);
@@ -1256,7 +1260,7 @@ void PrintObject::discover_vertical_shells()
 								if (! holes.empty())
 									holes = intersection(holes, cache.holes);
 								if (! cache.bottom_surfaces.empty()) {
-		                            polygons_append(shell, cache.bottom_surfaces);
+		                            polygons_append(shell, shrink(cache.bottom_surfaces, infill_sheath ? 3.0f * min_perimeter_infill_spacing : 1.3f * min_perimeter_infill_spacing)); // offset to counteract the other offset
 		                            // Running the union_ using the Clipper library piece by piece is cheaper 
 		                            // than running the union_ all at once.
 		                            shell = union_(shell);
@@ -1342,7 +1346,7 @@ void PrintObject::discover_vertical_shells()
 #if 1
                     // Intentionally inflate a bit more than how much the region has been shrunk, 
                     // so there will be some overlap between this solid infill and the other infill regions (mainly the sparse infill).
-                    shell = opening(union_(shell), 0.5f * min_perimeter_infill_spacing, 0.8f * min_perimeter_infill_spacing, ClipperLib::jtSquare);
+                    shell = opening(union_(shell), 0.5f * min_perimeter_infill_spacing, infill_sheath ? 2.5f * min_perimeter_infill_spacing : 0.8f * min_perimeter_infill_spacing, ClipperLib::jtRound);
                     if (shell.empty())
                         continue;
 #else
@@ -1878,6 +1882,8 @@ void PrintObject::discover_horizontal_shells()
                             if (surface.surface_type == stInternal || surface.surface_type == stInternalSolid)
                                 polygons_append(internal, to_polygons(surface.expolygon));
                         new_internal_solid = intersection(solid, internal, ApplySafetyOffset::Yes);
+                        if (m_config.infill_with_sheath)
+                            new_internal_solid = intersection(expand(new_internal_solid, 0.75 * layerm->flow(frSolidInfill).scaled_width(), ClipperLib::jtRound), internal, ApplySafetyOffset::Yes);
                     }
                     if (new_internal_solid.empty()) {
                         // No internal solid needed on this layer. In order to decide whether to continue
@@ -1904,7 +1910,7 @@ void PrintObject::discover_horizontal_shells()
                         float margin = float(neighbor_layerm->flow(frExternalPerimeter).scaled_width());
                         Polygons too_narrow = diff(
                             new_internal_solid, 
-                            opening(new_internal_solid, margin, margin + ClipperSafetyOffset, jtMiter, 5));
+                            opening(new_internal_solid, margin, margin + ClipperSafetyOffset, ClipperLib::jtRound));
                         // Trim the regularized region by the original region.
                         if (! too_narrow.empty())
                             new_internal_solid = solid = diff(new_internal_solid, too_narrow);
@@ -1915,7 +1921,7 @@ void PrintObject::discover_horizontal_shells()
                     {
                         //FIXME Vojtech: Disable this and you will be sorry.
                         // https://github.com/prusa3d/PrusaSlicer/issues/26 bottom
-                        float margin = 3.f * layerm->flow(frSolidInfill).scaled_width(); // require at least this size
+                        float margin = m_config.infill_with_sheath ? 3.75f * layerm->flow(frSolidInfill).scaled_width() : 3.0f * layerm->flow(frSolidInfill).scaled_width(); // require at least this size
                         // we use a higher miterLimit here to handle areas with acute angles
                         // in those cases, the default miterLimit would cut the corner and we'd
                         // get a triangle in $too_narrow; if we grow it below then the shell
@@ -1923,7 +1929,7 @@ void PrintObject::discover_horizontal_shells()
                         // have the same angle, so the next shell would be grown even more and so on.
                         Polygons too_narrow = diff(
                             new_internal_solid,
-                            opening(new_internal_solid, margin, margin + ClipperSafetyOffset, ClipperLib::jtMiter, 5));
+                            opening(new_internal_solid, margin, margin + ClipperSafetyOffset, ClipperLib::jtRound));
                         if (! too_narrow.empty()) {
                             // grow the collapsing parts and add the extra area to  the neighbor layer 
                             // as well as to our original surfaces so that we support this 
@@ -1935,7 +1941,7 @@ void PrintObject::discover_horizontal_shells()
                                     polygons_append(internal, to_polygons(surface.expolygon));
                             polygons_append(new_internal_solid, 
                                 intersection(
-                                    expand(too_narrow, +margin),
+                                    expand(too_narrow, +margin, ClipperLib::jtRound),
                                     // Discard bridges as they are grown for anchoring and we can't
                                     // remove such anchors. (This may happen when a bridge is being 
                                     // anchored onto a wall where little space remains after the bridge
