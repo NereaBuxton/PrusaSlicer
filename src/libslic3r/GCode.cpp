@@ -2618,7 +2618,7 @@ std::string GCode::extrude_loop(ExtrusionLoop loop, std::string description, dou
     if (paths.empty()) return "";
 
     // apply the small perimeter speed
-    if (is_perimeter(paths.front().role()) && loop.length() <= SMALL_PERIMETER_LENGTH && speed == -1)
+    if (is_perimeter(paths.front().role()) && loop.length() <= scale_(m_config.small_perimeter_length) && speed == -1)
         speed = m_config.small_perimeter_speed.get_abs_value(m_config.perimeter_speed);
 
     // extrude along the path
