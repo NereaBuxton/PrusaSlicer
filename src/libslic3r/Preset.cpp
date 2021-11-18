@@ -440,7 +440,7 @@ static std::vector<std::string> s_Preset_print_options {
     "support_material_contact_distance", "support_material_bottom_contact_distance",
     "support_material_additional_xy_spacing", "support_material_expand_or_filter", "support_material_interface_with_sheath", "retract_skip_support_islands",
     "solid_infill_acceleration", "support_material_acceleration", "support_material_interface_acceleration",
-    "skirt_extra_loops", "skirt_extra_loop_layers", "skirt_speed", "optimize_island_extrusions",
+    "skirt_extra_loops", "skirt_extra_loop_layers", "skirt_speed", "optimize_island_extrusions", "little_move_inwards",
     "support_material_buildplate_only", "dont_support_bridges", "thick_bridges", "notes", "complete_objects", "extruder_clearance_radius",
     "extruder_clearance_height", "gcode_comments", "gcode_label_objects", "output_filename_format", "post_process", "perimeter_extruder",
     "infill_extruder", "solid_infill_extruder", "support_material_extruder", "support_material_interface_extruder",
