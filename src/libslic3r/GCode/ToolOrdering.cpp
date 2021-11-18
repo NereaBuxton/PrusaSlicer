@@ -308,7 +308,7 @@ void ToolOrdering::reorder_extruders(unsigned int last_extruder_id)
     } else
         // 1 based index
         ++ last_extruder_id;
-
+    
     for (LayerTools &lt : m_layer_tools) {
         if (lt.extruders.empty())
             continue;
@@ -318,15 +318,16 @@ void ToolOrdering::reorder_extruders(unsigned int last_extruder_id)
             if (lt.extruders.front() == 0)
                 // Pop the "don't care" extruder, the "don't care" region will be merged with the next one.
                 lt.extruders.erase(lt.extruders.begin());
-            // Reorder the extruders to start with the last one.
-            for (size_t i = 1; i < lt.extruders.size(); ++ i)
-                if (lt.extruders[i] == last_extruder_id) {
-                    // Move the last extruder to the front.
-                    memmove(lt.extruders.data() + 1, lt.extruders.data(), i * sizeof(unsigned int));
-                    lt.extruders.front() = last_extruder_id;
-                    break;
-                }
-
+            if (!m_print_config_ptr || m_print_config_ptr && m_print_config_ptr->optimize_tool_order) {
+                // Reorder the extruders to start with the last one.
+                for (size_t i = 1; i < lt.extruders.size(); ++i)
+                    if (lt.extruders[i] == last_extruder_id) {
+                        // Move the last extruder to the front.
+                        memmove(lt.extruders.data() + 1, lt.extruders.data(), i * sizeof(unsigned int));
+                        lt.extruders.front() = last_extruder_id;
+                        break;
+                    }
+            }
             // On first layer with wipe tower, prefer a soluble extruder
             // at the beginning, so it is not wiped on the first layer.
             if (lt == m_layer_tools[0] && m_print_config_ptr && m_print_config_ptr->wipe_tower) {
