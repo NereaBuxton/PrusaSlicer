@@ -72,9 +72,11 @@
 
 static constexpr const float TRACKBALLSIZE = 0.8f;
 
-static constexpr const float DEFAULT_BG_DARK_COLOR[3] = { 0.478f, 0.478f, 0.478f };
-static constexpr const float DEFAULT_BG_LIGHT_COLOR[3] = { 0.753f, 0.753f, 0.753f };
+static constexpr const float DEFAULT_BG_DARK_COLOR[3] = { 0.1f, 0.1f, 0.1f };
+static constexpr const float DEFAULT_BG_MED_COLOR[3] = { 0.25f, 0.25f, 0.25f };
+static constexpr const float DEFAULT_BG_LIGHT_COLOR[3] = { 0.666f, 0.666f, 0.666f };
 static constexpr const float ERROR_BG_DARK_COLOR[3] = { 0.478f, 0.192f, 0.039f };
+static constexpr const float ERROR_BG_MED_COLOR[3] = { 0.616f, 0.192f, 0.039f };
 static constexpr const float ERROR_BG_LIGHT_COLOR[3] = { 0.753f, 0.192f, 0.039f };
 //static constexpr const float AXES_COLOR[3][3] = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
 
@@ -5054,12 +5056,24 @@ void GLCanvas3D::_render_background() const
     ::glVertex2f(1.0f, -1.0f);
 
     if (use_error_color)
+        ::glColor3fv(ERROR_BG_MED_COLOR);
+    else
+        ::glColor3fv(DEFAULT_BG_MED_COLOR);
+
+    ::glVertex2f(1.0f, 0.166f);
+    ::glVertex2f(-1.0f, 0.166f);
+
+    ::glVertex2f(-1.0f, 0.166f);
+    ::glVertex2f(1.0f, 0.166f);
+
+    if (use_error_color)
         ::glColor3fv(ERROR_BG_LIGHT_COLOR);
     else
         ::glColor3fv(DEFAULT_BG_LIGHT_COLOR);
 
     ::glVertex2f(1.0f, 1.0f);
     ::glVertex2f(-1.0f, 1.0f);
+
     glsafe(::glEnd());
 
     glsafe(::glEnable(GL_DEPTH_TEST));
