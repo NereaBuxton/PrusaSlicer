@@ -17,16 +17,17 @@ class Linef3;
 class ModelObject;
 
 namespace GUI {
-
-static const std::array<float, 4> DEFAULT_BASE_COLOR = { 0.625f, 0.625f, 0.625f, 1.0f };
-static const std::array<float, 4> DEFAULT_DRAG_COLOR = { 1.0f, 1.0f, 1.0f, 1.0f };
-static const std::array<float, 4> DEFAULT_HIGHLIGHT_COLOR = { 1.0f, 0.38f, 0.0f, 1.0f };
+    
+static const std::array<float, 4> DEFAULT_BASE_COLOR = { 0.631f, 0.631f, 0.631f, 1.0f }; // 63% white
+static const std::array<float, 4> DEFAULT_DRAG_COLOR = { 0.980f, 0.980f, 0.980f, 1.0f }; // 98% white
+static const std::array<float, 4> DEFAULT_HIGHLIGHT_COLOR = { 0.796f, 0.435f, 0.063f, 1.0f }; // categorical 6
 static const std::array<std::array<float, 4>, 3> AXES_COLOR = {{
-                                                                { 0.75f, 0.0f, 0.0f, 1.0f },
-                                                                { 0.0f, 0.75f, 0.0f, 1.0f },
-                                                                { 0.0f, 0.0f, 0.75f, 1.0f }
+                                                                { 0.855f, 0.204f, 0.565f, 1.0f }, // categorical 8
+                                                                { 0.278f, 0.886f, 0.435f, 1.0f }, // categorical 12
+                                                                //{ 0.098f, 0.753f, 0.780f, 1.0f }  // categorical 11 Option 1
+                                                                { 0.153f, 0.502f, 0.922f, 1.0f }  // categorical 3 Option 2
                                                               }};
-static const std::array<float, 4> CONSTRAINED_COLOR = { 0.5f, 0.5f, 0.5f, 1.0f };
+static const std::array<float, 4> CONSTRAINED_COLOR = { 0.502f, 0.502f, 0.502f, 1.0f }; // 50% neutral
 
 class ImGuiWrapper;
 class GLCanvas3D;

@@ -34,15 +34,15 @@ BoundingBox get_extents(const SurfacesPtr &surfaces)
 const char* surface_type_to_color_name(const SurfaceType surface_type)
 {
     switch (surface_type) {
-        case stTop:             return "rgb(255,0,0)"; // "red";
-        case stBottom:          return "rgb(0,255,0)"; // "green";
-        case stBottomBridge:    return "rgb(0,0,255)"; // "blue";
-        case stInternal:        return "rgb(255,255,128)"; // yellow 
-        case stInternalSolid:   return "rgb(255,0,255)"; // magenta
-        case stInternalBridge:  return "rgb(0,255,255)";
-        case stInternalVoid:    return "rgb(128,128,128)";
-        case stPerimeter:       return "rgb(128,0,0)"; // maroon
-        default:                return "rgb(64,64,64)";
+        case stTop:             return "rgb(218,52,144)"; // "red"; // categorical 8
+        case stBottom:          return "rgb(71,226,111)"; // "green"; // categorical 12
+        case stBottomBridge:    return "rgb(39,128,235)"; // "blue"; // categorical 3
+        case stInternal:        return "rgb(223,191,25)"; // yellow  // categorical 1
+        case stInternalSolid:   return "rgb(111,56,177)"; // magenta // categorical 4
+        case stInternalBridge:  return "rgb(25,192,199)"; // cyan // categorical 11
+        case stInternalVoid:    return "rgb(128,128,128)"; // 50% neutral
+        case stPerimeter:       return "rgb(232,135,26)"; // maroon // categorical 2
+        default:                return "rgb(64,64,64)"; // 25% black
     };
 }
 
