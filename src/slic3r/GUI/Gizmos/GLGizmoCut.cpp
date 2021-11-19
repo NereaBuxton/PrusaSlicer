@@ -23,7 +23,7 @@ namespace GUI {
 
 const double GLGizmoCut::Offset = 10.0;
 const double GLGizmoCut::Margin = 20.0;
-const std::array<float, 4> GLGizmoCut::GrabberColor = { 1.0, 0.5, 0.0, 1.0 };
+const std::array<float, 4> GLGizmoCut::GrabberColor = { 0.910, 0.529, 0.102, 1.0 }; // categorical 3 colortag
 
 GLGizmoCut::GLGizmoCut(GLCanvas3D& parent, const std::string& icon_filename, unsigned int sprite_id)
     : GLGizmoBase(parent, icon_filename, sprite_id)
@@ -103,7 +103,7 @@ void GLGizmoCut::on_render()
 
     // Draw the cutting plane
     ::glBegin(GL_QUADS);
-    ::glColor4f(0.8f, 0.8f, 0.8f, 0.5f);
+    ::glColor4f(0.941f, 0.941f, 0.941f, 0.502f); // 94.1% mono tint, 50.2% alpha colortag
     ::glVertex3f(min_x, min_y, plane_center.z());
     ::glVertex3f(max_x, min_y, plane_center.z());
     ::glVertex3f(max_x, max_y, plane_center.z());
@@ -122,7 +122,7 @@ void GLGizmoCut::on_render()
     glsafe(::glClear(GL_DEPTH_BUFFER_BIT));
 
     glsafe(::glLineWidth(m_hover_id != -1 ? 2.0f : 1.5f));
-    glsafe(::glColor3f(1.0, 1.0, 0.0));
+    glsafe(::glColor3f(0.875, 0.749, 0.098)); // categorical 9 colortag
     ::glBegin(GL_LINES);
     ::glVertex3dv(plane_center.data());
     ::glVertex3dv(m_grabbers[0].center.data());
@@ -300,7 +300,7 @@ void GLGizmoCut::update_contours()
             const Polygons polys = slice_mesh(m_cut_contours.mesh.its, m_cut_z, slicing_params);
             if (!polys.empty()) {
                 m_cut_contours.contours.init_from(polys, static_cast<float>(m_cut_z));
-                m_cut_contours.contours.set_color(-1, { 1.0f, 1.0f, 1.0f, 1.0f });
+                m_cut_contours.contours.set_color(-1, { 0.980f, 0.980f, 0.980f, 1.0f }); // 98% near-white colortag
             }
         }
         else if (box.center() != m_cut_contours.position) {

@@ -1162,10 +1162,10 @@ bool GLGizmosManager::generate_icons_texture() const
         }
     }
 
-    std::vector<std::pair<int, bool>> states;
+    std::vector<std::pair<int, bool>> states; // left side duh
     states.push_back(std::make_pair(1, false)); // Activable
     states.push_back(std::make_pair(0, false)); // Hovered
-    states.push_back(std::make_pair(0, true));  // Selected
+    states.push_back(std::make_pair(0, false));  // Selected
     states.push_back(std::make_pair(2, false)); // Disabled
     states.push_back(std::make_pair(0, false)); // HighlightedShown
     states.push_back(std::make_pair(2, false)); // HighlightedHidden

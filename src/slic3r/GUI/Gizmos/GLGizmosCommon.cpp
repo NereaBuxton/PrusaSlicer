@@ -214,7 +214,7 @@ void InstancesHider::render_cut() const
 
         glsafe(::glPushMatrix());
         if (mv->is_model_part())
-            glsafe(::glColor3f(0.8f, 0.3f, 0.0f));
+            glsafe(::glColor3f(0.796f, 0.435f, 0.098f)); // categorical 10 colortag
         else {
             const std::array<float, 4>& c = color_from_model_volume(*mv);
             glsafe(::glColor4f(c[0], c[1], c[2], c[3]));
@@ -417,7 +417,7 @@ void ObjectClipper::render_cut() const
         clipper->set_transformation(trafo);
         clipper->set_limiting_plane(ClippingPlane(Vec3d::UnitZ(), -SINKING_Z_THRESHOLD));
         glsafe(::glPushMatrix());
-        glsafe(::glColor3f(1.0f, 0.37f, 0.0f));
+        glsafe(::glColor3f(0.910f, 0.529f, 0.102f)); // categorical 3 colortag
         clipper->render_cut();
         glsafe(::glPopMatrix());
 
@@ -530,7 +530,7 @@ void SupportsClipper::render_cut() const
     m_clipper->set_transformation(supports_trafo);
 
     glsafe(::glPushMatrix());
-    glsafe(::glColor3f(1.0f, 0.f, 0.37f));
+    glsafe(::glColor3f(0.855f, 0.204f, 0.565f)); // categorical 4 colortag
     m_clipper->render_cut();
     glsafe(::glPopMatrix());
 }

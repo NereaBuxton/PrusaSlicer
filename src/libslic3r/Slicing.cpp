@@ -637,16 +637,17 @@ int generate_layer_height_texture(
 	const std::vector<coordf_t> &layers,
 	void *data, int rows, int cols, bool level_of_detail_2nd_level)
 {
-// https://github.com/aschn/gnuplot-colorbrewer
+    // using diverging orange-yellow-seafoam https://spectrum.adobe.com/page/color-for-data-visualization/
     std::vector<Vec3crd> palette_raw;
-    palette_raw.push_back(Vec3crd(0x01A, 0x098, 0x050));
-    palette_raw.push_back(Vec3crd(0x066, 0x0BD, 0x063));
-    palette_raw.push_back(Vec3crd(0x0A6, 0x0D9, 0x06A));
-    palette_raw.push_back(Vec3crd(0x0D9, 0x0F1, 0x0EB));
-    palette_raw.push_back(Vec3crd(0x0FE, 0x0E6, 0x0EB));
-    palette_raw.push_back(Vec3crd(0x0FD, 0x0AE, 0x061));
-    palette_raw.push_back(Vec3crd(0x0F4, 0x06D, 0x043));
-    palette_raw.push_back(Vec3crd(0x0D7, 0x030, 0x027));
+    palette_raw.push_back(Vec3crd(0x0BD, 0x065, 0x01A)); // diverging o-y-s -4 colortag
+    palette_raw.push_back(Vec3crd(0x0DD, 0x086, 0x029)); // diverging o-y-s -3 colortag
+    palette_raw.push_back(Vec3crd(0x0F5, 0x0AD, 0x052)); // diverging o-y-s -2 colortag
+    palette_raw.push_back(Vec3crd(0x0FA, 0x0D6, 0x093)); // diverging o-y-s -1 colortag
+    palette_raw.push_back(Vec3crd(0x0FA, 0x0FA, 0x0E0)); // diverging o-y-s 0 colortag
+    palette_raw.push_back(Vec3crd(0x0BB, 0x0E4, 0x0D1)); // diverging o-y-s +1 colortag
+    palette_raw.push_back(Vec3crd(0x076, 0x0C7, 0x0BE)); // diverging o-y-s +2 colortag
+    palette_raw.push_back(Vec3crd(0x03E, 0x0A8, 0x0A6)); // diverging o-y-s +3 colortag
+    palette_raw.push_back(Vec3crd(0x020, 0x082, 0x088)); // diverging o-y-s +4 colortag
 
     // Clear the main texture and the 2nd LOD level.
 //	memset(data, 0, rows * cols * (level_of_detail_2nd_level ? 5 : 4));
@@ -693,9 +694,9 @@ int generate_layer_height_texture(
 			assert(row >= 0 && row < rows);
 			assert(col >= 0 && col < cols);
             unsigned char *ptr = (unsigned char*)data + (row * cols + col) * 4;
-            ptr[0] = (unsigned char)std::clamp(int(floor(color(0) + 0.5)), 0, 255);
-            ptr[1] = (unsigned char)std::clamp(int(floor(color(1) + 0.5)), 0, 255);
-            ptr[2] = (unsigned char)std::clamp(int(floor(color(2) + 0.5)), 0, 255);
+            ptr[0] = (unsigned char)std::clamp(int(floor(color(0) + 0.5)), 25, 250);
+            ptr[1] = (unsigned char)std::clamp(int(floor(color(1) + 0.5)), 25, 250);
+            ptr[2] = (unsigned char)std::clamp(int(floor(color(2) + 0.5)), 25, 250);
             ptr[3] = 255;
             if (col == 0 && row > 0) {
                 // Duplicate the first value in a row as a last value of the preceding row.
@@ -725,9 +726,9 @@ int generate_layer_height_texture(
     			assert(row >= 0 && row < rows/2);
     			assert(col >= 0 && col < cols/2);
                 unsigned char *ptr = data1 + (row * cols1 + col) * 4;
-                ptr[0] = (unsigned char)std::clamp(int(floor(color(0) + 0.5)), 0, 255);
-                ptr[1] = (unsigned char)std::clamp(int(floor(color(1) + 0.5)), 0, 255);
-                ptr[2] = (unsigned char)std::clamp(int(floor(color(2) + 0.5)), 0, 255);
+                ptr[0] = (unsigned char)std::clamp(int(floor(color(0) + 0.5)), 25, 250);
+                ptr[1] = (unsigned char)std::clamp(int(floor(color(1) + 0.5)), 25, 250);
+                ptr[2] = (unsigned char)std::clamp(int(floor(color(2) + 0.5)), 25, 250);
                 ptr[3] = 255;
                 if (col == 0 && row > 0) {
                     // Duplicate the first value in a row as a last value of the preceding row.

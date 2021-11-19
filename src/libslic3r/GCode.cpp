@@ -479,7 +479,7 @@ namespace Slic3r {
         return gcode;
     }
 
-    const std::vector<std::string> ColorPrintColors::Colors = { "#C0392B", "#E67E22", "#F1C40F", "#27AE60", "#1ABC9C", "#2980B9", "#9B59B6" };
+    const std::vector<std::string> ColorPrintColors::Colors = { "#C0392B", "#E67E22", "#F1C419", "#27AE60", "#1ABC9C", "#2980B9", "#9B59B6" }; // Ontological rainbow: red, orange, yellow, green, teal, blue, purple colortag
 
 #define EXTRUDER_CONFIG(OPT) m_config.OPT.get_at(m_writer.extruder()->id())
 
