@@ -16,7 +16,7 @@ struct Camera
     static double FrustrumMinZRange;
     static double FrustrumMinNearZ;
     static double FrustrumZMargin;
-    static double MaxFovDeg;
+    //static double MaxFovDeg;
 
     enum class EType : unsigned char
     {

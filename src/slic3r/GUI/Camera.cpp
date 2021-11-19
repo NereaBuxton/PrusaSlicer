@@ -13,13 +13,13 @@
 namespace Slic3r {
 namespace GUI {
 
-const double Camera::DefaultDistance = 1000.0;
+const double Camera::DefaultDistance = 300.0;
 const double Camera::DefaultZoomToBoxMarginFactor = 1.025;
 const double Camera::DefaultZoomToVolumesMarginFactor = 1.025;
 double Camera::FrustrumMinZRange = 50.0;
 double Camera::FrustrumMinNearZ = 100.0;
 double Camera::FrustrumZMargin = 10.0;
-double Camera::MaxFovDeg = 60.0;
+//double Camera::MaxFovDeg = 60.0;
 
 std::string Camera::get_type_as_string() const
 {
