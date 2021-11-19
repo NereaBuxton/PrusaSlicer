@@ -239,7 +239,7 @@ void BitmapComboBox::DrawBackground_(wxDC& dc, const wxRect& rect, int WXUNUSED(
     {
         const int vSizeDec = 0;  // Vertical size reduction of selection rectangle edges
 
-        dc.SetTextForeground(wxGetApp().get_label_highlight_clr());
+        dc.SetTextForeground(wxGetApp().get_label_clr_default());
 
         wxColour selCol = wxGetApp().get_highlight_default_clr();
         dc.SetPen(selCol);
@@ -251,7 +251,7 @@ void BitmapComboBox::DrawBackground_(wxDC& dc, const wxRect& rect, int WXUNUSED(
     }
     else
     {
-        dc.SetTextForeground(flags & ODCB_PAINTING_DISABLED ? wxColour(108,108,108) : wxGetApp().get_label_clr_default());
+        dc.SetTextForeground(flags & ODCB_PAINTING_DISABLED ? wxColour(109,109,109) : wxGetApp().get_label_clr_default()); // 43% black
 
         wxColour selCol = flags & ODCB_PAINTING_DISABLED ? 
 #ifdef _MSW_DARK_MODE

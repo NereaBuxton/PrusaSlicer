@@ -915,7 +915,7 @@ void Preview::load_print_as_fff(bool keep_z_range)
                 color_print_values = wxGetApp().plater()->model().custom_gcode_per_print_z.gcodes;
             else
                 color_print_values = m_canvas->get_custom_gcode_per_print_z();
-            colors.push_back("#808080"); // gray color for pause print or custom G-code 
+            colors.push_back("#808080"); // gray color for pause print or custom G-code // 50% shade
         }
     }
     else if (gcode_preview_data_valid || gcode_view_type == GCodeViewer::EViewType::Tool) {

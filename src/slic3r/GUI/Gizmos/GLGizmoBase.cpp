@@ -20,7 +20,7 @@ GLGizmoBase::Grabber::Grabber()
     , dragging(false)
     , enabled(true)
 {
-    color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    color = { 0.980f, 0.980f, 0.980f, 0.980f }; // 98% white
 }
 
 void GLGizmoBase::Grabber::render(bool hover, float size) const

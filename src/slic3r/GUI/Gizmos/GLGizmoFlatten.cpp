@@ -75,9 +75,9 @@ void GLGizmoFlatten::on_render()
             update_planes();
         for (int i = 0; i < (int)m_planes.size(); ++i) {
             if (i == m_hover_id)
-                glsafe(::glColor4f(0.9f, 0.9f, 0.9f, 0.75f));
+                glsafe(::glColor4f(0.882f, 0.882f, 0.882f, 0.75f)); // 88% white 75% alpha
             else
-                glsafe(::glColor4f(0.9f, 0.9f, 0.9f, 0.5f));
+                glsafe(::glColor4f(0.882f, 0.882f, 0.882f, 0.5f)); // 88% white 50% alpha
 
             if (m_planes[i].vbo.has_VBOs())
                 m_planes[i].vbo.render();

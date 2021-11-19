@@ -150,20 +150,20 @@ void GLGizmoSlaSupports::render_points(const Selection& selection, bool picking)
             render_color = picking_color_component(i);
         else {
             if (size_t(m_hover_id) == i && m_editing_mode) // ignore hover state unless editing mode is active
-                render_color = { 0.f, 1.f, 1.f, 1.f };
+                render_color = { 0.153f, 0.502f, 0.922f, 1.0f }; // categorical 3
             else { // neigher hover nor picking
                 bool supports_new_island = m_lock_unique_islands && support_point.is_new_island;
                 if (m_editing_mode) {
                     if (point_selected)
-                        render_color = { 1.f, 0.3f, 0.3f, 1.f};
+                        render_color = { 0.910f, 0.529f, 0.102f, 1.0f}; // categorical 2
                     else
                         if (supports_new_island)
-                            render_color = { 0.3f, 0.3f, 1.f, 1.f };
+                            render_color = { 0.098f, 0.753f, 0.780f, 1.0f }; // categorical 11
                         else
-                            render_color = { 0.7f, 0.7f, 0.7f, 1.f };
+                            render_color = { 0.749f, 0.749f, 0.749f, 1.0f }; // 75% white
                 }
                 else
-                    render_color = { 0.5f, 0.5f, 0.5f, 1.f };
+                    render_color = { 0.502f, 0.502f, 0.502f, 1.0f }; // 50% shade
             }
         }
 
@@ -218,11 +218,11 @@ void GLGizmoSlaSupports::render_points(const Selection& selection, bool picking)
     }
 
     // Now render the drain holes:
-    if (has_holes && ! picking) {
-        render_color[0] = 0.7f;
-        render_color[1] = 0.7f;
-        render_color[2] = 0.7f;
-        render_color[3] = 0.7f;
+    if (has_holes && !picking) {
+        render_color[0] = 0.749f; // 75% white 75% alpha
+        render_color[1] = 0.749f;
+        render_color[2] = 0.749f;
+        render_color[3] = 0.749f;
         const_cast<GLModel*>(&m_cylinder)->set_color(-1, render_color);
         if (shader)
             shader->set_uniform("emission_factor", 0.5f);
