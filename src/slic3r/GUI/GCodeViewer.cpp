@@ -211,13 +211,13 @@ void GCodeViewer::SequentialRangeCap::reset() {
     buffer = nullptr;
     ibo = 0;
     vbo = 0;
-    color = { 0.0f, 0.0f, 0.0f, 1.0f };
+    color = { 0.098f, 0.098f, 0.098f, 1.0f }; // 9.8% black
 }
 
 void GCodeViewer::SequentialView::Marker::init()
 {
     m_model.init_from(stilized_arrow(16, 2.0f, 4.0f, 1.0f, 8.0f));
-    m_model.set_color(-1, { 1.0f, 1.0f, 1.0f, 0.5f });
+    m_model.set_color(-1, { 0.980f, 0.980f, 0.980f, 0.5f }); // 98% white
 }
 
 void GCodeViewer::SequentialView::Marker::set_world_position(const Vec3f& position)
@@ -345,12 +345,12 @@ void GCodeViewer::SequentialView::GCodeWindow::render(float top, float bottom, u
         }
         return ret;
     };
-
+    
     static const ImVec4 LINE_NUMBER_COLOR = ImGuiWrapper::COL_ORANGE_LIGHT;
     static const ImVec4 SELECTION_RECT_COLOR = ImGuiWrapper::COL_ORANGE_DARK;
-    static const ImVec4 COMMAND_COLOR = { 0.8f, 0.8f, 0.0f, 1.0f };
-    static const ImVec4 PARAMETERS_COLOR = { 1.0f, 1.0f, 1.0f, 1.0f };
-    static const ImVec4 COMMENT_COLOR = { 0.7f, 0.7f, 0.7f, 1.0f };
+    static const ImVec4 COMMAND_COLOR = { 0.875f, 0.749f, 0.098f, 1.0f }; // categorical 1
+    static const ImVec4 PARAMETERS_COLOR = { 0.980f, 0.980f, 0.980f, 0.980f }; // 98% white
+    static const ImVec4 COMMENT_COLOR = { 0.753f, 0.753f, 0.753f, 1.0f }; // 75% white
 
     if (!m_visible || m_filename.empty() || m_lines_ends.empty() || curr_line_id == 0)
         return;
@@ -476,54 +476,61 @@ void GCodeViewer::SequentialView::render(float legend_height) const
 }
 
 const std::vector<GCodeViewer::Color> GCodeViewer::Extrusion_Role_Colors {{
-    { 0.90f, 0.70f, 0.70f, 1.0f },   // erNone
-    { 1.00f, 0.90f, 0.30f, 1.0f },   // erPerimeter
-    { 1.00f, 0.49f, 0.22f, 1.0f },   // erExternalPerimeter
-    { 0.12f, 0.12f, 1.00f, 1.0f },   // erOverhangPerimeter
-    { 0.69f, 0.19f, 0.16f, 1.0f },   // erInternalInfill
-    { 0.59f, 0.33f, 0.80f, 1.0f },   // erSolidInfill
-    { 0.94f, 0.25f, 0.25f, 1.0f },   // erTopSolidInfill
-    { 1.00f, 0.55f, 0.41f, 1.0f },   // erIroning
-    { 0.30f, 0.50f, 0.73f, 1.0f },   // erBridgeInfill
-    { 1.00f, 1.00f, 1.00f, 1.0f },   // erGapFill
-    { 0.00f, 0.53f, 0.43f, 1.0f },   // erSkirt
-    { 0.00f, 1.00f, 0.00f, 1.0f },   // erSupportMaterial
-    { 0.00f, 0.50f, 0.00f, 1.0f },   // erSupportMaterialInterface
-    { 0.70f, 0.89f, 0.67f, 1.0f },   // erWipeTower
-    { 0.37f, 0.82f, 0.58f, 1.0f },   // erCustom
-    { 0.00f, 0.00f, 0.00f, 1.0f }    // erMixed
+    // categorical colors: https://spectrum.adobe.com/page/color-for-data-visualization/
+    { 0.502f, 0.502f, 0.502f, 1.0f },   // erNone: 50% neutral
+    { 0.875f, 0.749f, 0.098f, 1.0f },   // erPerimeter: categorical 1
+    { 0.910f, 0.529f, 0.102f, 1.0f },   // erExternalPerimeter: categorical 2
+    { 0.153f, 0.502f, 0.922f, 1.0f },   // erOverhangPerimeter: categorical 3
+    //{ 0.435f, 0.220f, 0.694f, 1.0f },   // erInternalInfill: categorical 4 Option 1
+    { 0.855f, 0.204f, 0.565f, 1.0f },   // erInternalInfill: categorical 8 Option 2
+    //{ 0.318f, 0.267f, 0.827f, 1.0f },   // erSolidInfill: categorical 5 Option 1
+    { 0.435f, 0.220f, 0.694f, 1.0f },   // erSolidInfill: categorical 4 Option 2
+    { 0.796f, 0.435f, 0.063f, 1.0f },   // erTopSolidInfill: categorical 6
+    { 0.910f, 0.529f, 0.102f, 1.0f },   // erIroning: erExternalPerimeter: categorical 2
+    { 0.565f, 0.537f, 0.980f, 1.0f },   // erBridgeInfill: categorical 7
+    { 0.980f, 0.980f, 0.980f, 1.0f },   // erGapFill: 98% white (max color brightness)
+    //{ 0.855f, 0.204f, 0.565f, 1.0f },   // erSkirt: categorical 8 Option 1
+    { 0.318f, 0.267f, 0.827f, 1.0f },   // erSkirt: categorical 5 Option 2
+    //{ 0.608f, 0.925f, 0.329f, 1.0f },   // erSupportMaterial: categorical 9 Option 1
+    { 0.098f, 0.753f, 0.780f, 1.0f },   // erSupportMaterial: categorical 11 Option 2
+    { 0.149f, 0.553f, 0.424f, 1.0f },   // erSupportMaterialInterface: categorical 10
+    //{ 0.098f, 0.753f, 0.780f, 1.0f },   // erWipeTower: categorical 11 Option 1
+    { 0.608f, 0.925f, 0.329f, 1.0f },   // erWipeTower: categorical 9 Option 2
+
+    { 0.278f, 0.886f, 0.435f, 1.0f },   // erCustom: categorical 12
+    { 0.098f, 0.098f, 0.098f, 1.0f }    // erMixed: 9.8% black (min color brightness)
 }};
 
 const std::vector<GCodeViewer::Color> GCodeViewer::Options_Colors {{
-    { 0.803f, 0.135f, 0.839f, 1.0f },   // Retractions
-    { 0.287f, 0.679f, 0.810f, 1.0f },   // Unretractions
-    { 0.900f, 0.900f, 0.900f, 1.0f },   // Seams
-    { 0.758f, 0.744f, 0.389f, 1.0f },   // ToolChanges
-    { 0.856f, 0.582f, 0.546f, 1.0f },   // ColorChanges
-    { 0.322f, 0.942f, 0.512f, 1.0f },   // PausePrints
-    { 0.886f, 0.825f, 0.262f, 1.0f }    // CustomGCodes
+    { 0.980f, 0.839f, 0.576f, 1.0f },   // Retractions: diverging orange-yellow-seafoam -1
+    { 0.733f, 0.894f, 0.820f, 1.0f },   // Unretractions: diverging orange-yellow-seafoam +1
+    { 0.875f, 0.749f, 0.098f, 1.0f },   // Seams: categorical 1
+    { 0.942f, 0.942f, 0.942f, 1.0f },   // ToolChanges: 94% white
+    { 0.753f, 0.753f, 0.753f, 1.0f },   // ColorChanges: 75% white
+    { 0.631f, 0.631f, 0.631f, 1.0f },   // PausePrints: 63% white
+    { 0.278f, 0.886f, 0.435f, 1.0f }    // CustomGCodes: categorical 12
 }};
 
 const std::vector<GCodeViewer::Color> GCodeViewer::Travel_Colors {{
-    { 0.219f, 0.282f, 0.609f, 1.0f }, // Move
-    { 0.112f, 0.422f, 0.103f, 1.0f }, // Extrude
-    { 0.505f, 0.064f, 0.028f, 1.0f }  // Retract
+    { 0.980f, 0.980f, 0.878f, 1.0f }, // Move: diverging orange-yellow-seafoam 0
+    { 0.463f, 0.780f, 0.745f, 1.0f }, // Extrude: diverging orange-yellow-seafoam 2
+    { 0.961f, 0.678f, 0.322f, 1.0f }  // Retract: diverging orange-yellow-seafoam -2
 }};
 
 #if 1
 // Normal ranges
 const std::vector<GCodeViewer::Color> GCodeViewer::Range_Colors {{
-    { 0.043f, 0.173f, 0.478f, 1.0f }, // bluish
-    { 0.075f, 0.349f, 0.522f, 1.0f },
-    { 0.110f, 0.533f, 0.569f, 1.0f },
-    { 0.016f, 0.839f, 0.059f, 1.0f },
-    { 0.667f, 0.949f, 0.000f, 1.0f },
-    { 0.988f, 0.975f, 0.012f, 1.0f },
-    { 0.961f, 0.808f, 0.039f, 1.0f },
-    { 0.890f, 0.533f, 0.125f, 1.0f },
-    { 0.820f, 0.408f, 0.188f, 1.0f },
-    { 0.761f, 0.322f, 0.235f, 1.0f },
-    { 0.581f, 0.149f, 0.087f, 1.0f }  // reddish
+    { 0.980f, 0.980f, 0.749f, 1.0f }, // min
+    { 0.980f, 0.871f, 0.627f, 1.0f }, // sequential magma visual spectrum
+    { 0.980f, 0.749f, 0.518f, 1.0f }, // https://spectrum.adobe.com/page/color-for-data-visualization/
+    { 0.980f, 0.624f, 0.427f, 1.0f },
+    { 0.980f, 0.498f, 0.369f, 1.0f },
+    { 0.945f, 0.376f, 0.365f, 1.0f },
+    { 0.871f, 0.286f, 0.408f, 1.0f },
+    { 0.769f, 0.235f, 0.459f, 1.0f },
+    { 0.659f, 0.196f, 0.490f, 1.0f },
+    { 0.549f, 0.161f, 0.506f, 1.0f },
+    { 0.447f, 0.122f, 0.506f, 1.0f }  // max
 }};
 #else
 // Detailed ranges
@@ -552,8 +559,8 @@ const std::vector<GCodeViewer::Color> GCodeViewer::Range_Colors{ {
 } };
 #endif
 
-const GCodeViewer::Color GCodeViewer::Wipe_Color = { 1.0f, 1.0f, 0.0f, 1.0f };
-const GCodeViewer::Color GCodeViewer::Neutral_Color = { 0.25f, 0.25f, 0.25f, 1.0f };
+const GCodeViewer::Color GCodeViewer::Wipe_Color = { 0.875f, 0.749f, 0.098f, 1.0f }; // categorical 1
+const GCodeViewer::Color GCodeViewer::Neutral_Color = { 0.631f, 0.631f, 0.631f, 1.0f }; // 63% white
 
 GCodeViewer::GCodeViewer()
 {
@@ -731,7 +738,7 @@ void GCodeViewer::refresh(const GCodeProcessorResult& gcode_result, const std::v
 
     // ensure there are enough colors defined
     while (m_tool_colors.size() < std::max(size_t(1), gcode_result.extruders_count))
-        m_tool_colors.push_back(decode_color("#FF8000"));
+        m_tool_colors.push_back(decode_color("#E8871A")); // categorical 2
 
     // update ranges for coloring / legend
     m_extrusions.reset_ranges();
@@ -2133,13 +2140,13 @@ void GCodeViewer::refresh_render_paths(bool keep_sequential_current_first, bool 
         case EViewType::Tool:           { color = m_tool_colors[path.extruder_id]; break; }
         case EViewType::ColorPrint:     {
             if (path.cp_color_id >= static_cast<unsigned char>(m_tool_colors.size()))
-                color = { 0.5f, 0.5f, 0.5f, 1.0f };
+                color = { 0.502f, 0.502f, 0.502f, 1.0f }; // 50% neutral
             else
                 color = m_tool_colors[path.cp_color_id];
 
             break;
         }
-        default: { color = { 1.0f, 1.0f, 1.0f, 1.0f }; break; }
+        default: { color = { 0.980f, 0.980f, 0.980f, 1.0f }; break; } // 98% white
         }
 
         return color;
@@ -2367,7 +2374,7 @@ void GCodeViewer::refresh_render_paths(bool keep_sequential_current_first, bool 
             break;
         }
         case EMoveType::Wipe: { color = Wipe_Color; break; }
-        default: { color = { 0.0f, 0.0f, 0.0f, 1.0f }; break; }
+        default: { color = { 0.098f, 0.098f, 0.098f, 1.0f }; break; } // 9.8% black
         }
 
         RenderPath key{ tbuffer_id, color, static_cast<unsigned int>(ibuffer_id), path_id };
@@ -2806,14 +2813,14 @@ void GCodeViewer::render_toolpaths()
             shader->start_using();
 
             if (buffer.render_primitive_type == TBuffer::ERenderPrimitiveType::InstancedModel) {
-                shader->set_uniform("emission_factor", 0.25f);
+                //shader->set_uniform("emission_factor", 0.25f);
                 render_as_instanced_model(buffer, *shader);
-                shader->set_uniform("emission_factor", 0.0f);
+                //shader->set_uniform("emission_factor", 0.0f);
             }
             else if (buffer.render_primitive_type == TBuffer::ERenderPrimitiveType::BatchedModel) {
-                shader->set_uniform("emission_factor", 0.25f);
+                //shader->set_uniform("emission_factor", 0.25f);
                 render_as_batched_model(buffer, *shader);
-                shader->set_uniform("emission_factor", 0.0f);
+                //shader->set_uniform("emission_factor", 0.0f);
             }
             else {
                 switch (buffer.render_primitive_type) {
@@ -3931,7 +3938,7 @@ GCodeViewer::Color GCodeViewer::option_color(EMoveType move_type) const
     case EMoveType::Retract:      { return Options_Colors[static_cast<unsigned int>(EOptionsColors::Retractions)]; }
     case EMoveType::Unretract:    { return Options_Colors[static_cast<unsigned int>(EOptionsColors::Unretractions)]; }
     case EMoveType::Seam:         { return Options_Colors[static_cast<unsigned int>(EOptionsColors::Seams)]; }
-    default:                      { return { 0.0f, 0.0f, 0.0f, 1.0f }; }
+    default:                      { return { 0.098f, 0.098f, 0.098f, 1.0f }; } // 98% white
     }
 }
 

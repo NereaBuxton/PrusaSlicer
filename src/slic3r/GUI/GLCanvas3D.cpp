@@ -71,11 +71,15 @@
 #include <imgui/imgui_internal.h>
 
 static constexpr const float TRACKBALLSIZE = 0.8f;
-
-static constexpr const float DEFAULT_BG_DARK_COLOR[3] = { 0.478f, 0.478f, 0.478f };
-static constexpr const float DEFAULT_BG_LIGHT_COLOR[3] = { 0.753f, 0.753f, 0.753f };
-static constexpr const float ERROR_BG_DARK_COLOR[3] = { 0.478f, 0.192f, 0.039f };
-static constexpr const float ERROR_BG_LIGHT_COLOR[3] = { 0.753f, 0.192f, 0.039f };
+static constexpr const float DARKMODE_BG_DARK_COLOR[3] = { 0.098f, 0.098f, 0.098f }; // 10% black
+static constexpr const float DARKMODE_BG_MED_COLOR[3] = { 0.251f, 0.251f, 0.251f }; // 25% black
+static constexpr const float DARKMODE_BG_LIGHT_COLOR[3] = { 0.753f, 0.753f, 0.753f }; // 75% white
+static constexpr const float LIGHTMODE_BG_DARK_COLOR[3] = { 0.753f, 0.753f, 0.753f }; // 75% white
+static constexpr const float LIGHTMODE_BG_MED_COLOR[3] = { 0.942f, 0.942f, 0.942f }; // 94% white
+static constexpr const float LIGHTMODE_BG_LIGHT_COLOR[3] = { 0.980f, 0.980f, 0.980f }; // 98% white
+static constexpr const float ERROR_BG_DARK_COLOR[3] = { 0.980f, 0.749f, 0.518f }; // sequential magma visual spectrum 3
+static constexpr const float ERROR_BG_MED_COLOR[3] = { 0.980f, 0.498f, 0.369f }; // sequential magma visual spectrum 5
+static constexpr const float ERROR_BG_LIGHT_COLOR[3] = { 0.871f, 0.286f, 0.408f }; // sequential magma visual spectrum 7
 //static constexpr const float AXES_COLOR[3][3] = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
 
 // Number of floats
@@ -422,14 +426,14 @@ void GLCanvas3D::LayersEditing::render_profile(const Rect& bar_rect) const
     float x = bar_rect.get_left() + (float)m_slicing_parameters->layer_height * scale_x;
 
     // Baseline
-    glsafe(::glColor3f(0.0f, 0.0f, 0.0f));
+    glsafe(::glColor3f(0.098f, 0.098f, 0.098f)); // 9.8% black
     ::glBegin(GL_LINE_STRIP);
     ::glVertex2f(x, bar_rect.get_bottom());
     ::glVertex2f(x, bar_rect.get_top());
     glsafe(::glEnd());
 
     // Curve
-    glsafe(::glColor3f(0.0f, 0.0f, 1.0f));
+    glsafe(::glColor3f(0.318f, 0.267f, 0.827f)); // categorical 5
     ::glBegin(GL_LINE_STRIP);
     for (unsigned int i = 0; i < m_layer_height_profile.size(); i += 2)
         ::glVertex2f(bar_rect.get_left() + (float)m_layer_height_profile[i + 1] * scale_x, bar_rect.get_bottom() + (float)m_layer_height_profile[i] * scale_y);
@@ -712,7 +716,7 @@ void GLCanvas3D::Labels::render(const std::vector<const ModelInstance*>& sorted_
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, owner.selected ? 3.0f : 1.5f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleColor(ImGuiCol_Border, owner.selected ? ImVec4(0.757f, 0.404f, 0.216f, 1.0f) : ImVec4(0.75f, 0.75f, 0.75f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_Border, owner.selected ? ImVec4(0.796f, 0.435f, 0.063f, 1.0f) : ImVec4(0.753f, 0.753f, 0.753f, 1.0f)); // categorical 6 : 75% white
         imgui.set_next_window_pos(x, y, ImGuiCond_Always, 0.5f, 0.5f);
         imgui.begin(owner.title, ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
         ImGui::BringWindowToDisplayFront(ImGui::GetCurrentWindow());
@@ -814,7 +818,7 @@ void GLCanvas3D::SequentialPrintClearance::set_polygons(const Polygons& polygons
         GLModel::InitializationData fill_data;
         GLModel::InitializationData::Entity entity;
         entity.type = GLModel::PrimitiveType::Triangles;
-        entity.color = { 0.3333f, 0.0f, 0.0f, 0.5f };
+        entity.color = { 0.855f, 0.204f, 0.565f, 0.502f }; // categorical 8 50% alpha
         entity.positions.reserve(vertices_count);
         entity.normals.reserve(vertices_count);
         entity.indices.reserve(vertices_count);
@@ -859,8 +863,8 @@ void GLCanvas3D::SequentialPrintClearance::set_polygons(const Polygons& polygons
 
 void GLCanvas3D::SequentialPrintClearance::render()
 {
-    std::array<float, 4> FILL_COLOR = { 1.0f, 0.0f, 0.0f, 0.5f };
-    std::array<float, 4> NO_FILL_COLOR = { 1.0f, 1.0f, 1.0f, 0.75f };
+    std::array<float, 4> FILL_COLOR = { 0.855f, 0.204f, 0.565f, 0.502f }; // categorical 8 50% alpha
+    std::array<float, 4> NO_FILL_COLOR = { 0.980f, 0.980f, 0.980f, 0.753f }; // 98% white 75% alpha
 
     GLShaderProgram* shader = wxGetApp().get_shader("gouraud_light");
     if (shader == nullptr)
@@ -5015,6 +5019,7 @@ void GLCanvas3D::_rectangular_selection_picking_pass()
 void GLCanvas3D::_render_background() const
 {
     bool use_error_color = false;
+    bool dark_mode = wxGetApp().dark_mode();
     if (wxGetApp().is_editor()) {
         use_error_color = m_dynamic_background_enabled &&
         (current_printer_technology() != ptSLA || !m_volumes.empty());
@@ -5038,18 +5043,30 @@ void GLCanvas3D::_render_background() const
     if (use_error_color)
         ::glColor3fv(ERROR_BG_DARK_COLOR);
     else
-        ::glColor3fv(DEFAULT_BG_DARK_COLOR);
+        ::glColor3fv(dark_mode ? DARKMODE_BG_DARK_COLOR : LIGHTMODE_BG_DARK_COLOR);
 
     ::glVertex2f(-1.0f, -1.0f);
     ::glVertex2f(1.0f, -1.0f);
 
     if (use_error_color)
+        ::glColor3fv(ERROR_BG_MED_COLOR);
+    else
+        ::glColor3fv(dark_mode ? DARKMODE_BG_MED_COLOR : LIGHTMODE_BG_MED_COLOR);
+
+    ::glVertex2f(1.0f, 0.166f);
+    ::glVertex2f(-1.0f, 0.166f);
+
+    ::glVertex2f(-1.0f, 0.166f);
+    ::glVertex2f(1.0f, 0.166f);
+
+    if (use_error_color)
         ::glColor3fv(ERROR_BG_LIGHT_COLOR);
     else
-        ::glColor3fv(DEFAULT_BG_LIGHT_COLOR);
+        ::glColor3fv(dark_mode ? DARKMODE_BG_LIGHT_COLOR : LIGHTMODE_BG_LIGHT_COLOR);
 
     ::glVertex2f(1.0f, 1.0f);
     ::glVertex2f(-1.0f, 1.0f);
+
     glsafe(::glEnd());
 
     glsafe(::glEnable(GL_DEPTH_TEST));
@@ -5592,7 +5609,7 @@ void GLCanvas3D::_render_sla_slices()
                     // The polygons are mirrored by X.
                     glsafe(::glScalef(-1.0, 1.0, 1.0));
                 glsafe(::glEnableClientState(GL_VERTEX_ARRAY));
-                glsafe(::glColor3f(1.0f, 0.37f, 0.0f));
+                glsafe(::glColor3f(0.855f, 0.204f, 0.565f)); // categorical 8
 				if (!bottom_obj_triangles.empty()) {
                     glsafe(::glVertexPointer(3, GL_DOUBLE, 0, (GLdouble*)bottom_obj_triangles.front().data()));
                     glsafe(::glDrawArrays(GL_TRIANGLES, 0, bottom_obj_triangles.size()));
@@ -5601,7 +5618,7 @@ void GLCanvas3D::_render_sla_slices()
                     glsafe(::glVertexPointer(3, GL_DOUBLE, 0, (GLdouble*)top_obj_triangles.front().data()));
                     glsafe(::glDrawArrays(GL_TRIANGLES, 0, top_obj_triangles.size()));
 				}
-                glsafe(::glColor3f(1.0f, 0.0f, 0.37f));
+                glsafe(::glColor3f(0.910f, 0.529f, 0.102f)); // categorical 2
 				if (! bottom_sup_triangles.empty()) {
                     glsafe(::glVertexPointer(3, GL_DOUBLE, 0, (GLdouble*)bottom_sup_triangles.front().data()));
                     glsafe(::glDrawArrays(GL_TRIANGLES, 0, bottom_sup_triangles.size()));
@@ -5771,7 +5788,7 @@ void GLCanvas3D::_load_print_toolpaths(const BuildVolume &build_volume)
     if (!print->has_skirt() && !print->has_brim())
         return;
 
-    const std::array<float, 4> color = { 0.5f, 1.0f, 0.5f, 1.0f }; // greenish
+    const std::array<float, 4> color = { 0.608f, 0.925f, 0.329f, 1.0f }; // categorical 9
 
     // number of skirt layers
     size_t total_layer_count = 0;
@@ -5832,10 +5849,10 @@ void GLCanvas3D::_load_print_object_toolpaths(const PrintObject& print_object, c
         int                          extruders_cnt;
         const std::vector<CustomGCode::Item>*   color_print_values;
 
-        static const std::array<float, 4>& color_perimeters() { static std::array<float, 4> color = { 1.0f, 1.0f, 0.0f, 1.f }; return color; } // yellow
-        static const std::array<float, 4>& color_infill() { static std::array<float, 4> color = { 1.0f, 0.5f, 0.5f, 1.f }; return color; } // redish
-        static const std::array<float, 4>& color_support() { static std::array<float, 4> color = { 0.5f, 1.0f, 0.5f, 1.f }; return color; } // greenish
-        static const std::array<float, 4>& color_pause_or_custom_code() { static std::array<float, 4> color = { 0.5f, 0.5f, 0.5f, 1.f }; return color; } // gray
+        static const std::array<float, 4>& color_perimeters() { static std::array<float, 4> color = { 0.875f, 0.749f, 0.098f, 1.0f }; return color; } // categorical 1
+        static const std::array<float, 4>& color_infill() { static std::array<float, 4> color = { 0.855f, 0.204f, 0.565f, 1.0f }; return color; } // categorical 8
+        static const std::array<float, 4>& color_support() { static std::array<float, 4> color = { 0.608f, 0.925f, 0.329f, 1.0f }; return color; } // categorical 9
+        static const std::array<float, 4>& color_pause_or_custom_code() { static std::array<float, 4> color = { 0.502f, 0.502f, 0.502f, 1.0f }; return color; } // 50% neutral
 
         // For cloring by a tool, return a parsed color.
         bool                         color_by_tool() const { return tool_colors != nullptr; }
@@ -6130,7 +6147,7 @@ void GLCanvas3D::_load_wipe_tower_toolpaths(const BuildVolume& build_volume, con
         Vec2f                        wipe_tower_pos;
         float                        wipe_tower_angle;
 
-        static const std::array<float, 4>& color_support() { static std::array<float, 4> color = { 0.5f, 1.0f, 0.5f, 1.f }; return color; } // greenish
+        static const std::array<float, 4>& color_support() { static std::array<float, 4> color = { 0.608f, 0.925f, 0.329f, 1.0f }; return color; } // categorical 9
 
         // For cloring by a tool, return a parsed color.
         bool                         color_by_tool() const { return tool_colors != nullptr; }

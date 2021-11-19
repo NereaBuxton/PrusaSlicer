@@ -61,8 +61,8 @@ static std::string def_text_color()
     auto clr_str = wxString::Format(wxT("#%02X%02X%02X"), def_colour.Red(), def_colour.Green(), def_colour.Blue());
     return clr_str.ToStdString();
 }
-static std::string grey     = "#808080";
-static std::string orange   = "#ed6b21";
+static std::string grey     = "#808080"; // 50% neutral
+static std::string orange   = "#E8871A"; // categorical 2
 
 static void color_string(wxString& str, const std::string& color)
 {
