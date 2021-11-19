@@ -126,13 +126,13 @@ Control::Control( wxWindow *parent,
     // control's view variables
     SLIDER_MARGIN     = 4 + GUI::wxGetApp().em_unit();
 
-    DARK_ORANGE_PEN   = wxPen(wxColour(237, 107, 33));
-    ORANGE_PEN        = wxPen(wxColour(253, 126, 66));
-    LIGHT_ORANGE_PEN  = wxPen(wxColour(254, 177, 139));
+    DARK_ORANGE_PEN   = wxPen(wxColour(203, 111, 25)); // categorical 10 colortag
+    ORANGE_PEN        = wxPen(wxColour(232, 135, 26)); // categorical 3 colortag
+    LIGHT_ORANGE_PEN  = wxPen(wxColour(250, 197, 137)); // categorical 3l colortag
 
-    DARK_GREY_PEN     = wxPen(wxColour(128, 128, 128));
-    GREY_PEN          = wxPen(wxColour(164, 164, 164));
-    LIGHT_GREY_PEN    = wxPen(wxColour(204, 204, 204));
+    DARK_GREY_PEN     = wxPen(wxColour(128, 128, 128)); // 50.2% mono tone colortag
+    GREY_PEN          = wxPen(wxColour(161, 161, 161)); // 63.1% mono tint colortag
+    LIGHT_GREY_PEN    = wxPen(wxColour(240, 240, 240)); // 94.1% mono tint colortag
 
     m_line_pens = { &DARK_GREY_PEN, &GREY_PEN, &LIGHT_GREY_PEN };
     m_segm_pens = { &DARK_ORANGE_PEN, &ORANGE_PEN, &LIGHT_ORANGE_PEN };
@@ -500,9 +500,9 @@ void Control::draw_focus_rect()
         return;
     const wxSize sz = GetSize();
     wxPaintDC dc(this);
-    const wxPen pen = wxPen(wxColour(128, 128, 10), 1, wxPENSTYLE_DOT);
+    const wxPen pen = wxPen(wxColour(223, 191, 25), 1, wxPENSTYLE_DOT); // categorical 9 colortag
     dc.SetPen(pen);
-    dc.SetBrush(wxBrush(wxColour(0, 0, 0), wxBRUSHSTYLE_TRANSPARENT));
+    dc.SetBrush(wxBrush(wxColour(25, 25, 25), wxBRUSHSTYLE_TRANSPARENT)); // 9.8% near-black colortag
     dc.DrawRectangle(1, 1, sz.x - 2, sz.y - 2);
 }
 
@@ -2159,7 +2159,7 @@ static std::string get_new_color(const std::string& color)
 {
     wxColour clr(color);
     if (!clr.IsOk())
-        clr = wxColour(0, 0, 0); // Don't set alfa to transparence
+        clr = wxColour(25, 25, 25); // Don't set alfa to transparence  // 9.8% near-black colortag
 
     auto data = new wxColourData();
     data->SetChooseFull(1);

@@ -99,8 +99,8 @@ static void set_font_and_background_style(wxWindow* win, const wxFont& font)
     win->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
 
-static const wxString axes_color_text[] = { "#990000", "#009900", "#000099" };
-static const wxString axes_color_back[] = { "#f5dcdc", "#dcf5dc", "#dcdcf5" };
+static const wxString axes_color_text[] = { "#DA3490", "#47E26F", "#2780EB" }; // categorical 4, categorical 6, categorical 7 colortag
+static const wxString axes_color_back[] = { "#F5DDEA", "#DCF5E2", "#DDE8F5" }; // categorical 4l, categorical 6l, categorical 7l colortag
 ObjectManipulation::ObjectManipulation(wxWindow* parent) :
     OG_Settings(parent, true)
 {
