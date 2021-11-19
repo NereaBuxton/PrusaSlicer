@@ -149,7 +149,7 @@ public:
             memDC.SelectObject(bitmap);
 
             memDC.SetFont(m_action_font);
-            memDC.SetTextForeground(wxColour(237, 107, 33));
+            memDC.SetTextForeground(wxColour(232, 135, 26)); // categorical 2
             memDC.DrawText(text, int(m_scale * 60), m_action_line_y_position);
 
             memDC.SelectObject(wxNullBitmap);
@@ -214,7 +214,7 @@ public:
         memDc.DrawBitmap(logo_bmp, margin, margin, true);
 
         // draw the (white) labels inside of our black box (at the left of the splashscreen)
-        memDc.SetTextForeground(wxColour(255, 255, 255));
+        memDc.SetTextForeground(wxColour(250, 250, 250)); // 98% white
 
         memDc.SetFont(m_constant_text.title_font);
         memDc.DrawLabel(m_constant_text.title,   banner_rect, wxALIGN_TOP | wxALIGN_LEFT);
@@ -1341,12 +1341,12 @@ bool GUI_App::dark_mode()
 
 const wxColour GUI_App::get_label_default_clr_system()
 {
-    return dark_mode() ? wxColour(115, 220, 103) : wxColour(26, 132, 57);
+    return dark_mode() ? wxColour(71, 226, 111) : wxColour(38, 141, 108); // categorical 12 : categorical 10
 }
 
 const wxColour GUI_App::get_label_default_clr_modified()
 {
-    return dark_mode() ? wxColour(253, 111, 40) : wxColour(252, 77, 1);
+    return dark_mode() ? wxColour(232, 135, 26) : wxColour(203, 111, 16); // categorical 2 : categorical 6
 }
 
 void GUI_App::init_label_colours()
@@ -1356,15 +1356,15 @@ void GUI_App::init_label_colours()
 
     bool is_dark_mode = dark_mode();
 #ifdef _WIN32
-    m_color_label_default           = is_dark_mode ? wxColour(250, 250, 250): wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
-    m_color_highlight_label_default = is_dark_mode ? wxColour(230, 230, 230): wxSystemSettings::GetColour(/*wxSYS_COLOUR_HIGHLIGHTTEXT*/wxSYS_COLOUR_WINDOWTEXT);
-    m_color_highlight_default       = is_dark_mode ? wxColour(78, 78, 78)   : wxSystemSettings::GetColour(wxSYS_COLOUR_3DLIGHT);
-    m_color_hovered_btn_label       = is_dark_mode ? wxColour(253, 111, 40) : wxColour(252, 77, 1);
-    m_color_selected_btn_bg         = is_dark_mode ? wxColour(95, 73, 62)   : wxColour(228, 220, 216);
+    m_color_label_default           = is_dark_mode ? wxColour(250, 250, 250): wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT); // 98% white : syscolor
+    m_color_highlight_label_default = is_dark_mode ? wxColour(250, 250, 250): wxSystemSettings::GetColour(/*wxSYS_COLOUR_HIGHLIGHTTEXT*/wxSYS_COLOUR_WINDOWTEXT); // 98% white : syscolor
+    m_color_highlight_default       = is_dark_mode ? wxColour(64, 64, 64)   : wxColour(240, 240, 240); // 25% black : 94% white
+    m_color_hovered_btn_label       = is_dark_mode ? wxColour(232, 135, 26) : wxColour(203, 111, 16); // categorical 2 : categorical 6
+    m_color_selected_btn_bg         = is_dark_mode ? wxColour(43, 43, 43)   : wxColour(255, 255, 255); // 17% black : 100% white
 #else
     m_color_label_default = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
 #endif
-    m_color_window_default          = is_dark_mode ? wxColour(43, 43, 43)   : wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+    m_color_window_default          = is_dark_mode ? wxColour(43, 43, 43)   : wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW); // 17% black
 }
 
 void GUI_App::update_label_colours_from_appconfig()

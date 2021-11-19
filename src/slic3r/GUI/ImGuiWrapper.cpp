@@ -82,11 +82,11 @@ static const std::map<const wchar_t, std::string> font_icons_extra_large = {
 
 };
 
-const ImVec4 ImGuiWrapper::COL_GREY_DARK         = { 0.333f, 0.333f, 0.333f, 1.0f };
-const ImVec4 ImGuiWrapper::COL_GREY_LIGHT        = { 0.4f, 0.4f, 0.4f, 1.0f };
-const ImVec4 ImGuiWrapper::COL_ORANGE_DARK       = { 0.757f, 0.404f, 0.216f, 1.0f };
-const ImVec4 ImGuiWrapper::COL_ORANGE_LIGHT      = { 1.0f, 0.49f, 0.216f, 1.0f };
-const ImVec4 ImGuiWrapper::COL_WINDOW_BACKGROUND = { 0.133f, 0.133f, 0.133f, 0.8f };
+const ImVec4 ImGuiWrapper::COL_GREY_DARK         = { 0.251f, 0.251f, 0.251f, 1.0f }; // 25% black
+const ImVec4 ImGuiWrapper::COL_GREY_LIGHT        = { 0.502f, 0.502f, 0.502f, 1.0f }; // 50% neutral
+const ImVec4 ImGuiWrapper::COL_ORANGE_DARK       = { 0.796f, 0.435f, 0.063f, 1.0f }; // categorical 6
+const ImVec4 ImGuiWrapper::COL_ORANGE_LIGHT      = { 0.910f, 0.529f, 0.102f, 1.0f }; // categorical 2
+const ImVec4 ImGuiWrapper::COL_WINDOW_BACKGROUND = { 0.098f, 0.098f, 0.098f, 0.8f }; // 9.8% black 80% alpha
 const ImVec4 ImGuiWrapper::COL_BUTTON_BACKGROUND = COL_ORANGE_DARK;
 const ImVec4 ImGuiWrapper::COL_BUTTON_HOVERED    = COL_ORANGE_LIGHT;
 const ImVec4 ImGuiWrapper::COL_BUTTON_ACTIVE     = ImGuiWrapper::COL_BUTTON_HOVERED;
@@ -520,9 +520,9 @@ bool ImGuiWrapper::slider_float(const char* label, float* v, float v_min, float 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 1, style.ItemSpacing.y });
         ImGui::SameLine();
         std::wstring btn_name = ImGui::SliderFloatEditBtnIcon + boost::nowide::widen(str_label);
-        ImGui::PushStyleColor(ImGuiCol_Button, { 0.25f, 0.25f, 0.25f, 0.0f });
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.5f, 0.5f, 0.5f, 1.0f });
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.5f, 0.5f, 0.5f, 1.0f });
+        ImGui::PushStyleColor(ImGuiCol_Button, { 0.251f, 0.251f, 0.251f, 0.0f }); // 25% black 0% alpha (wat?)
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.502f, 0.502f, 0.502f, 1.0f }); // 50% neutral
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.502f, 0.502f, 0.502f, 1.0f }); // 50% neutral
         if (ImGui::Button(into_u8(btn_name).c_str())) {
             ImGui::SetKeyboardFocusHere(-1);
             this->set_requires_extra_frame();
@@ -1050,7 +1050,7 @@ std::vector<unsigned char> ImGuiWrapper::load_svg(const std::string& bitmap_name
 {
     std::vector<unsigned char> empty_vector;
 
-    NSVGimage* image = BitmapCache::nsvgParseFromFileWithReplace(Slic3r::var(bitmap_name + ".svg").c_str(), "px", 96.0f, { { "\"#808080\"", "\"#FFFFFF\"" } });
+    NSVGimage* image = BitmapCache::nsvgParseFromFileWithReplace(Slic3r::var(bitmap_name + ".svg").c_str(), "px", 96.0f, { { "\"#808080\"", "\"#FAFAFA\"" } }); // 98% white
     if (image == nullptr)
         return empty_vector;
 

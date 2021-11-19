@@ -669,7 +669,7 @@ void PlaterPresetComboBox::change_extruder_color()
     auto colors = static_cast<ConfigOptionStrings*>(cfg->option("extruder_colour")->clone());
     wxColour clr(colors->values[m_extruder_idx]);
     if (!clr.IsOk())
-        clr = wxColour(0, 0, 0); // Don't set alfa to transparence
+        clr = wxColour(25, 25, 25); // Don't set alfa to transparence  // 9.8% black
 
     auto data = new wxColourData();
     data->SetChooseFull(1);
