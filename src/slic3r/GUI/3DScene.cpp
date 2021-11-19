@@ -344,20 +344,20 @@ void GLVolume::SinkingContours::update()
         m_model.reset();
 }
 
-const std::array<float, 4> GLVolume::SELECTED_COLOR = { 0.0f, 1.0f, 0.0f, 1.0f };
-const std::array<float, 4> GLVolume::HOVER_SELECT_COLOR = { 0.4f, 0.9f, 0.1f, 1.0f };
-const std::array<float, 4> GLVolume::HOVER_DESELECT_COLOR = { 1.0f, 0.75f, 0.75f, 1.0f };
-const std::array<float, 4> GLVolume::OUTSIDE_COLOR = { 0.0f, 0.38f, 0.8f, 1.0f };
-const std::array<float, 4> GLVolume::SELECTED_OUTSIDE_COLOR = { 0.19f, 0.58f, 1.0f, 1.0f };
-const std::array<float, 4> GLVolume::DISABLED_COLOR = { 0.25f, 0.25f, 0.25f, 1.0f };
-const std::array<float, 4> GLVolume::SLA_SUPPORT_COLOR = { 0.75f, 0.75f, 0.75f, 1.0f };
-const std::array<float, 4> GLVolume::SLA_PAD_COLOR = { 0.0f, 0.2f, 0.0f, 1.0f };
-const std::array<float, 4> GLVolume::NEUTRAL_COLOR = { 0.9f, 0.9f, 0.9f, 1.0f };
+const std::array<float, 4> GLVolume::SELECTED_COLOR = { 0.608f, 0.925f, 0.329f, 1.0f }; // categorical 12 colortag
+const std::array<float, 4> GLVolume::HOVER_SELECT_COLOR = { 0.098f, 0.753f, 0.780f, 1.0f }; // categorical 1 colortag
+const std::array<float, 4> GLVolume::HOVER_DESELECT_COLOR = { 0.855f, 0.204f, 0.565f, 1.0f }; // categorical 4 colortag
+const std::array<float, 4> GLVolume::OUTSIDE_COLOR = { 0.318f, 0.267f, 0.827f, 1.0f }; // categorical 2 colortag
+const std::array<float, 4> GLVolume::SELECTED_OUTSIDE_COLOR = { 0.153f, 0.502f, 0.922f, 1.0f }; // categorical 7 colortag
+const std::array<float, 4> GLVolume::DISABLED_COLOR = { 0.251f, 0.251f, 0.251f, 1.0f }; // 25.1% mono shade colortag
+const std::array<float, 4> GLVolume::SLA_SUPPORT_COLOR = { 0.753f, 0.753f, 0.753f, 1.0f }; // 75.3% mono tint colortag
+const std::array<float, 4> GLVolume::SLA_PAD_COLOR = { 0.875f, 0.749f, 0.098f, 1.0f }; // categorical 9 colortag
+const std::array<float, 4> GLVolume::NEUTRAL_COLOR = { 0.941, 0.941f, 0.941f, 1.0f }; // 94.1% mono tint colortag
 const std::array<std::array<float, 4>, 4> GLVolume::MODEL_COLOR = { {
-    { 1.0f, 1.0f, 0.0f, 1.f },
-    { 1.0f, 0.5f, 0.5f, 1.f },
-    { 0.5f, 1.0f, 0.5f, 1.f },
-    { 0.5f, 0.5f, 1.0f, 1.f }
+    { 0.875f, 0.749f, 0.098f, 1.0f }, // categorical 9 colortag
+    { 0.855f, 0.204f, 0.565f, 1.0f }, // categorical 4 colortag
+    { 0.608f, 0.925f, 0.329f, 1.0f }, // categorical 12 colortag
+    { 0.565f, 0.537f, 0.980f, 1.0f }  // categorical 5 colortag
 } };
 
 GLVolume::GLVolume(float r, float g, float b, float a)
@@ -446,15 +446,15 @@ std::array<float, 4> color_from_model_volume(const ModelVolume& model_volume)
 {
     std::array<float, 4> color;
     if (model_volume.is_negative_volume()) {
-        color[0] = 0.2f;
-        color[1] = 0.2f;
-        color[2] = 0.2f;
+        color[0] = 0.251f; // 25.1% mono shade colortag
+        color[1] = 0.251f;
+        color[2] = 0.251f;
     }
     else if (model_volume.is_modifier()) {
 #if ENABLE_MODIFIERS_ALWAYS_TRANSPARENT
-        color[0] = 1.0f;
-        color[1] = 1.0f;
-        color[2] = 0.2f;
+        color[0] = 0.875f; // categorical 9 colortag
+        color[1] = 0.749f;
+        color[2] = 0.098f;
 #else
         color[0] = 0.2f;
         color[1] = 1.0f;
@@ -462,16 +462,16 @@ std::array<float, 4> color_from_model_volume(const ModelVolume& model_volume)
 #endif // ENABLE_MODIFIERS_ALWAYS_TRANSPARENT
     }
     else if (model_volume.is_support_blocker()) {
-        color[0] = 1.0f;
-        color[1] = 0.2f;
-        color[2] = 0.2f;
+        color[0] = 0.855f; // categorical 4 colortag
+        color[1] = 0.204f;
+        color[2] = 0.565f;
     }
     else if (model_volume.is_support_enforcer()) {
-        color[0] = 0.2f;
-        color[1] = 0.2f;
-        color[2] = 1.0f;
+        color[0] = 0.565f; // categorical 5 colortag
+        color[1] = 0.537f;
+        color[2] = 0.980f;
     }
-    color[3] = model_volume.is_model_part() ? 1.f : 0.5f;
+    color[3] = model_volume.is_model_part() ? 1.f : 0.502f;
     return color;
 }
 
@@ -713,13 +713,14 @@ int GLVolumeCollection::load_wipe_tower_preview(
         height = 0.1f;
 
     TriangleMesh mesh;
-    std::array<float, 4> color = { 0.5f, 0.5f, 0.0f, 1.0f };
+    std::array<float, 4> color = { 0.796f, 0.435f, 0.098f, 1.0f }; // categorical 10 colortag
 
     // In case we don't know precise dimensions of the wipe tower yet, we'll draw
     // the box with different color with one side jagged:
-    if (size_unknown) {
-        color[0] = 0.9f;
-        color[1] = 0.6f;
+    if (size_unknown) { // categorical 9 colortag
+        color[0] = 0.875f;
+        color[1] = 0.749f;
+        color[2] = 0.098f;
 
         // Too narrow tower would interfere with the teeth. The estimate is not precise anyway.
         depth = std::max(depth, 10.f);
