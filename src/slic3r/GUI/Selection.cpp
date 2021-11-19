@@ -24,7 +24,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/log/trivial.hpp>
 
-static const std::array<float, 4> UNIFORM_SCALE_COLOR = { 0.923f, 0.504f, 0.264f, 1.0f };
+static const std::array<float, 4> UNIFORM_SCALE_COLOR = { 0.875f, 0.749f, 0.098f, 1.0f }; // categorical 9 colortag
 
 namespace Slic3r {
 namespace GUI {
@@ -1840,7 +1840,7 @@ void Selection::do_remove_object(unsigned int object_idx)
 
 void Selection::render_selected_volumes() const
 {
-    float color[3] = { 1.0f, 1.0f, 1.0f };
+    float color[3] = { 0.980f, 0.980f, 0.980f }; // 98% near-white colortag
     render_bounding_box(get_bounding_box(), color);
 }
 
@@ -1849,7 +1849,7 @@ void Selection::render_synchronized_volumes() const
     if (m_mode == Instance)
         return;
 
-    float color[3] = { 1.0f, 1.0f, 0.0f };
+    float color[3] = { 0.980f, 0.980f, 0.980f }; // 98% near-white colortag
 
     for (unsigned int i : m_list) {
         const GLVolume* volume = (*m_volumes)[i];
@@ -2053,9 +2053,9 @@ void Selection::render_sidebar_layers_hints(const std::string& sidebar_field) co
 
     ::glBegin(GL_QUADS);
     if ((camera_on_top && type == 1) || (!camera_on_top && type == 2))
-        ::glColor4f(1.0f, 0.38f, 0.0f, 1.0f);
+        ::glColor4f(0.910f, 0.529f, 0.102f, 1.0f); // categorical 3 colortag
     else
-        ::glColor4f(0.8f, 0.8f, 0.8f, 0.5f);
+        ::glColor4f(0.753f, 0.753f, 0.753f, 0.502f); // 75.3% mono tint, 50.2% alpha colortag
     ::glVertex3f(min_x, min_y, z1);
     ::glVertex3f(max_x, min_y, z1);
     ::glVertex3f(max_x, max_y, z1);
@@ -2064,9 +2064,9 @@ void Selection::render_sidebar_layers_hints(const std::string& sidebar_field) co
 
     ::glBegin(GL_QUADS);
     if ((camera_on_top && type == 2) || (!camera_on_top && type == 1))
-        ::glColor4f(1.0f, 0.38f, 0.0f, 1.0f);
+        ::glColor4f(0.910f, 0.529f, 0.102f, 1.0f); // categorical 3 colortag
     else
-        ::glColor4f(0.8f, 0.8f, 0.8f, 0.5f);
+        ::glColor4f(0.753f, 0.753f, 0.753f, 0.502f); // 75.3% mono tint, 50.2% alpha colortag
     ::glVertex3f(min_x, min_y, z2);
     ::glVertex3f(max_x, min_y, z2);
     ::glVertex3f(max_x, max_y, z2);

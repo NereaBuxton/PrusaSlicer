@@ -19,8 +19,8 @@
 #include <boost/log/trivial.hpp>
 
 static const float GROUND_Z = -0.02f;
-static const std::array<float, 4> DEFAULT_MODEL_COLOR = { 0.235f, 0.235f, 0.235f, 1.0f };
-static const std::array<float, 4> PICKING_MODEL_COLOR = { 0.0f, 0.0f, 0.0f, 1.0f };
+static const std::array<float, 4> DEFAULT_MODEL_COLOR = { 0.251f, 0.251f, 0.251f, 1.0f }; // 25.1% mono shade colortag
+static const std::array<float, 4> PICKING_MODEL_COLOR = { 0.0f, 0.0f, 0.0f, 1.0f }; // 0% black colortag
 
 namespace Slic3r {
 namespace GUI {
@@ -119,17 +119,17 @@ void Bed3D::Axes::render() const
 
     shader->start_using();
     shader->set_uniform("emission_factor", 0.0f);
-
-    // x axis
-    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.75f, 0.0f, 0.0f, 1.0f });
+    
+    // x axis: categorical 4 colortag
+    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.855f, 0.204f, 0.565f, 1.0f });
     render_axis(Geometry::assemble_transform(m_origin, { 0.0, 0.5 * M_PI, 0.0 }).cast<float>());
 
-    // y axis
-    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.0f, 0.75f, 0.0f, 1.0f });
+    // y axis: categorical 6 colortag
+    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.278f, 0.886f, 0.435f, 1.0f });
     render_axis(Geometry::assemble_transform(m_origin, { -0.5 * M_PI, 0.0, 0.0 }).cast<float>());
 
-    // z axis
-    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.0f, 0.0f, 0.75f, 1.0f });
+    // z axis: categorical 7 colortag
+    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.153f, 0.502f, 0.922f, 1.0f });
     render_axis(Geometry::assemble_transform(m_origin).cast<float>());
 
     shader->stop_using();
@@ -526,6 +526,7 @@ void Bed3D::render_custom(GLCanvas3D& canvas, bool bottom, bool show_texture, bo
 void Bed3D::render_default(bool bottom, bool picking) const
 {
     const_cast<GLTexture*>(&m_texture)->reset();
+    bool dark_mode = wxGetApp().dark_mode();
 
     unsigned int triangles_vcount = m_triangles.get_vertices_count();
     if (triangles_vcount > 0) {
@@ -537,10 +538,10 @@ void Bed3D::render_default(bool bottom, bool picking) const
 
         glsafe(::glEnableClientState(GL_VERTEX_ARRAY));
 
-        if (!has_model && !bottom) {
+        if (picking) {
             // draw background
             glsafe(::glDepthMask(GL_FALSE));
-            glsafe(::glColor4fv(picking ? PICKING_MODEL_COLOR.data() : DEFAULT_MODEL_COLOR.data()));
+            glsafe(::glColor4fv(PICKING_MODEL_COLOR.data()));
             glsafe(::glNormal3d(0.0f, 0.0f, 1.0f));
             glsafe(::glVertexPointer(3, GL_FLOAT, m_triangles.get_vertex_data_size(), (GLvoid*)m_triangles.get_vertices_data()));
             glsafe(::glDrawArrays(GL_TRIANGLES, 0, (GLsizei)triangles_vcount));
@@ -550,10 +551,10 @@ void Bed3D::render_default(bool bottom, bool picking) const
         if (!picking) {
             // draw grid
             glsafe(::glLineWidth(1.5f * m_scale_factor));
-            if (has_model && !bottom)
-                glsafe(::glColor4f(0.9f, 0.9f, 0.9f, 1.0f));
+            if (!dark_mode)
+                glsafe(::glColor4f(0.631f, 0.631f, 0.631f, 1.0f)); // 63.1% mono tint colortag
             else
-                glsafe(::glColor4f(0.9f, 0.9f, 0.9f, 0.6f));
+                glsafe(::glColor4f(0.753f, 0.753f, 0.753f, 1.0f)); // 75.3% mono tint colortag
             glsafe(::glVertexPointer(3, GL_FLOAT, m_triangles.get_vertex_data_size(), (GLvoid*)m_gridlines.get_vertices_data()));
             glsafe(::glDrawArrays(GL_LINES, 0, (GLsizei)m_gridlines.get_vertices_count()));
         }

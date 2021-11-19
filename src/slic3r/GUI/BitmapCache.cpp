@@ -315,9 +315,9 @@ wxBitmap* BitmapCache::load_svg(const std::string &bitmap_name, unsigned target_
     // map of color replaces
     std::map<std::string, std::string> replaces;
     if (dark_mode)
-        replaces["\"#808080\""] = "\"#FFFFFF\"";
+        replaces["\"#808080\""] = "\"#FAFAFA\""; // 98% near-white colortag
     if (!new_color.empty())
-        replaces["\"#ED6B21\""] = "\"" + new_color + "\"";
+        replaces["\"#E8871A\""] = "\"" + new_color + "\""; // categorical 3 colortag
 
     NSVGimage *image =  nsvgParseFromFileWithReplace(Slic3r::var(bitmap_name + ".svg").c_str(), "px", 96.0f, replaces);
     if (image == nullptr)
