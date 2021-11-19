@@ -41,8 +41,8 @@ static wxString generate_html_row(const Config::Snapshot &snapshot, bool row_eve
     // Start by declaring a row with an alternating background color.
     wxString text = "<tr bgcolor=\"";
     text += snapshot_active ? 
-            dark_mode ? "#208a20"  : "#B3FFCB" : 
-            (row_even ? get_color(wxGetApp().get_window_default_clr()/*wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)*/) : dark_mode ? "#656565" : "#D5D5D5" );
+            dark_mode ? "#268D6C"  : "#9BEC54" : // categorical 10 : categorical 9
+            (row_even ? get_color(wxGetApp().get_window_default_clr()/*wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)*/) : dark_mode ? "#808080" : "#E0E0E0" ); // 50% shade : 88% white
     text += "\">";
     text += "<td>";
     
@@ -104,7 +104,7 @@ static wxString generate_html_page(const Config::SnapshotDB &snapshot_db, const 
     bool dark_mode = wxGetApp().dark_mode();
     wxString text = 
         "<html>"
-        "<body bgcolor=\"" + get_color(wxGetApp().get_window_default_clr()/*wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)*/) + "\" cellspacing=\"2\" cellpadding=\"0\" border=\"0\" link=\"#800000\">"
+        "<body bgcolor=\"" + get_color(wxGetApp().get_window_default_clr()/*wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)*/) + "\" cellspacing=\"2\" cellpadding=\"0\" border=\"0\" link=\"#DA3490\">" // categorical 8
         "<font color=\"" + get_color(wxGetApp().get_label_clr_default()/*wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)*/) + "\">";
     text += "<table style=\"width:100%\">";
     for (size_t i_row = 0; i_row < snapshot_db.snapshots().size(); ++ i_row) {

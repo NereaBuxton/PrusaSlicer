@@ -1776,12 +1776,12 @@ void GCodeProcessor::process_tags(const std::string_view comment, bool producers
     if (boost::starts_with(comment, reserved_tag(ETags::Color_Change))) {
         unsigned char extruder_id = 0;
         static std::vector<std::string> Default_Colors = {
-            "#0B2C7A", // { 0.043f, 0.173f, 0.478f }, // bluish
-            "#1C8891", // { 0.110f, 0.533f, 0.569f },
-            "#AAF200", // { 0.667f, 0.949f, 0.000f },
-            "#F5CE0A", // { 0.961f, 0.808f, 0.039f },
-            "#D16830", // { 0.820f, 0.408f, 0.188f },
-            "#942616", // { 0.581f, 0.149f, 0.087f }  // reddish
+            "#9B59B6", // Purple
+            "#2980B9", // Blue
+            "#27AE60", // Green
+            "#F1C40F", // Yellow
+            "#E67E22", // Orange
+            "#C0392B", // Red
         };
 
         std::string color = Default_Colors[0];

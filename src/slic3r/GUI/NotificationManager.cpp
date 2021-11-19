@@ -224,20 +224,20 @@ void NotificationManager::PopNotification::render(GLCanvas3D& canvas, float init
 bool NotificationManager::PopNotification::push_background_color()
 {
 	if (m_is_gray) {
-		ImVec4 backcolor(0.7f, 0.7f, 0.7f, 0.5f);
+		ImVec4 backcolor(0.749f, 0.749f, 0.749f, 0.5f); // 75% white
 		push_style_color(ImGuiCol_WindowBg, backcolor, m_state == EState::FadingOut, m_current_fade_opacity);
 		return true;
 	}
 	if (m_data.level == NotificationLevel::ErrorNotificationLevel) {
 		ImVec4 backcolor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
-		backcolor.x += 0.3f;
+		backcolor.x += 0.2f;
 		push_style_color(ImGuiCol_WindowBg, backcolor, m_state == EState::FadingOut, m_current_fade_opacity);
 		return true;
 	}
 	if (m_data.level == NotificationLevel::WarningNotificationLevel) {
 		ImVec4 backcolor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
-		backcolor.x += 0.3f;
-		backcolor.y += 0.15f;
+		backcolor.x += 0.2f;
+		backcolor.y += 0.1f;
 		push_style_color(ImGuiCol_WindowBg, backcolor, m_state == EState::FadingOut, m_current_fade_opacity);
 		return true;
 	}
@@ -421,9 +421,12 @@ void NotificationManager::PopNotification::render_hypertext(ImGuiWrapper& imgui,
 	ImGui::PopStyleColor(3);
 
 	//hover color
-	ImVec4 orange_color = ImVec4(.99f, .313f, .0f, 1.0f);
-	if (ImGui::IsItemHovered(ImGuiHoveredFlags_RectOnly))
-		orange_color.y += 0.2f;
+	ImVec4 orange_color = ImVec4(0.910f, 0.529f, 0.102f, 1.0f); // categorical 2
+	if (ImGui::IsItemHovered(ImGuiHoveredFlags_RectOnly)) { // categorical 6
+		orange_color.x = 0.796f;
+		orange_color.y = 0.435f;
+		orange_color.z = 0.063f;
+	}
 
 	//text
 	push_style_color(ImGuiCol_Text, orange_color, m_state == EState::FadingOut, m_current_fade_opacity);
@@ -802,8 +805,8 @@ void NotificationManager::ProgressBarNotification::render_text(ImGuiWrapper& img
 }
 void NotificationManager::ProgressBarNotification::render_bar(ImGuiWrapper& imgui, const float win_size_x, const float win_size_y, const float win_pos_x, const float win_pos_y)
 {
-	ImVec4 orange_color			= ImVec4(.99f, .313f, .0f, 1.0f);
-	ImVec4 gray_color			= ImVec4(.34f, .34f, .34f, 1.0f);
+	ImVec4 orange_color			= ImVec4(0.910f, 0.529f, 0.102f, 1.0f); // categorical 2
+	ImVec4 gray_color			= ImVec4(.251f, .251f, .251f, 1.0f); // 25% black
 	ImVec2 lineEnd				= ImVec2(win_pos_x - m_window_width_offset, win_pos_y + win_size_y / 2 + (m_multiline ? m_line_height / 2 : 0));
 	ImVec2 lineStart			= ImVec2(win_pos_x - win_size_x + m_left_indentation, win_pos_y + win_size_y / 2 + (m_multiline ? m_line_height / 2 : 0));
 	ImVec2 midPoint				= ImVec2(lineStart.x + (lineEnd.x - lineStart.x) * m_percentage, lineStart.y);

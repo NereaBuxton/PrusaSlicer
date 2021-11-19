@@ -317,7 +317,7 @@ wxBitmap* BitmapCache::load_svg(const std::string &bitmap_name, unsigned target_
     if (dark_mode)
         replaces["\"#808080\""] = "\"#FFFFFF\"";
     if (!new_color.empty())
-        replaces["\"#ED6B21\""] = "\"" + new_color + "\"";
+        replaces["\"#E8871A\""] = "\"" + new_color + "\""; // changed to adapt to the newly used color in SVG icons
 
     NSVGimage *image =  nsvgParseFromFileWithReplace(Slic3r::var(bitmap_name + ".svg").c_str(), "px", 96.0f, replaces);
     if (image == nullptr)

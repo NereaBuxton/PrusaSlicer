@@ -92,10 +92,10 @@ namespace GUI {
         float bottom = (float)std::min(start(1), end(1)) * inv_zoom;
 
         glsafe(::glLineWidth(1.5f));
-        float color[3];
-        color[0] = (m_state == Select) ? 0.3f : 1.0f;
-        color[1] = (m_state == Select) ? 1.0f : 0.3f;
-        color[2] = 0.3f;
+        float color[3]; // categorical 9 : categorical 8
+        color[0] = (m_state == Select) ? 0.608f : 0.855f;
+        color[1] = (m_state == Select) ? 0.925f : 0.204f;
+        color[2] = (m_state == Select) ? 0.329f : 0.565f;
         glsafe(::glColor3fv(color));
 
         glsafe(::glDisable(GL_DEPTH_TEST));
