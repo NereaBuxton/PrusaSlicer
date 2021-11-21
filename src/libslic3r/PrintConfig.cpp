@@ -2408,6 +2408,17 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloatOrPercent(15, false));
 
+    def = this->add("solid_infill_adjust_spacing", coBool);
+    def->label = L("Auto-adjust solid infill spacing");
+    def->category = L("Infill");
+    def->tooltip = L("Calculate a new spacing to fill width with possibly integer number of lines, "
+                     "the first and last line being centered at the interval ends. "
+                     "This function possibly increases the spacing, never decreases, "
+                     "and for a narrow width the increase in spacing may become severe, "
+                     "therefore the adjustment is limited to 20% increase.");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionBool(true));
+
     def = this->add("solid_infill_below_area", coFloat);
     def->label = L("Solid infill threshold area");
     def->category = L("Infill");
