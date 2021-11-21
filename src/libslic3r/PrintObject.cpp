@@ -590,6 +590,7 @@ bool PrintObject::invalidate_state_by_config_options(
             || opt_key == "solid_infill_below_area"
             || opt_key == "infill_extruder"
             || opt_key == "solid_infill_extruder"
+            || opt_key == "solid_infill_adjust_spacing"
             || opt_key == "infill_extrusion_width"
             || opt_key == "ensure_vertical_shell_thickness"
             || opt_key == "bridge_angle") {
