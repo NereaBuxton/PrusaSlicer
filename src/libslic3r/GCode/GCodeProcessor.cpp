@@ -1897,6 +1897,7 @@ void GCodeProcessor::process_tags(const std::string_view comment, bool producers
                 m_result.spiral_vase_layers.push_back({ m_end_position[Z], { move_id, move_id } });
         }
 #endif // ENABLE_SPIRAL_VASE_LAYERS
+        m_end_position[E] = 0.f;
         return;
     }
 
