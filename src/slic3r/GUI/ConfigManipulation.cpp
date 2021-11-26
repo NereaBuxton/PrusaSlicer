@@ -159,7 +159,7 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
             new_conf.set_key_value("wipe_tower", new ConfigOptionBool(false));
         apply(config, &new_conf);
     }
-
+#if 0
     if (config->opt_bool("support_material")) {
         // Ask only once.
         if (!support_material_overhangs_queried) {
@@ -184,7 +184,7 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
     else {
         support_material_overhangs_queried = false;
     }
-
+#endif //0
     if (config->option<ConfigOptionPercent>("fill_density")->value == 100) {
         std::string  fill_pattern            = config->option<ConfigOptionEnum<InfillPattern>>("fill_pattern")->serialize();
         const auto  &top_fill_pattern_values = config->def()->get("top_fill_pattern")->enum_values;
