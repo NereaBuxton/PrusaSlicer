@@ -1865,6 +1865,7 @@ void GCodeProcessor::process_tags(const std::string_view comment, bool producers
     // layer change tag
     if (comment == reserved_tag(ETags::Layer_Change)) {
         ++m_layer_id;
+        m_end_position[E] = 0.f;
         return;
     }
 
