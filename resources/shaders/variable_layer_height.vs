@@ -1,18 +1,14 @@
 #version 110
 
-#define INTENSITY_CORRECTION 0.6
+const vec3 LIGHT_TOP_DIR = vec3(-1.0, 0.75, 1.0);
+const vec3 LIGHT_BOT_DIR = vec3(-1.0, -0.75, 1.0);
+const vec3 LIGHT_BACK_DIR = vec3(0.75, 0.5, -1.0);
+#define LIGHT_TOP_DIFFUSE    0.2
+#define LIGHT_TOP_SPECULAR   0.1
+#define LIGHT_TOP_SHININESS  1.0
+#define LIGHT_BACK_DIFFUSE   0.6
 
-const vec3 LIGHT_TOP_DIR = vec3(-0.4574957, 0.4574957, 0.7624929);
-#define LIGHT_TOP_DIFFUSE    (0.8 * INTENSITY_CORRECTION)
-#define LIGHT_TOP_SPECULAR   (0.125 * INTENSITY_CORRECTION)
-#define LIGHT_TOP_SHININESS  20.0
-
-const vec3 LIGHT_FRONT_DIR = vec3(0.6985074, 0.1397015, 0.6985074);
-#define LIGHT_FRONT_DIFFUSE  (0.3 * INTENSITY_CORRECTION)
-//#define LIGHT_FRONT_SPECULAR (0.0 * INTENSITY_CORRECTION)
-//#define LIGHT_FRONT_SHININESS 5.0
-
-#define INTENSITY_AMBIENT    0.3
+#define INTENSITY_AMBIENT    0.4
 
 uniform mat4 volume_world_matrix;
 uniform float object_max_z;
@@ -35,10 +31,15 @@ void main()
     vec3 position = (gl_ModelViewMatrix * gl_Vertex).xyz;
     intensity.y = LIGHT_TOP_SPECULAR * pow(max(dot(-normalize(position), reflect(-LIGHT_TOP_DIR, normal)), 0.0), LIGHT_TOP_SHININESS);
 
-    // Perform the same lighting calculation for the 2nd light source (no specular)
-    NdotL = max(dot(normal, LIGHT_FRONT_DIR), 0.0);
+    NdotL = max(dot(normal, LIGHT_BOT_DIR), 0.0);
+
+    intensity.x += NdotL * LIGHT_TOP_DIFFUSE;
+    intensity.y += LIGHT_TOP_SPECULAR * pow(max(dot(-normalize(position), reflect(-LIGHT_BOT_DIR, normal)), 0.0), LIGHT_TOP_SHININESS);
+
+    // Perform the same lighting calculation for the 3rd (4th w/ ambient) light source (no specular)
+    NdotL = max(dot(normal, LIGHT_BACK_DIR), 0.0);
     
-    intensity.x += NdotL * LIGHT_FRONT_DIFFUSE;
+    intensity.x += NdotL * LIGHT_BACK_DIFFUSE;
 
     // Scaled to widths of the Z texture.
     if (object_max_z > 0.0)

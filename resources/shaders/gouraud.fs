@@ -1,24 +1,20 @@
 #version 110
 
-#define INTENSITY_CORRECTION 0.6
+const vec3 LIGHT_TOP_DIR = vec3(-1.0, 0.75, 1.0);
+const vec3 LIGHT_BOT_DIR = vec3(-1.0, -0.75, 1.0);
+const vec3 LIGHT_BACK_DIR = vec3(0.75, 0.5, -1.0);
+#define LIGHT_TOP_DIFFUSE    0.2
+#define LIGHT_TOP_SPECULAR   0.1
+#define LIGHT_TOP_SHININESS  1.0
+#define LIGHT_BACK_DIFFUSE   0.6
 
-// normalized values for (-0.6/1.31, 0.6/1.31, 1./1.31)
-const vec3 LIGHT_TOP_DIR = vec3(-0.4574957, 0.4574957, 0.7624929);
-#define LIGHT_TOP_DIFFUSE    (0.8 * INTENSITY_CORRECTION)
-#define LIGHT_TOP_SPECULAR   (0.125 * INTENSITY_CORRECTION)
-#define LIGHT_TOP_SHININESS  20.0
-
-// normalized values for (1./1.43, 0.2/1.43, 1./1.43)
-const vec3 LIGHT_FRONT_DIR = vec3(0.6985074, 0.1397015, 0.6985074);
-#define LIGHT_FRONT_DIFFUSE  (0.3 * INTENSITY_CORRECTION)
-
-#define INTENSITY_AMBIENT    0.3
+#define INTENSITY_AMBIENT    0.4
 
 const vec3 ZERO = vec3(0.0, 0.0, 0.0);
 const vec3 GREEN = vec3(0.608, 0.925, 0.329); // categorical 9
 const vec3 YELLOW = vec3(0.875, 0.749, 0.098); // categorical 1
 const vec3 RED = vec3(0.855, 0.204, 0.565); // categorical 8 
-const vec3 WHITE = vec3(0.980, 0.980, 0.980);
+const vec3 WHITE = vec3(0.980, 0.980, 0.980); // 98% white
 const float EPSILON = 0.0001;
 const float BANDS_WIDTH = 10.0;
 
