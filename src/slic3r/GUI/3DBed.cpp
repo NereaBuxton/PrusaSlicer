@@ -19,8 +19,8 @@
 #include <boost/log/trivial.hpp>
 
 static const float GROUND_Z = -0.02f;
-static const std::array<float, 4> DEFAULT_MODEL_COLOR = { 0.235f, 0.235f, 0.235f, 1.0f };
-static const std::array<float, 4> PICKING_MODEL_COLOR = { 0.0f, 0.0f, 0.0f, 1.0f };
+static const std::array<float, 4> DEFAULT_MODEL_COLOR = { 0.251f, 0.251f, 0.251f, 1.0f }; // 25% black
+static const std::array<float, 4> PICKING_MODEL_COLOR = { 0.098f, 0.098f, 0.098f, 1.0f }; // 98% white
 
 namespace Slic3r {
 namespace GUI {
@@ -119,17 +119,17 @@ void Bed3D::Axes::render() const
 
     shader->start_using();
     shader->set_uniform("emission_factor", 0.0f);
-
-    // x axis
-    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.75f, 0.0f, 0.0f, 1.0f });
+    
+    // x axis: categorical 8
+    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.855f, 0.204f, 0.565f, 1.0f });
     render_axis(Geometry::assemble_transform(m_origin, { 0.0, 0.5 * M_PI, 0.0 }).cast<float>());
 
-    // y axis
-    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.0f, 0.75f, 0.0f, 1.0f });
+    // y axis: categorical 12
+    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.278f, 0.886f, 0.435f, 1.0f });
     render_axis(Geometry::assemble_transform(m_origin, { -0.5 * M_PI, 0.0, 0.0 }).cast<float>());
 
-    // z axis
-    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.0f, 0.0f, 0.75f, 1.0f });
+    // z axis: categorical 11
+    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.098f, 0.753f, 0.780f, 1.0f });
     render_axis(Geometry::assemble_transform(m_origin).cast<float>());
 
     shader->stop_using();

@@ -15,10 +15,10 @@ const vec3 LIGHT_FRONT_DIR = vec3(0.6985074, 0.1397015, 0.6985074);
 #define INTENSITY_AMBIENT    0.3
 
 const vec3 ZERO = vec3(0.0, 0.0, 0.0);
-const vec3 GREEN = vec3(0.0, 0.7, 0.0);
-const vec3 YELLOW = vec3(0.5, 0.7, 0.0);
-const vec3 RED = vec3(0.7, 0.0, 0.0);
-const vec3 WHITE = vec3(1.0, 1.0, 1.0);
+const vec3 GREEN = vec3(0.608, 0.925, 0.329); // categorical 9
+const vec3 YELLOW = vec3(0.875, 0.749, 0.098); // categorical 1
+const vec3 RED = vec3(0.855, 0.204, 0.565); // categorical 8 
+const vec3 WHITE = vec3(0.980, 0.980, 0.980);
 const float EPSILON = 0.0001;
 const float BANDS_WIDTH = 10.0;
 
