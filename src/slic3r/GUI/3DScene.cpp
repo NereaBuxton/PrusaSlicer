@@ -343,16 +343,16 @@ void GLVolume::SinkingContours::update()
     else
         m_model.reset();
 }
-
-const std::array<float, 4> GLVolume::SELECTED_COLOR = { 0.0f, 1.0f, 0.0f, 1.0f };
-const std::array<float, 4> GLVolume::HOVER_SELECT_COLOR = { 0.4f, 0.9f, 0.1f, 1.0f };
-const std::array<float, 4> GLVolume::HOVER_DESELECT_COLOR = { 1.0f, 0.75f, 0.75f, 1.0f };
-const std::array<float, 4> GLVolume::OUTSIDE_COLOR = { 0.0f, 0.38f, 0.8f, 1.0f };
-const std::array<float, 4> GLVolume::SELECTED_OUTSIDE_COLOR = { 0.19f, 0.58f, 1.0f, 1.0f };
-const std::array<float, 4> GLVolume::DISABLED_COLOR = { 0.25f, 0.25f, 0.25f, 1.0f };
-const std::array<float, 4> GLVolume::SLA_SUPPORT_COLOR = { 0.75f, 0.75f, 0.75f, 1.0f };
-const std::array<float, 4> GLVolume::SLA_PAD_COLOR = { 0.0f, 0.2f, 0.0f, 1.0f };
-const std::array<float, 4> GLVolume::NEUTRAL_COLOR = { 0.9f, 0.9f, 0.9f, 1.0f };
+// color fix
+const std::array<float, 4> GLVolume::SELECTED_COLOR = { 0.608f, 0.925f, 0.329f, 1.0f }; // categorical 9
+const std::array<float, 4> GLVolume::HOVER_SELECT_COLOR = { 0.149f, 0.553f, 0.424f, 1.0f }; // categorical 10
+const std::array<float, 4> GLVolume::HOVER_DESELECT_COLOR = { 0.855f, 0.204f, 0.565f, 1.0f }; // categorical 8
+const std::array<float, 4> GLVolume::OUTSIDE_COLOR = { 0.318f, 0.267f, 0.827f, 1.0f }; // categorical 5
+const std::array<float, 4> GLVolume::SELECTED_OUTSIDE_COLOR = { 0.153f, 0.502f, 0.922f, 1.0f }; // categorical 3
+const std::array<float, 4> GLVolume::DISABLED_COLOR = { 0.251f, 0.251f, 0.251f, 1.0f }; // 25% black
+const std::array<float, 4> GLVolume::SLA_SUPPORT_COLOR = { 0.749f, 0.749f, 0.749f, 1.0f }; // 75% white
+const std::array<float, 4> GLVolume::SLA_PAD_COLOR = { 0.149f, 0.553f, 0.424f, 1.0f }; // categorical 10
+const std::array<float, 4> GLVolume::NEUTRAL_COLOR = { 0.882, 0.882f, 0.882f, 1.0f }; // 88% white
 const std::array<std::array<float, 4>, 4> GLVolume::MODEL_COLOR = { {
     { 1.0f, 1.0f, 0.0f, 1.f },
     { 1.0f, 0.5f, 0.5f, 1.f },

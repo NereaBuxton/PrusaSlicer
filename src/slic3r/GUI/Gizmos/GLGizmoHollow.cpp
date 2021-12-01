@@ -132,18 +132,18 @@ void GLGizmoHollow::render_points(const Selection& selection, bool picking) cons
         }
         else {
             if (size_t(m_hover_id) == i) {
-                render_color = {0.f, 1.f, 1.f, 1.f};
+                render_color = { 0.153f, 0.502f, 0.922f, 1.0f }; // categorical 3
             }
             else if (m_c->hollowed_mesh() &&
                        i < m_c->hollowed_mesh()->get_drainholes().size() &&
                        m_c->hollowed_mesh()->get_drainholes()[i].failed) {
-                render_color = {1.f, 0.f, 0.f, .5f};
+                render_color = { 0.855f, 0.204f, 0.565f, 0.502f }; // categorical 8 alpha 50%
             }
             else { // neigher hover nor picking
-
-                render_color[0] = point_selected ? 1.0f : 1.f;
-                render_color[1] = point_selected ? 0.3f : 1.f;
-                render_color[2] = point_selected ? 0.3f : 1.f;
+                // categorical 4 : 98% white
+                render_color[0] = point_selected ? 0.435f : 0.980f;
+                render_color[1] = point_selected ? 0.220f : 0.980f;
+                render_color[2] = point_selected ? 0.694f : 0.980f;
                 render_color[3] = 0.5f;
             }
         }

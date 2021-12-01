@@ -71,13 +71,12 @@
 #include <imgui/imgui_internal.h>
 
 static constexpr const float TRACKBALLSIZE = 0.8f;
-
-static constexpr const float DEFAULT_BG_DARK_COLOR[3] = { 0.1f, 0.1f, 0.1f };
-static constexpr const float DEFAULT_BG_MED_COLOR[3] = { 0.25f, 0.25f, 0.25f };
-static constexpr const float DEFAULT_BG_LIGHT_COLOR[3] = { 0.666f, 0.666f, 0.666f };
-static constexpr const float ERROR_BG_DARK_COLOR[3] = { 0.478f, 0.192f, 0.039f };
-static constexpr const float ERROR_BG_MED_COLOR[3] = { 0.616f, 0.192f, 0.039f };
-static constexpr const float ERROR_BG_LIGHT_COLOR[3] = { 0.753f, 0.192f, 0.039f };
+static constexpr const float DEFAULT_BG_DARK_COLOR[3] = { 0.098f, 0.098f, 0.098f };
+static constexpr const float DEFAULT_BG_MED_COLOR[3] = { 0.251f, 0.251f, 0.251f };
+static constexpr const float DEFAULT_BG_LIGHT_COLOR[3] = { 0.667f, 0.667f, 0.667f };
+static constexpr const float ERROR_BG_DARK_COLOR[3] = { 0.980f, 0.749f, 0.518f }; // sequential magma visual spectrum 3
+static constexpr const float ERROR_BG_MED_COLOR[3] = { 0.980f, 0.498f, 0.369f }; // sequential magma visual spectrum 5
+static constexpr const float ERROR_BG_LIGHT_COLOR[3] = { 0.871f, 0.286f, 0.408f }; // sequential magma visual spectrum 7
 //static constexpr const float AXES_COLOR[3][3] = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
 
 // Number of floats
@@ -861,8 +860,8 @@ void GLCanvas3D::SequentialPrintClearance::set_polygons(const Polygons& polygons
 
 void GLCanvas3D::SequentialPrintClearance::render()
 {
-    std::array<float, 4> FILL_COLOR = { 1.0f, 0.0f, 0.0f, 0.5f };
-    std::array<float, 4> NO_FILL_COLOR = { 1.0f, 1.0f, 1.0f, 0.75f };
+    std::array<float, 4> FILL_COLOR = { 0.855f, 0.204f, 0.565f, 0.502f }; // categorical 8 50% alpha
+    std::array<float, 4> NO_FILL_COLOR = { 0.980f, 0.980f, 0.980f, 0.75f }; // 98% white 75% alpha
 
     GLShaderProgram* shader = wxGetApp().get_shader("gouraud_light");
     if (shader == nullptr)
@@ -5784,7 +5783,7 @@ void GLCanvas3D::_load_print_toolpaths(const BuildVolume &build_volume)
     if (!print->has_skirt() && !print->has_brim())
         return;
 
-    const std::array<float, 4> color = { 0.5f, 1.0f, 0.5f, 1.0f }; // greenish
+    const std::array<float, 4> color = { 0.608f, 0.925f, 0.329f, 1.0f }; // categorical 9
 
     // number of skirt layers
     size_t total_layer_count = 0;
@@ -5845,10 +5844,10 @@ void GLCanvas3D::_load_print_object_toolpaths(const PrintObject& print_object, c
         int                          extruders_cnt;
         const std::vector<CustomGCode::Item>*   color_print_values;
 
-        static const std::array<float, 4>& color_perimeters() { static std::array<float, 4> color = { 1.0f, 1.0f, 0.0f, 1.f }; return color; } // yellow
-        static const std::array<float, 4>& color_infill() { static std::array<float, 4> color = { 1.0f, 0.5f, 0.5f, 1.f }; return color; } // redish
-        static const std::array<float, 4>& color_support() { static std::array<float, 4> color = { 0.5f, 1.0f, 0.5f, 1.f }; return color; } // greenish
-        static const std::array<float, 4>& color_pause_or_custom_code() { static std::array<float, 4> color = { 0.5f, 0.5f, 0.5f, 1.f }; return color; } // gray
+        static const std::array<float, 4>& color_perimeters() { static std::array<float, 4> color = { 0.875f, 0.749f, 0.098f, 1.0f }; return color; } // categorical 1
+        static const std::array<float, 4>& color_infill() { static std::array<float, 4> color = { 0.855f, 0.204f, 0.565f, 1.0f }; return color; } // categorical 8
+        static const std::array<float, 4>& color_support() { static std::array<float, 4> color = { 0.608f, 0.925f, 0.329f, 1.0f }; return color; } // categorical 9
+        static const std::array<float, 4>& color_pause_or_custom_code() { static std::array<float, 4> color = { 0.502f, 0.502f, 0.502f, 1.0f }; return color; } // 50% shade
 
         // For cloring by a tool, return a parsed color.
         bool                         color_by_tool() const { return tool_colors != nullptr; }
@@ -6143,7 +6142,7 @@ void GLCanvas3D::_load_wipe_tower_toolpaths(const BuildVolume& build_volume, con
         Vec2f                        wipe_tower_pos;
         float                        wipe_tower_angle;
 
-        static const std::array<float, 4>& color_support() { static std::array<float, 4> color = { 0.5f, 1.0f, 0.5f, 1.f }; return color; } // greenish
+        static const std::array<float, 4>& color_support() { static std::array<float, 4> color = { 0.608f, 0.925f, 0.329f, 1.0f }; return color; } // categorical 9
 
         // For cloring by a tool, return a parsed color.
         bool                         color_by_tool() const { return tool_colors != nullptr; }

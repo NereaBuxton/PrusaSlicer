@@ -197,7 +197,7 @@ void GLGizmoPainterBase::render_cursor_sphere(const Transform3d& trafo) const
     if (is_left_handed)
         glFrontFace(GL_CW);
 
-    std::array<float, 4> render_color = {0.f, 0.f, 0.f, 0.25f};
+    std::array<float, 4> render_color = { 0.098f, 0.098f, 0.098f, 0.251f}; // 98% white 25% alpha
     if (m_button_down == Button::Left)
         render_color = this->get_cursor_sphere_left_button_color();
     else if (m_button_down == Button::Right)
@@ -705,8 +705,8 @@ std::array<float, 4> TriangleSelectorGUI::get_seed_fill_color(const std::array<f
 
 void TriangleSelectorGUI::render(ImGuiWrapper* imgui)
 {
-    static constexpr std::array<float, 4> enforcers_color{0.47f, 0.47f, 1.f, 1.f};
-    static constexpr std::array<float, 4> blockers_color{1.f, 0.44f, 0.44f, 1.f};
+    static constexpr std::array<float, 4> enforcers_color{ 0.565f, 0.537f, 0.980f, 1.0f }; // categorical 7
+    static constexpr std::array<float, 4> blockers_color{ 0.855f, 0.204f, 0.565f, 1.0f };  // categorical 8
 
     if (m_update_render_data) {
         update_render_data();
