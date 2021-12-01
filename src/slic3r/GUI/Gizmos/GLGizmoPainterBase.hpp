@@ -134,8 +134,8 @@ protected:
     virtual void update_model_object() const = 0;
     virtual void update_from_model_object() = 0;
 
-    virtual std::array<float, 4> get_cursor_sphere_left_button_color() const { return {0.f, 0.f, 1.f, 0.25f}; }
-    virtual std::array<float, 4> get_cursor_sphere_right_button_color() const { return {1.f, 0.f, 0.f, 0.25f}; }
+    virtual std::array<float, 4> get_cursor_sphere_left_button_color() const { return { 0.318f, 0.267f, 0.827f, 0.251f }; } // categorical 5 25% alpha
+    virtual std::array<float, 4> get_cursor_sphere_right_button_color() const { return { 0.855f, 0.204f, 0.565f, 0.251f }; } // categorical 8 25% alpha
 
     virtual EnforcerBlockerType get_left_button_state_type() const { return EnforcerBlockerType::ENFORCER; }
     virtual EnforcerBlockerType get_right_button_state_type() const { return EnforcerBlockerType::BLOCKER; }
