@@ -128,8 +128,9 @@ void Bed3D::Axes::render() const
     const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.278f, 0.886f, 0.435f, 1.0f });
     render_axis(Geometry::assemble_transform(m_origin, { -0.5 * M_PI, 0.0, 0.0 }).cast<float>());
 
-    // z axis: categorical 11
-    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.098f, 0.753f, 0.780f, 1.0f });
+    // z axis: option 1: categorical 11 option 2: categorical 3
+    //const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.098f, 0.753f, 0.780f, 1.0f }); // categorical 11 Option 1
+    const_cast<GLModel*>(&m_arrow)->set_color(-1, { 0.153f, 0.502f, 0.922f, 1.0f }); // categorical 3 Option 2
     render_axis(Geometry::assemble_transform(m_origin).cast<float>());
 
     shader->stop_using();

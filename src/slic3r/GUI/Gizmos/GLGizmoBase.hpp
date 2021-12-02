@@ -24,7 +24,8 @@ static const std::array<float, 4> DEFAULT_HIGHLIGHT_COLOR = { 0.796f, 0.435f, 0.
 static const std::array<std::array<float, 4>, 3> AXES_COLOR = {{
                                                                 { 0.855f, 0.204f, 0.565f, 1.0f }, // categorical 8
                                                                 { 0.278f, 0.886f, 0.435f, 1.0f }, // categorical 12
-                                                                { 0.098f, 0.753f, 0.780f, 1.0f }  // categorical 11
+                                                                //{ 0.098f, 0.753f, 0.780f, 1.0f }  // categorical 11 Option 1
+                                                                { 0.153f, 0.502f, 0.922f, 1.0f }  // categorical 3 Option 2
                                                               }};
 static const std::array<float, 4> CONSTRAINED_COLOR = { 0.502f, 0.502f, 0.502f, 1.0f }; // 50% shade
 

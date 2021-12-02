@@ -132,7 +132,8 @@ void GLGizmoHollow::render_points(const Selection& selection, bool picking) cons
         }
         else {
             if (size_t(m_hover_id) == i) {
-                render_color = { 0.153f, 0.502f, 0.922f, 1.0f }; // categorical 3
+                //render_color = { 0.153f, 0.502f, 0.922f, 1.0f }; // categorical 3 Option 1
+                render_color = { 0.098f, 0.753f, 0.780f, 1.0f }; // categorical 11 Option 2
             }
             else if (m_c->hollowed_mesh() &&
                        i < m_c->hollowed_mesh()->get_drainholes().size() &&
