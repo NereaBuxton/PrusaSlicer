@@ -481,16 +481,22 @@ const std::vector<GCodeViewer::Color> GCodeViewer::Extrusion_Role_Colors {{
     { 0.875f, 0.749f, 0.098f, 1.0f },   // erPerimeter: categorical 1
     { 0.910f, 0.529f, 0.102f, 1.0f },   // erExternalPerimeter: categorical 2
     { 0.153f, 0.502f, 0.922f, 1.0f },   // erOverhangPerimeter: categorical 3
-    { 0.435f, 0.220f, 0.694f, 1.0f },   // erInternalInfill: categorical 4
-    { 0.318f, 0.267f, 0.827f, 1.0f },   // erSolidInfill: categorical 5
+    //{ 0.435f, 0.220f, 0.694f, 1.0f },   // erInternalInfill: categorical 4 Option 1
+    { 0.855f, 0.204f, 0.565f, 1.0f },   // erInternalInfill: categorical 8 Option 2
+    //{ 0.318f, 0.267f, 0.827f, 1.0f },   // erSolidInfill: categorical 5 Option 1
+    { 0.435f, 0.220f, 0.694f, 1.0f },   // erSolidInfill: categorical 4 Option 2
     { 0.796f, 0.435f, 0.063f, 1.0f },   // erTopSolidInfill: categorical 6
     { 0.910f, 0.529f, 0.102f, 1.0f },   // erIroning: erExternalPerimeter: categorical 2
     { 0.565f, 0.537f, 0.980f, 1.0f },   // erBridgeInfill: categorical 7
     { 0.980f, 0.980f, 0.980f, 1.0f },   // erGapFill: 98% white (max color brightness)
-    { 0.855f, 0.204f, 0.565f, 1.0f },   // erSkirt: categorical 8
-    { 0.608f, 0.925f, 0.329f, 1.0f },   // erSupportMaterial: categorical 9
+    //{ 0.855f, 0.204f, 0.565f, 1.0f },   // erSkirt: categorical 8 Option 1
+    { 0.318f, 0.267f, 0.827f, 1.0f },   // erSkirt: categorical 5 Option 2
+    //{ 0.608f, 0.925f, 0.329f, 1.0f },   // erSupportMaterial: categorical 9 Option 1
+    { 0.098f, 0.753f, 0.780f, 1.0f },   // erSupportMaterial: categorical 11 Option 2
     { 0.149f, 0.553f, 0.424f, 1.0f },   // erSupportMaterialInterface: categorical 10
-    { 0.098f, 0.753f, 0.780f, 1.0f },   // erWipeTower: categorical 11
+    //{ 0.098f, 0.753f, 0.780f, 1.0f },   // erWipeTower: categorical 11 Option 1
+    { 0.608f, 0.925f, 0.329f, 1.0f },   // erWipeTower: categorical 9 Option 2
+
     { 0.278f, 0.886f, 0.435f, 1.0f },   // erCustom: categorical 12
     { 0.098f, 0.098f, 0.098f, 1.0f }    // erMixed: 9.8% black (min color brightness)
 }};
