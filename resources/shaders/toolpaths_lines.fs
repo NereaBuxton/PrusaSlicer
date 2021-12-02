@@ -1,6 +1,6 @@
 #version 110
 
-// Two key lights, front left top and bottom
+// Two key lights
 const vec3 LIGHT_KEY_TOP_DIR = vec3(-1.0, 0.75, 1.0);
 const vec3 LIGHT_KEY_BOT_DIR = vec3(-1.0, -0.75, 1.0);
 #define LIGHT_KEY_DIFFUSE   0.2
@@ -11,9 +11,11 @@ const vec3 LIGHT_BACK_DIR = vec3(0.75, 0.5, -1.0);
 #define LIGHT_BACK_DIFFUSE  0.4
 #define LIGHT_BACK_SPECULAR  0.02
 
-// Two fill lights
+// Four fill lights
 const vec3 LIGHT_FILL_TOP_FRONT_DIR = vec3(1.0, 0.75, 1.0);
 const vec3 LIGHT_FILL_BOT_FRONT_DIR = vec3(1.0, -0.75, 1.0);
+const vec3 LIGHT_FILL_TOP_MIDDLE_DIR = vec3(0.0, 1.0, 0.8);
+const vec3 LIGHT_FILL_BOT_MIDDLE_DIR = vec3(0.0, -1.0, 0.8);
 
 #define LIGHT_FILL_DIFFUSE  0.1
 #define LIGHT_FILL_SPECULAR  0.005
@@ -53,6 +55,12 @@ void main()
     intensity += NdotL * LIGHT_FILL_DIFFUSE;
 
     NdotL = abs(dot(normal, LIGHT_FILL_BOT_FRONT_DIR));
+    intensity += NdotL * LIGHT_FILL_DIFFUSE;
+
+    NdotL = abs(dot(normal, LIGHT_FILL_TOP_MIDDLE_DIR));
+    intensity += NdotL * LIGHT_FILL_DIFFUSE;
+
+    NdotL = abs(dot(normal, LIGHT_FILL_BOT_MIDDLE_DIR));
     intensity += NdotL * LIGHT_FILL_DIFFUSE;
 
     gl_FragColor = vec4(uniform_color.rgb * 0.75 * intensity, uniform_color.a);
