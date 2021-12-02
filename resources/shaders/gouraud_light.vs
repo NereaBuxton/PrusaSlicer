@@ -3,8 +3,8 @@
 // Two key lights
 const vec3 LIGHT_KEY_TOP_DIR = vec3(-1.0, 0.75, 1.0);
 const vec3 LIGHT_KEY_BOT_DIR = vec3(-1.0, -0.75, 1.0);
-#define LIGHT_KEY_DIFFUSE   0.2
-#define LIGHT_KEY_SPECULAR  0.01
+#define LIGHT_KEY_DIFFUSE   0.16
+#define LIGHT_KEY_SPECULAR  0.008
 
 // One back light
 const vec3 LIGHT_BACK_DIR = vec3(0.75, 0.5, -1.0);
