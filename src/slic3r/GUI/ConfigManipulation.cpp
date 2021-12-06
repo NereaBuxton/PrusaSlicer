@@ -155,7 +155,7 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
         apply(config, &new_conf);
     }
 
-    if (config->opt_bool("support_material")) {
+    if (0) {
         // Ask only once.
         if (!m_support_material_overhangs_queried) {
             m_support_material_overhangs_queried = true;
@@ -176,9 +176,9 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
             }
         }
     }
-    else {
-        m_support_material_overhangs_queried = false;
-    }
+    //else {
+    //    m_support_material_overhangs_queried = false;
+    //}
 
     if (config->option<ConfigOptionPercent>("fill_density")->value == 100) {
         std::string  fill_pattern            = config->option<ConfigOptionEnum<InfillPattern>>("fill_pattern")->serialize();
