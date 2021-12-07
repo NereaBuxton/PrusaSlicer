@@ -378,14 +378,25 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
 		if (!this->m_object->config().solid_infill_adjust_spacing)
 			params.dont_adjust		 = true;
 
-        for (ExPolygon &expoly : surface_fill.expolygons) {
+        for (ExPolygon &expoly : with_sheath ? closing_ex(to_polygons(surface_fill.expolygons), float(SCALED_EPSILON), float(SCALED_EPSILON + surface_fill.params.flow.scaled_width())) : surface_fill.expolygons) {
 			// Spacing is modified by the filler to indicate adjustments. Reset it for each expolygon.
 			f->spacing = surface_fill.params.spacing;
-			surface_fill.surface.expolygon = closing_ex(std::move(expoly), float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * surface_fill.params.flow.scaled_width()))[0];
+			surface_fill.surface.expolygon = std::move(expoly);
 			Polylines polylines;
 			try {
 				polylines = f->fill_surface(&surface_fill.surface, params);
 			} catch (InfillFailedException &) {
+			}
+			if (with_sheath) {
+				for (ExPolygon &expoly2 : closing_ex(to_polygons(surface_fill.expolygons), float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * surface_fill.params.flow.scaled_width()))) {
+					polylines.reserve(expoly2.holes.size() + 1);
+					for (size_t i = 0; i <= expoly2.holes.size(); ++i) {
+						Polyline pl(i == 0 ? expoly2.contour.points : expoly2.holes[i - 1].points);
+						pl.points.emplace_back(pl.points.front());
+						pl.clip_end(f->loop_clipping);
+						polylines.emplace_back(std::move(pl));
+					}
+				}
 			}
 	        if (! polylines.empty()) {
 		        // calculate actual flow from spacing (which might have been adjusted by the infill
