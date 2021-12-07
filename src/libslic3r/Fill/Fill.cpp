@@ -381,7 +381,7 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
         for (ExPolygon &expoly : surface_fill.expolygons) {
 			// Spacing is modified by the filler to indicate adjustments. Reset it for each expolygon.
 			f->spacing = surface_fill.params.spacing;
-			surface_fill.surface.expolygon = closing_ex(std::move(expoly), float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * surface_fill.params.flow.width()))[0];
+			surface_fill.surface.expolygon = closing_ex(std::move(expoly), float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * surface_fill.params.flow.scaled_width()))[0];
 			Polylines polylines;
 			try {
 				polylines = f->fill_surface(&surface_fill.surface, params);
