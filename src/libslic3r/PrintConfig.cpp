@@ -1520,6 +1520,15 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(80));
 
+    def = this->add("infill_with_sheath", coBool);
+    def->label = L("With sheath around infill");
+    def->category = L("Infill");
+    def->tooltip = L("Add a sheath (a single perimeter line) around all infill. This helps "
+        "small solid infill regions have a substrate to print against, avoiding curling. "
+        "It has the effect of adding an extra perimeter, printed at the infill speeds.");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionBool(false));
+
     def = this->add("inherits", coString);
     def->label = L("Inherits profile");
     def->tooltip = L("Name of the profile, from which this profile inherits.");

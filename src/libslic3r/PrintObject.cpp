@@ -584,6 +584,7 @@ bool PrintObject::invalidate_state_by_config_options(
                opt_key == "interface_shells"
             || opt_key == "infill_only_where_needed"
             || opt_key == "infill_every_layers"
+            || opt_key == "infill_with_sheath"
             || opt_key == "solid_infill_every_layers"
             || opt_key == "bottom_solid_min_thickness"
             || opt_key == "top_solid_layers"

@@ -557,6 +557,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionInt,                  infill_every_layers))
     ((ConfigOptionFloatOrPercent,       infill_overlap))
     ((ConfigOptionFloat,                infill_speed))
+    ((ConfigOptionBool,                 infill_with_sheath))
     // Ironing options
     ((ConfigOptionBool,                 ironing))
     ((ConfigOptionEnum<IroningType>,    ironing_type))

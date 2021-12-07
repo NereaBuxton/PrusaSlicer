@@ -351,6 +351,7 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
         // calculate flow spacing for infill pattern generation
         bool using_internal_flow = ! surface_fill.surface.is_solid() && ! surface_fill.params.bridge;
         double link_max_length = 0.;
+		bool with_sheath = m_regions[surface_fill.region_id]->region().config().infill_with_sheath;
         if (! surface_fill.params.bridge) {
 #if 0
             link_max_length = layerm.region()->config().get_abs_value(surface.is_external() ? "external_fill_link_max_length" : "fill_link_max_length", flow.spacing());
@@ -380,7 +381,7 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
         for (ExPolygon &expoly : surface_fill.expolygons) {
 			// Spacing is modified by the filler to indicate adjustments. Reset it for each expolygon.
 			f->spacing = surface_fill.params.spacing;
-			surface_fill.surface.expolygon = std::move(expoly);
+			surface_fill.surface.expolygon = closing_ex(std::move(expoly), float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * surface_fill.params.flow.width()))[0];
 			Polylines polylines;
 			try {
 				polylines = f->fill_surface(&surface_fill.surface, params);
