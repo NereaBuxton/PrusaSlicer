@@ -387,18 +387,7 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
 				polylines = f->fill_surface(&surface_fill.surface, params);
 			} catch (InfillFailedException &) {
 			}
-			if (with_sheath) {
-				for (ExPolygon &expoly2 : closing_ex(to_polygons(surface_fill.expolygons), float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * surface_fill.params.flow.scaled_width()))) {
-					polylines.reserve(expoly2.holes.size() + 1);
-					for (size_t i = 0; i <= expoly2.holes.size(); ++i) {
-						Polyline pl(i == 0 ? expoly2.contour.points : expoly2.holes[i - 1].points);
-						pl.points.emplace_back(pl.points.front());
-						pl.clip_end(f->loop_clipping);
-						polylines.emplace_back(std::move(pl));
-					}
-				}
-			}
-	        if (! polylines.empty()) {
+			if (! polylines.empty()) {
 		        // calculate actual flow from spacing (which might have been adjusted by the infill
 		        // pattern generator)
 		        double flow_mm3_per_mm = surface_fill.params.flow.mm3_per_mm();
@@ -422,6 +411,29 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
 		            surface_fill.params.extrusion_role,
 		            flow_mm3_per_mm, float(flow_width), surface_fill.params.flow.height());
 		    }
+		}
+		if (with_sheath) {
+			for (ExPolygon& expoly : closing_ex(to_polygons(surface_fill.expolygons), float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * surface_fill.params.flow.scaled_width()))) {
+				Polylines polylines;
+				polylines.reserve(expoly.holes.size() + 1);
+				for (size_t i = 0; i <= expoly.holes.size(); ++i) {
+					Polyline pl(i == 0 ? expoly.contour.points : expoly.holes[i - 1].points);
+					pl.points.emplace_back(pl.points.front());
+					pl.clip_end(f->loop_clipping);
+					polylines.emplace_back(std::move(pl));
+				}
+				if (!polylines.empty()) {
+					// Save into layer.
+					ExtrusionEntityCollection* eec = nullptr;
+					m_regions[surface_fill.region_id]->fills.entities.push_back(eec = new ExtrusionEntityCollection());
+					// Only concentric fills are not sorted.
+					eec->no_sort = f->no_sort();
+					extrusion_entities_append_paths(
+						eec->entities, std::move(polylines),
+						surface_fill.params.extrusion_role,
+						surface_fill.params.flow.mm3_per_mm(), float(surface_fill.params.flow.width()), surface_fill.params.flow.height());
+				}
+			}
 		}
     }
 
