@@ -1128,6 +1128,8 @@ void PrintObject::discover_vertical_shells()
         //FIXME Improve the heuristics for a grain size.
         size_t grain_size = std::max(num_layers / 16, size_t(1));
 
+        bool infill_sheath = region.config().infill_with_sheath;
+
         if (! top_bottom_surfaces_all_regions) {
             // This is either a single material print, or a multi-material print and interface_shells are enabled, meaning that the vertical shell thickness
             // is calculated over a single material.
@@ -1162,7 +1164,7 @@ void PrintObject::discover_vertical_shells()
         BOOST_LOG_TRIVIAL(debug) << "Discovering vertical shells for region " << region_id << " in parallel - start : ensure vertical wall thickness";
         tbb::parallel_for(
             tbb::blocked_range<size_t>(0, num_layers, grain_size),
-            [this, region_id, &cache_top_botom_regions]
+            [this, region_id, &cache_top_botom_regions, infill_sheath]
             (const tbb::blocked_range<size_t>& range) {
                 // printf("discover_vertical_shells from %d to %d\n", range.begin(), range.end());
                 for (size_t idx_layer = range.begin(); idx_layer < range.end(); ++ idx_layer) {
@@ -1228,7 +1230,7 @@ void PrintObject::discover_vertical_shells()
 								if (! holes.empty())
 									holes = intersection(holes, cache.holes);
 								if (! cache.top_surfaces.empty()) {
-		                            polygons_append(shell, shrink(cache.top_surfaces, 1.3f * min_perimeter_infill_spacing)); // offset to counteract the other offset
+		                            polygons_append(shell, shrink(cache.top_surfaces, infill_sheath ? 3.3f * min_perimeter_infill_spacing : 1.3f * min_perimeter_infill_spacing)); // offset to counteract the other offset
 		                            // Running the union_ using the Clipper library piece by piece is cheaper 
 		                            // than running the union_ all at once.
 	                               shell = union_(shell);
@@ -1247,7 +1249,7 @@ void PrintObject::discover_vertical_shells()
 								if (! holes.empty())
 									holes = intersection(holes, cache.holes);
 								if (! cache.bottom_surfaces.empty()) {
-		                            polygons_append(shell, shrink(cache.bottom_surfaces, 1.3f * min_perimeter_infill_spacing)); // offset to counteract the other offset
+		                            polygons_append(shell, shrink(cache.bottom_surfaces, infill_sheath ? 3.3f * min_perimeter_infill_spacing : 1.3f * min_perimeter_infill_spacing)); // offset to counteract the other offset
 		                            // Running the union_ using the Clipper library piece by piece is cheaper 
 		                            // than running the union_ all at once.
 		                            shell = union_(shell);
@@ -1333,7 +1335,7 @@ void PrintObject::discover_vertical_shells()
 #if 1
                     // Intentionally inflate a bit more than how much the region has been shrunk, 
                     // so there will be some overlap between this solid infill and the other infill regions (mainly the sparse infill).
-                    shell = opening(union_(shell), 0.5f * min_perimeter_infill_spacing, 0.8f * min_perimeter_infill_spacing, ClipperLib::jtRound);
+                    shell = opening(union_(shell), 0.5f * min_perimeter_infill_spacing, infill_sheath ? 2.8f * min_perimeter_infill_spacing : 0.8f * min_perimeter_infill_spacing, ClipperLib::jtRound);
                     if (shell.empty())
                         continue;
 #else
@@ -1869,6 +1871,8 @@ void PrintObject::discover_horizontal_shells()
                             if (surface.surface_type == stInternal || surface.surface_type == stInternalSolid)
                                 polygons_append(internal, to_polygons(surface.expolygon));
                         new_internal_solid = intersection(solid, internal, ApplySafetyOffset::Yes);
+                        if (region_config.infill_with_sheath)
+                            new_internal_solid = intersection(expand(new_internal_solid, 2. * layerm->flow(frSolidInfill).scaled_width()), internal, ApplySafetyOffset::Yes);
                     }
                     if (new_internal_solid.empty()) {
                         // No internal solid needed on this layer. In order to decide whether to continue
