@@ -71,7 +71,7 @@ static void take_snapshot(const wxString& snapshot_name)
 ObjectList::ObjectList(wxWindow* parent) :
     wxDataViewCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 
 #ifdef _WIN32
-        wxBORDER_SIMPLE | 
+        wxNO_BORDER | 
 #endif
         wxDV_MULTIPLE)
 {
