@@ -446,7 +446,7 @@ void MainFrame::update_layout()
         else
 #endif
         m_tabpanel->InsertPage(0, m_plater, _L("Plater"));
-        m_main_sizer->Add(m_tabpanel, 1, wxEXPAND | wxTOP, 1);
+        m_main_sizer->Add(m_tabpanel, 1, wxEXPAND);
         m_plater->Show();
         m_tabpanel->Show();
         // update Tabs
@@ -478,7 +478,7 @@ void MainFrame::update_layout()
     {
         m_main_sizer->Add(m_plater, 1, wxEXPAND);
         m_tabpanel->Reparent(&m_settings_dialog);
-        m_settings_dialog.GetSizer()->Add(m_tabpanel, 1, wxEXPAND | wxTOP, 2);
+        m_settings_dialog.GetSizer()->Add(m_tabpanel, 1, wxEXPAND);
         m_tabpanel->Show();
         m_plater->Show();
 
