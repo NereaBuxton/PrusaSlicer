@@ -304,12 +304,13 @@ void Tab::create_preset_tab()
     m_hsizer->Add(m_left_sizer, 0, wxEXPAND | wxLEFT | wxTOP | wxBOTTOM, 3);
 
     // tree
-    if (wxOSX)
-        m_treectrl = new wxTreeCtrl(panel, wxID_ANY, wxDefaultPosition, wxSize(18 * m_em_unit, -1),
-            wxTR_NO_BUTTONS | wxTR_HIDE_ROOT | wxTR_SINGLE | wxTR_NO_LINES | wxBORDER_THEME | wxWANTS_CHARS | wxTR_FULL_ROW_HIGHLIGHT);
-    else
+#ifdef __WINDOWS__
         m_treectrl = new wxTreeCtrl(panel, wxID_ANY, wxDefaultPosition, wxSize(16 * m_em_unit, -1),
             wxTR_NO_BUTTONS | wxTR_HIDE_ROOT | wxTR_SINGLE | wxTR_NO_LINES | wxBORDER_NONE | wxWANTS_CHARS | wxTR_FULL_ROW_HIGHLIGHT);
+#else
+        m_treectrl = new wxTreeCtrl(panel, wxID_ANY, wxDefaultPosition, wxSize(20 * m_em_unit, -1),
+            wxTR_NO_BUTTONS | wxTR_HIDE_ROOT | wxTR_SINGLE | wxTR_NO_LINES | wxBORDER_SUNKEN | wxWANTS_CHARS | wxTR_FULL_ROW_HIGHLIGHT);
+#endif //__WINDOWS__
     m_left_sizer->Add(m_treectrl, 1, wxEXPAND);
     const int img_sz = int(16 * scale_factor + 0.5f);
     m_icons = new wxImageList(img_sz, img_sz, true, 1);
