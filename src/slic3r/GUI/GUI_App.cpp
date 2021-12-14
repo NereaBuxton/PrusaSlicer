@@ -1459,11 +1459,13 @@ void GUI_App::UpdateDVCDarkUI(wxDataViewCtrl* dvc, bool highlited/* = false*/)
     UpdateDarkUI(dvc, highlited ? dark_mode() : false);
 #ifdef _MSW_DARK_MODE
     dvc->RefreshHeaderDarkMode(&m_normal_font);
+    if (!dark_mode())
+        dvc->SetBackgroundColour(wxColour(250, 250, 250)); // 98% white
 #endif //_MSW_DARK_MODE
     if (dvc->HasFlag(wxDV_ROW_LINES))
         dvc->SetAlternateRowColour(m_color_highlight_default);
-    if (dvc->GetBorder() != wxBORDER_SIMPLE)
-        dvc->SetWindowStyle(dvc->GetWindowStyle() | wxBORDER_SIMPLE);
+    //if (dvc->GetBorder() != wxBORDER_SIMPLE)
+    //    dvc->SetWindowStyle(dvc->GetWindowStyle() | wxBORDER_SIMPLE);
 #endif
 }
 

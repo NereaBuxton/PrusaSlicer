@@ -69,11 +69,7 @@ static void take_snapshot(const wxString& snapshot_name)
 }
 
 ObjectList::ObjectList(wxWindow* parent) :
-    wxDataViewCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 
-#ifdef _WIN32
-        wxBORDER_SIMPLE | 
-#endif
-        wxDV_MULTIPLE)
+    wxDataViewCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER | wxDV_MULTIPLE)
 {
     wxGetApp().UpdateDVCDarkUI(this, true);
 
