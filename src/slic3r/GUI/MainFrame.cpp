@@ -446,7 +446,7 @@ void MainFrame::update_layout()
         else
 #endif
         m_tabpanel->InsertPage(0, m_plater, _L("Plater"));
-        m_main_sizer->Add(m_tabpanel, 1, wxEXPAND | wxTOP, 1);
+        m_main_sizer->Add(m_tabpanel, 1, wxEXPAND);
         m_plater->Show();
         m_tabpanel->Show();
         // update Tabs
