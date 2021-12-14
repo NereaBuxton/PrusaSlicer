@@ -11,7 +11,7 @@
 wxDEFINE_EVENT(wxCUSTOMEVT_NOTEBOOK_SEL_CHANGED, wxCommandEvent);
 
 ButtonsListCtrl::ButtonsListCtrl(wxWindow *parent, bool add_mode_buttons/* = false*/) :
-    wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTAB_TRAVERSAL)
+    wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTAB_TRAVERSAL | wxFULL_REPAINT_ON_RESIZE)
 {
 #ifdef __WINDOWS__
     SetDoubleBuffered(true);
@@ -25,12 +25,12 @@ ButtonsListCtrl::ButtonsListCtrl(wxWindow *parent, bool add_mode_buttons/* = fal
     this->SetSizer(m_sizer);
 
     m_buttons_sizer = new wxFlexGridSizer(1, m_btn_margin, m_btn_margin);
-    m_sizer->Add(m_buttons_sizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM, m_btn_margin);
+    m_sizer->Add(m_buttons_sizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxTOP, m_btn_margin);
 
     if (add_mode_buttons) {
         m_mode_sizer = new ModeSizer(this, m_btn_margin);
         m_sizer->AddStretchSpacer(20);
-        m_sizer->Add(m_mode_sizer, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxBOTTOM, m_btn_margin);
+        m_sizer->Add(m_mode_sizer, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxTOP, m_btn_margin);
     }
 
     this->Bind(wxEVT_PAINT, &ButtonsListCtrl::OnPaint, this);
@@ -51,6 +51,15 @@ void ButtonsListCtrl::OnPaint(wxPaintEvent&)
 
     // highlight selected notebook button
 
+    // Draw grey line on top in light mode, but underneath the next orange highlights.
+    // This is basically to hide the stupid grey menubar line that windows has.
+    // Accept it. Lean into it. Make it thicker. (And make it appear in preferences and settings.)
+    if (!Slic3r::GUI::GUI_App::dark_mode()) {
+        dc.SetPen(default_btn_bg);
+        dc.SetBrush(default_btn_bg);
+        dc.DrawRectangle(1, 0, sz.x, m_line_margin);
+    }
+
     for (int idx = 0; idx < int(m_pageButtons.size()); idx++) {
         wxButton* btn = m_pageButtons[idx];
 
@@ -61,7 +70,7 @@ void ButtonsListCtrl::OnPaint(wxPaintEvent&)
         const wxColour& clr = idx == m_selection ? btn_marker_color : default_btn_bg;
         dc.SetPen(clr);
         dc.SetBrush(clr);
-        dc.DrawRectangle(pos.x, pos.y + size.y, size.x, sz.y - size.y);
+        dc.DrawRectangle(pos.x, 0, size.x, sz.y - size.y);
     }
 
     // highlight selected mode button
@@ -72,20 +81,21 @@ void ButtonsListCtrl::OnPaint(wxPaintEvent&)
             ModeButton* btn = mode_btns[idx];
             btn->SetBackgroundColour(btn->is_selected() ? selected_btn_bg : default_btn_bg);
 
-            //wxPoint pos = btn->GetPosition();
-            //wxSize size = btn->GetSize();
-            //const wxColour& clr = btn->is_selected() ? btn_marker_color : default_btn_bg;
-            //dc.SetPen(clr);
-            //dc.SetBrush(clr);
-            //dc.DrawRectangle(pos.x, pos.y + size.y, size.x, sz.y - size.y);
+            wxPoint pos = btn->GetPosition();
+            wxSize size = btn->GetSize();
+            const wxColour& clr = btn->is_selected() ? btn_marker_color : default_btn_bg;
+            dc.SetPen(clr);
+            dc.SetBrush(clr);
+            dc.DrawRectangle(pos.x, 0, size.x, sz.y - size.y);
         }
     }
 
-    // Draw orange bottom line
-
-    dc.SetPen(btn_marker_color);
-    dc.SetBrush(btn_marker_color);
-    dc.DrawRectangle(1, sz.y - m_line_margin, sz.x, m_line_margin);
+    // Draw orange line on top in light mode
+    if (Slic3r::GUI::GUI_App::dark_mode()) {
+        dc.SetPen(btn_marker_color);
+        dc.SetBrush(btn_marker_color);
+        dc.DrawRectangle(1, 0, sz.x, m_line_margin);
+    }
 }
 
 void ButtonsListCtrl::UpdateMode()
