@@ -262,8 +262,8 @@ void Tab::create_preset_tab()
 
     const float scale_factor = /*wxGetApp().*/em_unit(this)*0.1;// GetContentScaleFactor();
     m_hsizer = new wxBoxSizer(wxHORIZONTAL);
-    sizer->Add(m_hsizer, 0, wxEXPAND | wxBOTTOM, 3);
-    m_hsizer->Add(m_presets_choice, 0, wxLEFT | wxRIGHT | wxTOP | wxALIGN_CENTER_VERTICAL, 3);
+    sizer->Add(m_hsizer, 0, wxEXPAND | wxTOP, 7);
+    m_hsizer->Add(m_presets_choice, 0, wxLEFT | wxRIGHT | wxALIGN_CENTER_VERTICAL, 3);
     m_hsizer->AddSpacer(int(4*scale_factor));
     m_hsizer->Add(m_btn_save_preset, 0, wxALIGN_CENTER_VERTICAL);
     m_hsizer->AddSpacer(int(4 * scale_factor));
@@ -297,16 +297,20 @@ void Tab::create_preset_tab()
 
     //Horizontal sizer to hold the tree and the selected page.
     m_hsizer = new wxBoxSizer(wxHORIZONTAL);
-    sizer->Add(m_hsizer, 1, wxEXPAND, 0);
+    sizer->Add(m_hsizer, 1, wxEXPAND);
 
     //left vertical sizer
     m_left_sizer = new wxBoxSizer(wxVERTICAL);
-    m_hsizer->Add(m_left_sizer, 0, wxEXPAND | wxLEFT | wxTOP | wxBOTTOM, 3);
+    m_hsizer->Add(m_left_sizer, 0, wxEXPAND | wxLEFT | wxBOTTOM, 7);
 
     // tree
-    m_treectrl = new wxTreeCtrl(panel, wxID_ANY, wxDefaultPosition, wxSize(20 * m_em_unit, -1),
-        wxTR_NO_BUTTONS | wxTR_HIDE_ROOT | wxTR_SINGLE | wxTR_NO_LINES | wxBORDER_SUNKEN | wxWANTS_CHARS);
-    m_left_sizer->Add(m_treectrl, 1, wxEXPAND);
+    m_treectrl = new wxTreeCtrl(panel, wxID_ANY, wxDefaultPosition, wxSize(wxOSX ? 20 * m_em_unit : 16 * m_em_unit, -1),
+        wxTR_NO_BUTTONS | wxTR_HIDE_ROOT | wxTR_SINGLE | wxTR_NO_LINES | wxBORDER_NONE | wxWANTS_CHARS
+#ifndef __APPLE__
+    | wxTR_FULL_ROW_HIGHLIGHT // this causes bad background colour choice on macOS -- it might be possible to fix with forced colour selection.
+#endif //__APPLE__
+    );
+    m_left_sizer->Add(m_treectrl, 1, wxEXPAND | wxTOP, 7);
     const int img_sz = int(16 * scale_factor + 0.5f);
     m_icons = new wxImageList(img_sz, img_sz, true, 1);
     // Index of the last icon inserted into $self->{icons}.
@@ -354,7 +358,7 @@ void Tab::create_preset_tab()
     m_page_sizer = new wxBoxSizer(wxVERTICAL);
     m_page_view->SetSizer(m_page_sizer);
     m_page_view->SetScrollbars(1, 20, 1, 2);
-    m_hsizer->Add(m_page_view, 1, wxEXPAND | wxLEFT, 5);
+    m_hsizer->Add(m_page_view, 1, wxEXPAND | wxTOP, 8);
 
     m_btn_compare_preset->Bind(wxEVT_BUTTON, ([this](wxCommandEvent e) { compare_preset(); }));
     m_btn_save_preset->Bind(wxEVT_BUTTON, ([this](wxCommandEvent e) { save_preset(); }));
@@ -4096,7 +4100,7 @@ void Page::activate(ConfigOptionMode mode, std::function<void()> throw_if_cancel
     for (auto group : m_optgroups) {
         if (!group->activate(throw_if_canceled))
             continue;
-        m_vsizer->Add(group->sizer, 0, wxEXPAND | (group->is_legend_line() ? (wxLEFT|wxTOP) : wxALL), 10);
+        m_vsizer->Add(group->sizer, 0, wxEXPAND | (group->is_legend_line() ? (wxLEFT|wxTOP) : wxLEFT | wxRIGHT | wxBOTTOM), 7);
         group->update_visibility(mode);
         group->reload_config();
         throw_if_canceled();
