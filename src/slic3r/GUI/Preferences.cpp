@@ -517,7 +517,7 @@ void PreferencesDialog::build(size_t selected_tab)
 		tabs->SetSelection(selected_tab);
 
 	auto sizer = new wxBoxSizer(wxVERTICAL);
-	sizer->Add(tabs, 1, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5);
+	sizer->Add(tabs, 1, wxEXPAND);
 
 	auto buttons = CreateStdDialogButtonSizer(wxOK | wxCANCEL);
 	this->Bind(wxEVT_BUTTON, &PreferencesDialog::accept, this, wxID_OK);
