@@ -1302,6 +1302,8 @@ bool GUI_App::on_init_inner()
             update_gui_after_init = false;
 #ifdef WIN32
             this->mainframe->register_win32_callbacks();
+            this->force_colors_update();
+            this->update_ui_from_settings();
 #endif
             this->post_init();
         }
