@@ -399,7 +399,7 @@ void MainFrame::update_layout()
     ESettingsLayout layout = wxGetApp().is_gcode_viewer() ? ESettingsLayout::GCodeViewer :
         (wxGetApp().app_config->get("old_settings_layout_mode") == "1" ? ESettingsLayout::Old :
             wxGetApp().app_config->get("new_settings_layout_mode") == "1" ? ( wxGetApp().tabs_as_menu() ? ESettingsLayout::Old : ESettingsLayout::New) :
-            wxGetApp().app_config->get("dlg_settings_layout_mode") == "1" ? ESettingsLayout::Dlg : ESettingsLayout::Old);
+            wxGetApp().app_config->get("dlg_settings_layout_mode") == "1" && wxGetApp().initialized() ? ESettingsLayout::Dlg : ESettingsLayout::Old);
 
     if (m_layout == layout)
         return;

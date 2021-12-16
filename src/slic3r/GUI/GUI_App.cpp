@@ -1308,6 +1308,11 @@ bool GUI_App::on_init_inner()
     });
 
     m_initialized = true;
+#ifdef __WINDOWS__
+    wxGetApp().update_ui_from_settings();
+    if (wxGetApp().app_config->get("dlg_settings_layout_mode") == "1")
+        mainframe->update_layout(); // force recreation of layout in case non-modal settings dialog is used
+#endif //__WINDOWS__
     return true;
 }
 

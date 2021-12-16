@@ -125,7 +125,7 @@ private:
     wxColour        m_color_hovered_btn_label;
     wxColour        m_color_highlight_default;
     wxColour        m_color_selected_btn_bg;
-    bool            m_force_colors_update { false };
+    bool            m_force_colors_update { true };
 #endif
 
     wxFont		    m_small_font;
