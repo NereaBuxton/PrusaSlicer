@@ -1745,7 +1745,7 @@ void GUI_App::update_ui_from_settings()
         if (mainframe->is_dlg_layout()) {
             // update for tabs bar
             UpdateDarkUI(&mainframe->m_settings_dialog);
-            mainframe->m_settings_dialog.Fit();
+            //mainframe->m_settings_dialog.Fit(); // not useful for non-modal dialog
             mainframe->m_settings_dialog.Refresh();
             // update scrollbars
             update_scrolls(&mainframe->m_settings_dialog);
