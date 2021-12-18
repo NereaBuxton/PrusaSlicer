@@ -2214,7 +2214,7 @@ SettingsDialog::SettingsDialog(MainFrame* mainframe)
     SetSizer(sizer);
     //Fit(); // not useful for non-modal dialog
 
-    const wxSize min_size = wxSize(85 * em_unit(), 50 * em_unit());
+    const wxSize min_size = wxSize(68 * em_unit(), 38 * em_unit());
 #ifdef __APPLE__
     // Using SetMinSize() on Mac messes up the window position in some cases
     // cf. https://groups.google.com/forum/#!topic/wx-users/yUKPBBfXWO0
@@ -2232,7 +2232,7 @@ void SettingsDialog::on_dpi_changed(const wxRect& suggested_rect)
         return;
 
     const int& em = em_unit();
-    const wxSize& size = wxSize(85 * em, 50 * em);
+    const wxSize& size = wxSize(68 * em, 38 * em);
 
 #ifdef _MSW_DARK_MODE
     // update common mode sizer
@@ -2244,9 +2244,15 @@ void SettingsDialog::on_dpi_changed(const wxRect& suggested_rect)
     for (auto tab : wxGetApp().tabs_list)
         tab->msw_rescale();
 
+#ifdef __APPLE__
+    // Using SetMinSize() on Mac messes up the window position in some cases
+    // cf. https://groups.google.com/forum/#!topic/wx-users/yUKPBBfXWO0
+    SetSize(size);
+#else
     SetMinSize(size);
-    //Fit(); // not useful for non-modal dialog
-    Refresh();
+    SetSize(GetMinSize());
+#endif
+    Layout();
 }
 
 
