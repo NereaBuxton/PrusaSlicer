@@ -96,7 +96,7 @@ protected:
 public:
     const bool		staticbox {true};
     const wxString	title;
-    size_t			label_width = 20 ;// {200};
+    size_t			label_width = 18 ;// {200};
     wxSizer*		sizer {nullptr};
 	OG_CustomCtrl*  custom_ctrl{ nullptr };
 	int				ctrl_horiz_alignment{ wxALIGN_LEFT};
