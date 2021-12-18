@@ -2212,7 +2212,7 @@ SettingsDialog::SettingsDialog(MainFrame* mainframe)
     auto sizer = new wxBoxSizer(wxVERTICAL);
     sizer->SetSizeHints(this);
     SetSizer(sizer);
-    Fit();
+    //Fit(); // not useful for non-modal dialog
 
     const wxSize min_size = wxSize(85 * em_unit(), 50 * em_unit());
 #ifdef __APPLE__
@@ -2245,7 +2245,7 @@ void SettingsDialog::on_dpi_changed(const wxRect& suggested_rect)
         tab->msw_rescale();
 
     SetMinSize(size);
-    Fit();
+    //Fit(); // not useful for non-modal dialog
     Refresh();
 }
 
