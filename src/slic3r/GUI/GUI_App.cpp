@@ -1408,8 +1408,6 @@ void GUI_App::UpdateDarkUI(wxWindow* window, bool highlited/* = false*/, bool ju
 
             btn->Bind(wxEVT_ENTER_WINDOW, [focus_button](wxMouseEvent& event) { focus_button(true); event.Skip(); });
             btn->Bind(wxEVT_LEAVE_WINDOW, [focus_button](wxMouseEvent& event) { focus_button(false); event.Skip(); });
-            btn->Bind(wxEVT_SET_FOCUS, [focus_button](wxFocusEvent& event) { focus_button(true); event.Skip(); });
-            btn->Bind(wxEVT_KILL_FOCUS, [focus_button](wxFocusEvent& event) { focus_button(false); event.Skip(); });
         }
     }
     else if (wxTextCtrl* text = dynamic_cast<wxTextCtrl*>(window)) {
