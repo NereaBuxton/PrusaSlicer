@@ -4467,7 +4467,7 @@ bool GLCanvas3D::_init_main_toolbar()
     }
     // init arrow
     BackgroundTexture::Metadata arrow_data;
-    arrow_data.filename = "toolbar_arrow.svg";
+    arrow_data.filename = "toolbar_arrow_sharp.svg";
     arrow_data.left = 0;
     arrow_data.top = 0;
     arrow_data.right = 0;
@@ -4486,14 +4486,14 @@ bool GLCanvas3D::_init_main_toolbar()
     m_main_toolbar.set_layout_type(GLToolbar::Layout::Horizontal);
     m_main_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Right);
     m_main_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
-    m_main_toolbar.set_border(5.0f);
-    m_main_toolbar.set_separator_size(5);
-    m_main_toolbar.set_gap_size(4);
+    m_main_toolbar.set_border(0.0f);
+    m_main_toolbar.set_separator_size(0.0f);
+    m_main_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
 
     item.name = "add";
-    item.icon_filename = "add.svg";
+    item.icon_filename = "add_solid_7.svg";
     item.tooltip = _utf8(L("Add...")) + " [" + GUI::shortkey_ctrl_prefix() + "I]";
     item.sprite_id = 0;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_ADD)); };
@@ -4501,7 +4501,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "delete";
-    item.icon_filename = "remove.svg";
+    item.icon_filename = "remove_solid_1.svg";
     item.tooltip = _utf8(L("Delete")) + " [Del]";
     item.sprite_id = 1;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_DELETE)); };
@@ -4510,7 +4510,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "deleteall";
-    item.icon_filename = "delete_all.svg";
+    item.icon_filename = "delete_all_solid_1.svg";
     item.tooltip = _utf8(L("Delete all")) + " [" + GUI::shortkey_ctrl_prefix() + "Del]";
     item.sprite_id = 2;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_DELETE_ALL)); };
@@ -4519,7 +4519,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "arrange";
-    item.icon_filename = "arrange.svg";
+    item.icon_filename = "arrange_solid_1.svg";
     item.tooltip = _utf8(L("Arrange")) + " [A]\n" + _utf8(L("Arrange selection")) + " [Shift+A]\n" + _utf8(L("Click right mouse button to show arrangement options"));
     item.sprite_id = 3;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_ARRANGE)); };
@@ -4541,7 +4541,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "copy";
-    item.icon_filename = "copy.svg";
+    item.icon_filename = "copy_solid_2.svg";
     item.tooltip = _utf8(L("Copy")) + " [" + GUI::shortkey_ctrl_prefix() + "C]";
     item.sprite_id = 4;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_COPY)); };
@@ -4550,7 +4550,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "paste";
-    item.icon_filename = "paste.svg";
+    item.icon_filename = "paste_solid_2.svg";
     item.tooltip = _utf8(L("Paste")) + " [" + GUI::shortkey_ctrl_prefix() + "V]";
     item.sprite_id = 5;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_PASTE)); };
@@ -4562,7 +4562,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "more";
-    item.icon_filename = "instance_add.svg";
+    item.icon_filename = "instance_add_solid_1.svg";
     item.tooltip = _utf8(L("Add instance")) + " [+]";
     item.sprite_id = 6;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_MORE)); };
@@ -4573,7 +4573,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "fewer";
-    item.icon_filename = "instance_remove.svg";
+    item.icon_filename = "instance_remove_solid_1.svg";
     item.tooltip = _utf8(L("Remove instance")) + " [-]";
     item.sprite_id = 7;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_FEWER)); };
@@ -4586,7 +4586,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "splitobjects";
-    item.icon_filename = "split_objects.svg";
+    item.icon_filename = "split_objects_solid_1.svg";
     item.tooltip = _utf8(L("Split to objects"));
     item.sprite_id = 8;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_SPLIT_OBJECTS)); };
@@ -4596,7 +4596,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "splitvolumes";
-    item.icon_filename = "split_parts.svg";
+    item.icon_filename = "split_parts_solid_1.svg";
     item.tooltip = _utf8(L("Split to parts"));
     item.sprite_id = 9;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_SPLIT_VOLUMES)); };
@@ -4609,7 +4609,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "settings";
-    item.icon_filename = "settings.svg";
+    item.icon_filename = "settings_solid_2.svg";
     item.tooltip = _u8L("Switch to Settings") + "\n" + "[" + GUI::shortkey_ctrl_prefix() + "2] - " + _u8L("Print Settings Tab")    + 
                                                 "\n" + "[" + GUI::shortkey_ctrl_prefix() + "3] - " + (current_printer_technology() == ptFFF ? _u8L("Filament Settings Tab") : _u8L("Material Settings Tab")) +
                                                 "\n" + "[" + GUI::shortkey_ctrl_prefix() + "4] - " + _u8L("Printer Settings Tab") ;
@@ -4627,7 +4627,7 @@ bool GLCanvas3D::_init_main_toolbar()
         */
 
     item.name = "search";
-    item.icon_filename = "search_.svg";
+    item.icon_filename = "search_solid_1.svg";
     item.tooltip = _utf8(L("Search")) + " [" + GUI::shortkey_ctrl_prefix() + "F]";
     item.sprite_id = 11;
     item.left.toggable = true;
@@ -4648,7 +4648,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "layersediting";
-    item.icon_filename = "layers_white.svg";
+    item.icon_filename = "layers_white_solid_1.svg";
     item.tooltip = _utf8(L("Variable layer height"));
     item.sprite_id = 12;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_LAYERSEDITING)); };
@@ -4689,7 +4689,7 @@ bool GLCanvas3D::_init_undoredo_toolbar()
 
     // init arrow
     BackgroundTexture::Metadata arrow_data;
-    arrow_data.filename = "toolbar_arrow.svg";
+    arrow_data.filename = "toolbar_arrow_sharp.svg";
     arrow_data.left = 0;
     arrow_data.top = 0;
     arrow_data.right = 0;
@@ -4703,14 +4703,14 @@ bool GLCanvas3D::_init_undoredo_toolbar()
     m_undoredo_toolbar.set_layout_type(GLToolbar::Layout::Horizontal);
     m_undoredo_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Left);
     m_undoredo_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
-    m_undoredo_toolbar.set_border(5.0f);
-    m_undoredo_toolbar.set_separator_size(5);
-    m_undoredo_toolbar.set_gap_size(4);
+    m_undoredo_toolbar.set_border(0.0f);
+    m_undoredo_toolbar.set_separator_size(0.0f);
+    m_undoredo_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
 
     item.name = "undo";
-    item.icon_filename = "undo_toolbar.svg";
+    item.icon_filename = "undo_toolbar_solid_1.svg";
     item.tooltip = _utf8(L("Undo")) + " [" + GUI::shortkey_ctrl_prefix() + "Z]\n" + _utf8(L("Click right mouse button to open/close History"));
     item.sprite_id = 0;
     item.left.action_callback = [this]() { post_event(SimpleEvent(EVT_GLCANVAS_UNDO)); };
@@ -4749,7 +4749,7 @@ bool GLCanvas3D::_init_undoredo_toolbar()
         return false;
 
     item.name = "redo";
-    item.icon_filename = "redo_toolbar.svg";
+    item.icon_filename = "redo_toolbar_solid_1.svg";
     item.tooltip = _utf8(L("Redo")) + " [" + GUI::shortkey_ctrl_prefix() + "Y]\n" + _utf8(L("Click right mouse button to open/close History"));
     item.sprite_id = 1;
     item.left.action_callback = [this]() { post_event(SimpleEvent(EVT_GLCANVAS_REDO)); };
@@ -5477,11 +5477,11 @@ void GLCanvas3D::_render_view_toolbar() const
 #if __APPLE__
     view_toolbar.set_scale(scale);
 #else // if GTK3
-    const float size = int(GLGizmosManager::Default_Icons_Size * scale);
+    const float size = int(GLGizmosManager::Default_Icons_Size * 1.25f * scale);
     view_toolbar.set_icons_size(size);
 #endif // __APPLE__
 #else
-    const float size = int(GLGizmosManager::Default_Icons_Size * wxGetApp().toolbar_icon_scale());
+    const float size = int(GLGizmosManager::Default_Icons_Size * 1.25f * wxGetApp().toolbar_icon_scale());
     view_toolbar.set_icons_size(size);
 #endif // ENABLE_RETINA_GL
 
