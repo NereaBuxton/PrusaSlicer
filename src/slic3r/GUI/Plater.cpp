@@ -4376,9 +4376,9 @@ bool Plater::priv::init_view_toolbar()
 
     view_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Left);
     view_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Bottom);
-    view_toolbar.set_border(2.0f);
-    view_toolbar.set_separator_size(2.0f);
-    view_toolbar.set_gap_size(0.0f);
+    view_toolbar.set_border(0.0f);
+    view_toolbar.set_separator_size(6.0f);
+    view_toolbar.set_gap_size(2.0f);
 
     GLToolbarItem::Data item;
 
