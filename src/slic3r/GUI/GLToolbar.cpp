@@ -256,6 +256,11 @@ void GLToolbar::set_scale(float scale)
     }
 }
 
+void GLToolbar::force_dirty_toolbar()
+{
+    m_icons_texture_dirty = true;
+}
+
 bool GLToolbar::add_item(const GLToolbarItem::Data& data)
 {
     GLToolbarItem* item = new GLToolbarItem(GLToolbarItem::Action, data);
