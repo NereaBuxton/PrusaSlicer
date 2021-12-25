@@ -4376,25 +4376,35 @@ bool Plater::priv::init_view_toolbar()
 
     view_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Left);
     view_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Bottom);
-    view_toolbar.set_border(5.0f);
-    view_toolbar.set_gap_size(1.0f);
+    view_toolbar.set_border(2.0f);
+    view_toolbar.set_separator_size(2.0f);
+    view_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
 
+    if (!view_toolbar.add_separator())
+        return false;
+
     item.name = "3D";
-    item.icon_filename = "editor.svg";
+    item.icon_filename = "editor_solid_4.svg";
     item.tooltip = _utf8(L("3D editor view")) + " [" + GUI::shortkey_ctrl_prefix() + "5]";
     item.sprite_id = 0;
     item.left.action_callback = [this]() { if (this->q != nullptr) wxPostEvent(this->q, SimpleEvent(EVT_GLVIEWTOOLBAR_3D)); };
     if (!view_toolbar.add_item(item))
         return false;
 
+    if (!view_toolbar.add_separator())
+        return false;
+
     item.name = "Preview";
-    item.icon_filename = "preview.svg";
+    item.icon_filename = "preview_solid_4.svg";
     item.tooltip = _utf8(L("Preview")) + " [" + GUI::shortkey_ctrl_prefix() + "6]";
     item.sprite_id = 1;
     item.left.action_callback = [this]() { if (this->q != nullptr) wxPostEvent(this->q, SimpleEvent(EVT_GLVIEWTOOLBAR_PREVIEW)); };
     if (!view_toolbar.add_item(item))
+        return false;
+
+    if (!view_toolbar.add_separator())
         return false;
 
     view_toolbar.select_item("3D");

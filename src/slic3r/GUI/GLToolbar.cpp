@@ -1323,14 +1323,14 @@ bool GLToolbar::generate_icons_texture()
         states.push_back({ 2, false }); // HighlightedHidden
     }
     else { // slice preview button bottom left DONE
-        states.push_back({ 2, false }); // Normal
-        states.push_back({ 1, false });  // Pressed
-        states.push_back({ 2, false }); // Disabled
-        states.push_back({ 0, false }); // Hover
-        states.push_back({ 0, false });  // HoverPressed
-        states.push_back({ 2, false }); // HoverDisabled
-        states.push_back({ 0, false }); // HighlightedShown
-        states.push_back({ 2, false }); // HighlightedHidden
+        states.push_back({ 1, true }); // Normal
+        states.push_back({ 2, true });  // Pressed
+        states.push_back({ 2, true }); // Disabled
+        states.push_back({ 0, true }); // Hover
+        states.push_back({ 0, true });  // HoverPressed
+        states.push_back({ 2, true }); // HoverDisabled
+        states.push_back({ 0, true }); // HighlightedShown
+        states.push_back({ 2, true }); // HighlightedHidden
     }
 
     unsigned int sprite_size_px = (unsigned int)(m_layout.icons_size * m_layout.scale);
@@ -1357,15 +1357,15 @@ bool GLToolbar::update_items_visibility()
         m_layout.dirty = true;
 
     // updates separators visibility to avoid having two of them consecutive
-    bool any_item_visible = false;
-    for (GLToolbarItem* item : m_items) {
-        if (!item->is_separator())
-            any_item_visible |= item->is_visible();
-        else {
-            item->set_visible(any_item_visible);
-            any_item_visible = false;
-        }
-    }
+    //bool any_item_visible = false;
+    //for (GLToolbarItem* item : m_items) {
+    //    if (!item->is_separator())
+    //        any_item_visible |= item->is_visible();
+    //    else {
+    //        item->set_visible(any_item_visible);
+    //        any_item_visible = false;
+    //    }
+    //}
 
     return ret;
 }
