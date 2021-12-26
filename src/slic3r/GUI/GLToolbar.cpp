@@ -132,7 +132,7 @@ BackgroundTexture::Metadata::Metadata()
 {
 }
 
-const float GLToolbar::Default_Icons_Size = 40.0f;
+const float GLToolbar::Default_Icons_Size = 64.0f;
 
 GLToolbar::Layout::Layout()
     : type(Horizontal)
@@ -254,11 +254,6 @@ void GLToolbar::set_scale(float scale)
         m_layout.dirty = true;
         m_icons_texture_dirty = true;
     }
-}
-
-void GLToolbar::force_dirty_toolbar()
-{
-    m_icons_texture_dirty = true;
 }
 
 bool GLToolbar::add_item(const GLToolbarItem::Data& data)
@@ -1317,7 +1312,7 @@ bool GLToolbar::generate_icons_texture()
     }
 
     std::vector<std::pair<int, bool>> states;
-    if (m_type == Normal) { // top and collapse
+    if (m_type == Normal) { // main and collapse toolbars
         states.push_back({ 1, false }); // Normal
         states.push_back({ 0, false }); // Pressed
         states.push_back({ 2, false }); // Disabled
@@ -1327,15 +1322,15 @@ bool GLToolbar::generate_icons_texture()
         states.push_back({ 0, false }); // HighlightedShown
         states.push_back({ 2, false }); // HighlightedHidden
     }
-    else { // slice preview button bottom left DONE
-        states.push_back({ 1, true }); // Normal
-        states.push_back({ 2, true });  // Pressed
-        states.push_back({ 2, true }); // Disabled
+    else { // view toolbar
+        states.push_back({ 2, true }); // Normal
+        states.push_back({ 1, true });  // Pressed
+        states.push_back({ 2, false }); // Disabled
         states.push_back({ 0, true }); // Hover
         states.push_back({ 0, true });  // HoverPressed
-        states.push_back({ 2, true }); // HoverDisabled
+        states.push_back({ 2, false }); // HoverDisabled
         states.push_back({ 0, true }); // HighlightedShown
-        states.push_back({ 2, true }); // HighlightedHidden
+        states.push_back({ 0, false }); // HighlightedHidden
     }
 
     unsigned int sprite_size_px = (unsigned int)(m_layout.icons_size * m_layout.scale);
@@ -1362,15 +1357,15 @@ bool GLToolbar::update_items_visibility()
         m_layout.dirty = true;
 
     // updates separators visibility to avoid having two of them consecutive
-    //bool any_item_visible = false;
-    //for (GLToolbarItem* item : m_items) {
-    //    if (!item->is_separator())
-    //        any_item_visible |= item->is_visible();
-    //    else {
-    //        item->set_visible(any_item_visible);
-    //        any_item_visible = false;
-    //    }
-    //}
+    bool any_item_visible = false;
+    for (GLToolbarItem* item : m_items) {
+        if (!item->is_separator())
+            any_item_visible |= item->is_visible();
+        else {
+            item->set_visible(any_item_visible);
+            any_item_visible = false;
+        }
+    }
 
     return ret;
 }

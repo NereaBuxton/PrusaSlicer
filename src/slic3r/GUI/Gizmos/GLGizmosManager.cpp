@@ -31,7 +31,7 @@
 namespace Slic3r {
 namespace GUI {
 
-const float GLGizmosManager::Default_Icons_Size = 64;
+const float GLGizmosManager::Default_Icons_Size = 64.0f;
 
 GLGizmosManager::GLGizmosManager(GLCanvas3D& parent)
     : m_parent(parent)
@@ -98,7 +98,7 @@ bool GLGizmosManager::init()
     m_gizmos.emplace_back(new GLGizmoRotate3D(m_parent, "rotate.svg", 2));
     m_gizmos.emplace_back(new GLGizmoFlatten(m_parent, "place.svg", 3));
     m_gizmos.emplace_back(new GLGizmoCut(m_parent, "cut.svg", 4));
-    m_gizmos.emplace_back(new GLGizmoHollow(m_parent, "hollow.svg", 5));
+    m_gizmos.emplace_back(new GLGizmoHollow(m_parent, "hollow_3.svg", 5));
     m_gizmos.emplace_back(new GLGizmoSlaSupports(m_parent, "sla_supports.svg", 6));
     m_gizmos.emplace_back(new GLGizmoFdmSupports(m_parent, "fdm_supports.svg", 7));
     m_gizmos.emplace_back(new GLGizmoSeam(m_parent, "seam.svg", 8));
@@ -1162,13 +1162,13 @@ bool GLGizmosManager::generate_icons_texture() const
         }
     }
 
-    std::vector<std::pair<int, bool>> states; // left side duh
-    states.push_back(std::make_pair(1, false)); // Activable
-    states.push_back(std::make_pair(0, false)); // Hovered
-    states.push_back(std::make_pair(0, false));  // Selected
+    std::vector<std::pair<int, bool>> states; // gizmos toolbar
+    states.push_back(std::make_pair(1, true)); // Activable
+    states.push_back(std::make_pair(0, true)); // Hovered
+    states.push_back(std::make_pair(0, true));  // Selected
     states.push_back(std::make_pair(2, false)); // Disabled
-    states.push_back(std::make_pair(0, false)); // HighlightedShown
-    states.push_back(std::make_pair(2, false)); // HighlightedHidden
+    states.push_back(std::make_pair(0, true)); // HighlightedShown
+    states.push_back(std::make_pair(0, false)); // HighlightedHidden
 
     unsigned int sprite_size_px = (unsigned int)m_layout.scaled_icons_size();
 //    // force even size

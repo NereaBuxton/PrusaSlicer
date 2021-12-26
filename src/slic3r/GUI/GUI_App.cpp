@@ -1758,7 +1758,9 @@ void GUI_App::update_ui_from_settings()
         mainframe->force_color_changed();
         mainframe->diff_dialog.force_color_changed();
         mainframe->printhost_queue_dlg()->force_color_changed();
-        mainframe->plater()->get_view_toolbar().force_dirty_toolbar(); // to force light/dark selection/generation of icons
+        // to force light/dark selection/generation of icons
+        mainframe->plater()->get_view_toolbar().force_dirty_toolbar();
+        wxGetApp().plater()->canvas3D()->get_gizmos_manager().force_dirty_gizmos();
 #ifdef _MSW_DARK_MODE
         update_scrolls(mainframe);
         if (mainframe->is_dlg_layout()) {
