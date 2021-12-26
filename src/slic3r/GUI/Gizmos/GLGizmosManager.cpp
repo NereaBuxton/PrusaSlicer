@@ -93,9 +93,9 @@ bool GLGizmosManager::init()
     }
 
     // Order of gizmos in the vector must match order in EType!
-    m_gizmos.emplace_back(new GLGizmoMove3D(m_parent, "move.svg", 0));
-    m_gizmos.emplace_back(new GLGizmoScale3D(m_parent, "scale.svg", 1));
-    m_gizmos.emplace_back(new GLGizmoRotate3D(m_parent, "rotate_solid_1.svg", 2));
+    m_gizmos.emplace_back(new GLGizmoMove3D(m_parent, "move_solid_1.svg", 0));
+    m_gizmos.emplace_back(new GLGizmoScale3D(m_parent, "scale_solid_1.svg", 1));
+    m_gizmos.emplace_back(new GLGizmoRotate3D(m_parent, "rotate_solid_2.svg", 2));
     m_gizmos.emplace_back(new GLGizmoFlatten(m_parent, "place_solid_1.svg", 3));
     m_gizmos.emplace_back(new GLGizmoCut(m_parent, "cut_solid_4.svg", 4));
     m_gizmos.emplace_back(new GLGizmoHollow(m_parent, "hollow_3.svg", 5));
