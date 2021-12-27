@@ -169,10 +169,10 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
         return false;
 
     // every tile needs to have a 1px border around it to avoid artifacts when linear sampling on its edges
-    unsigned int sprite_size_px_ex = sprite_size_px + 1;
+    unsigned int sprite_size_px_ex = sprite_size_px;
 
-    m_width = 1 + (int)(sprite_size_px_ex * states.size());
-    m_height = 1 + (int)(sprite_size_px_ex * filenames.size());
+    m_width = (int)(sprite_size_px_ex * states.size());
+    m_height = (int)(sprite_size_px_ex * filenames.size());
 
     int n_pixels = m_width * m_height;
     int sprite_n_pixels = sprite_size_px_ex * sprite_size_px_ex;
@@ -206,7 +206,7 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
         if (!boost::algorithm::iends_with(filename, ".svg"))
             continue;
 
-        NSVGimage* image = nsvgParseFromFile(filename.c_str(), "px", 96.0f);
+        NSVGimage* image = nsvgParseFromFile(filename.c_str(), "px", 64.0f);
         if (image == nullptr)
             continue;
 
@@ -220,7 +220,7 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
         for (int i = 0; i < sprite_n_pixels; ++i) {
             int offset = i * 4;
             if (sprite_white_only_data.data()[offset] != 0)
-                ::memset((void*)&sprite_white_only_data.data()[offset], wxGetApp().dark_mode() ? 192 : 250, 3);
+                ::memset((void*)&sprite_white_only_data.data()[offset],sprite_data.data()[offset + 1] == 254 ? 128 : wxGetApp().dark_mode() ? 192 : 250, 3);
         }
 
         // makes gray only copy of the sprite
@@ -250,9 +250,9 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
             if (state.second) {
                 float inv_255 = 1.0f / 255.0f;
                 // offset by 1 to leave the first pixel empty (both in x and y)
-                for (unsigned int r = 1; r <= sprite_size_px; ++r) {
+                for (unsigned int r = 1; r <= sprite_size_px-1; ++r) {
                     unsigned int offset_r = r * sprite_size_px_ex;
-                    for (unsigned int c = 1; c <= sprite_size_px; ++c) {
+                    for (unsigned int c = 1; c <= sprite_size_px-1; ++c) {
                         unsigned int offset = (offset_r + c) * 4;
                         float alpha = (float)output_data.data()[offset + 3] * inv_255;
                         output_data.data()[offset + 0] = (unsigned char)(output_data.data()[offset + 0] * alpha);
