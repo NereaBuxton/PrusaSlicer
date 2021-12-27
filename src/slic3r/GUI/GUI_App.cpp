@@ -1389,13 +1389,13 @@ void GUI_App::update_label_colours()
     for (Tab* tab : tabs_list)
         tab->update_label_colours();
 }
-
+#ifdef _WIN32
 static bool is_focused(HWND hWnd)
 {
     HWND hFocusedWnd = ::GetFocus();
     return hFocusedWnd && hWnd == hFocusedWnd;
 }
-
+#endif //_WIN32
 void GUI_App::UpdateDarkUI(wxWindow* window, bool highlited/* = false*/, bool just_font/* = false*/)
 {
 #ifdef _WIN32
