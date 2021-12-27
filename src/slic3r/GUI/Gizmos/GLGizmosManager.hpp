@@ -79,7 +79,7 @@ private:
         float scale{ 1.0f };
         float icons_size{ Default_Icons_Size };
         float border{ 0.0f };
-        float gap_y{ 2.0f };
+        float gap_y{ 0.0f };
 
         float stride_y() const { return icons_size + gap_y;}
 

@@ -4488,13 +4488,13 @@ bool GLCanvas3D::_init_main_toolbar()
     m_main_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Right);
     m_main_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
     m_main_toolbar.set_border(0.0f);
-    m_main_toolbar.set_separator_size(1.0f);
-    m_main_toolbar.set_gap_size(2.0f);
+    m_main_toolbar.set_separator_size(2.0f);
+    m_main_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
 
     item.name = "add";
-    item.icon_filename = "add_solid_1.svg";
+    item.icon_filename = "add_solid_3.svg";
     item.tooltip = _utf8(L("Add...")) + " [" + GUI::shortkey_ctrl_prefix() + "I]";
     item.sprite_id = 0;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_ADD)); };
@@ -4705,8 +4705,8 @@ bool GLCanvas3D::_init_undoredo_toolbar()
     m_undoredo_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Left);
     m_undoredo_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
     m_undoredo_toolbar.set_border(0.0f);
-    m_undoredo_toolbar.set_separator_size(1.0f);
-    m_undoredo_toolbar.set_gap_size(2.0f);
+    m_undoredo_toolbar.set_separator_size(2.0f);
+    m_undoredo_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
 
@@ -5482,7 +5482,7 @@ void GLCanvas3D::_render_view_toolbar() const
     view_toolbar.set_icons_size(size);
 #endif // __APPLE__
 #else
-    const float size = int(GLGizmosManager::Default_Icons_Size * 1.5f * wxGetApp().toolbar_icon_scale());
+    const float size = int(GLGizmosManager::Default_Icons_Size * 1.25f * wxGetApp().toolbar_icon_scale());
     view_toolbar.set_icons_size(size);
 #endif // ENABLE_RETINA_GL
 
