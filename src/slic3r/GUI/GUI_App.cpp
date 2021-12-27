@@ -1590,7 +1590,7 @@ float GUI_App::toolbar_icon_scale(const bool is_limited/* = false*/) const
     if (is_limited && int_val < 100)
         int_val = 100;
 
-    return 0.005f * int_val * icon_sc;
+    return 0.01f * int_val * icon_sc;
 }
 
 void GUI_App::set_auto_toolbar_icon_scale(float scale) const
@@ -1601,7 +1601,7 @@ void GUI_App::set_auto_toolbar_icon_scale(float scale) const
     const float icon_sc = m_em_unit * 0.1f;
 #endif // __APPLE__
 
-    long int_val = std::min(int(std::lround(scale / icon_sc * 200)), 200);
+    long int_val = std::min(int(std::lround(scale / icon_sc * 100)), 200);
     std::string val = std::to_string(int_val);
 
     app_config->set("auto_toolbar_size", val);
