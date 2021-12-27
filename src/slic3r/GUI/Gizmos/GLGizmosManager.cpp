@@ -103,7 +103,7 @@ bool GLGizmosManager::init()
     m_gizmos.emplace_back(new GLGizmoFdmSupports(m_parent, "fdm_supports_solid_1.svg", 7));
     m_gizmos.emplace_back(new GLGizmoSeam(m_parent, "seam_solid_2.svg", 8));
     m_gizmos.emplace_back(new GLGizmoMmuSegmentation(m_parent, "mmu_segmentation_1.svg", 9));
-    m_gizmos.emplace_back(new GLGizmoSimplify(m_parent, "cut.svg", 10));
+    m_gizmos.emplace_back(new GLGizmoSimplify(m_parent, "simplify_solid_1.svg", 10));
 
     m_common_gizmos_data.reset(new CommonGizmosDataPool(&m_parent));
 
