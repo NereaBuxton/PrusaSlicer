@@ -96,13 +96,13 @@ bool GLGizmosManager::init()
     m_gizmos.emplace_back(new GLGizmoMove3D(m_parent, "move_solid_1.svg", 0));
     m_gizmos.emplace_back(new GLGizmoScale3D(m_parent, "scale_solid_1.svg", 1));
     m_gizmos.emplace_back(new GLGizmoRotate3D(m_parent, "rotate_solid_2.svg", 2));
-    m_gizmos.emplace_back(new GLGizmoFlatten(m_parent, "place_solid_1.svg", 3));
+    m_gizmos.emplace_back(new GLGizmoFlatten(m_parent, "place_solid_2.svg", 3));
     m_gizmos.emplace_back(new GLGizmoCut(m_parent, "cut_solid_4.svg", 4));
     m_gizmos.emplace_back(new GLGizmoHollow(m_parent, "hollow_3.svg", 5));
     m_gizmos.emplace_back(new GLGizmoSlaSupports(m_parent, "sla_supports_solid_1.svg", 6));
-    m_gizmos.emplace_back(new GLGizmoFdmSupports(m_parent, "fdm_supports.svg", 7));
-    m_gizmos.emplace_back(new GLGizmoSeam(m_parent, "seam.svg", 8));
-    m_gizmos.emplace_back(new GLGizmoMmuSegmentation(m_parent, "mmu_segmentation.svg", 9));
+    m_gizmos.emplace_back(new GLGizmoFdmSupports(m_parent, "fdm_supports_solid_1.svg", 7));
+    m_gizmos.emplace_back(new GLGizmoSeam(m_parent, "seam_solid_2.svg", 8));
+    m_gizmos.emplace_back(new GLGizmoMmuSegmentation(m_parent, "mmu_segmentation_1.svg", 9));
     m_gizmos.emplace_back(new GLGizmoSimplify(m_parent, "cut.svg", 10));
 
     m_common_gizmos_data.reset(new CommonGizmosDataPool(&m_parent));
