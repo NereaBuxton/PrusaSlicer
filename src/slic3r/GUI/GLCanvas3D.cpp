@@ -4487,14 +4487,14 @@ bool GLCanvas3D::_init_main_toolbar()
     m_main_toolbar.set_layout_type(GLToolbar::Layout::Horizontal);
     m_main_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Right);
     m_main_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
-    m_main_toolbar.set_border(5.0f);
-    m_main_toolbar.set_separator_size(5);
-    m_main_toolbar.set_gap_size(4);
+    m_main_toolbar.set_border(2.0f);
+    m_main_toolbar.set_separator_size(2.0f);
+    m_main_toolbar.set_gap_size(1.0f);
 
     GLToolbarItem::Data item;
 
     item.name = "add";
-    item.icon_filename = "add.svg";
+    item.icon_filename = "add_solid_1.svg";
     item.tooltip = _utf8(L("Add...")) + " [" + GUI::shortkey_ctrl_prefix() + "I]";
     item.sprite_id = 0;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_ADD)); };
