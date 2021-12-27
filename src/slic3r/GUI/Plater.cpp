@@ -4376,8 +4376,8 @@ bool Plater::priv::init_view_toolbar()
 
     view_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Left);
     view_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Bottom);
-    view_toolbar.set_border(2.0f);
-    view_toolbar.set_gap_size(1.0f);
+    view_toolbar.set_border(0.0f);
+    view_toolbar.set_gap_size(2.0f);
 
     GLToolbarItem::Data item;
 
@@ -4425,9 +4425,9 @@ bool Plater::priv::init_collapse_toolbar()
     collapse_toolbar.set_layout_type(GLToolbar::Layout::Vertical);
     collapse_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Right);
     collapse_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
-    collapse_toolbar.set_border(5.0f);
-    collapse_toolbar.set_separator_size(5);
-    collapse_toolbar.set_gap_size(2);
+    collapse_toolbar.set_border(0.0f);
+    collapse_toolbar.set_separator_size(1.0f);
+    collapse_toolbar.set_gap_size(2.0f);
 
     GLToolbarItem::Data item;
 
