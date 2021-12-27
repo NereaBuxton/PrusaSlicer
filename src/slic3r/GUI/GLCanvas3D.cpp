@@ -5482,7 +5482,7 @@ void GLCanvas3D::_render_view_toolbar() const
     view_toolbar.set_icons_size(size);
 #endif // __APPLE__
 #else
-    const float size = int(GLGizmosManager::Default_Icons_Size * wxGetApp().toolbar_icon_scale());
+    const float size = int(GLGizmosManager::Default_Icons_Size * 1.5f * wxGetApp().toolbar_icon_scale());
     view_toolbar.set_icons_size(size);
 #endif // ENABLE_RETINA_GL
 

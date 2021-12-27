@@ -132,7 +132,7 @@ BackgroundTexture::Metadata::Metadata()
 {
 }
 
-const float GLToolbar::Default_Icons_Size = 64.0f;
+const float GLToolbar::Default_Icons_Size = 32.0f;
 
 GLToolbar::Layout::Layout()
     : type(Horizontal)
