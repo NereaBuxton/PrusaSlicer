@@ -4502,7 +4502,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "delete";
-    item.icon_filename = "remove.svg";
+    item.icon_filename = "add_solid_3.svg";
     item.tooltip = _utf8(L("Delete")) + " [Del]";
     item.sprite_id = 1;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_DELETE)); };

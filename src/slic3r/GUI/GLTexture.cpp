@@ -213,11 +213,11 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
         float scale = (float)sprite_size_px / std::max(image->width, image->height);
 
         // offset by 1 to leave the first pixel empty (both in x and y)
-        nsvgRasterize(rast, image, 1, 1, scale, sprite_data.data(), sprite_size_px, sprite_size_px_ex, sprite_stride);
+        nsvgRasterize(rast, image, 1, 1, scale, sprite_data.data(), sprite_size_px_ex, sprite_size_px_ex, sprite_stride);
 
         // makes white only copy of the sprite
         ::memcpy((void*)sprite_white_only_data.data(), (const void*)sprite_data.data(), sprite_bytes);
-        for (int i = 0; i < sprite_n_pixels; ++i) {
+        for (int i = 1; i < sprite_n_pixels; ++i) {
             int offset = i * 4;
             if (sprite_white_only_data.data()[offset] != 254)
                 ::memset((void*)&sprite_white_only_data.data()[offset], wxGetApp().dark_mode() ? 192 : 250, 3);
@@ -225,7 +225,7 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
 
         // makes gray only copy of the sprite
         ::memcpy((void*)sprite_gray_only_data.data(), (const void*)sprite_data.data(), sprite_bytes);
-        for (int i = 0; i < sprite_n_pixels; ++i) {
+        for (int i = 1; i < sprite_n_pixels; ++i) {
             int offset = i * 4;
             if (sprite_gray_only_data.data()[offset] != 254)
                 ::memset((void*)&sprite_gray_only_data.data()[offset], wxGetApp().dark_mode() ? 96 : 128, 3);
