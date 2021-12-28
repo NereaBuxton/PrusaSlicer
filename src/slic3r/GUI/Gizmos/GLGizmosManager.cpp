@@ -1163,12 +1163,12 @@ bool GLGizmosManager::generate_icons_texture() const
     }
 
     std::vector<std::pair<int, bool>> states; // gizmos toolbar
-    states.push_back(std::make_pair(1, true)); // Activable
-    states.push_back(std::make_pair(0, true)); // Hovered
-    states.push_back(std::make_pair(0, true));  // Selected
-    states.push_back(std::make_pair(2, false)); // Disabled
-    states.push_back(std::make_pair(0, true)); // HighlightedShown
-    states.push_back(std::make_pair(0, false)); // HighlightedHidden
+    states.push_back(std::make_pair(1, false)); // Activable
+    states.push_back(std::make_pair(0, false)); // Hovered
+    states.push_back(std::make_pair(0, false));  // Selected
+    states.push_back(std::make_pair(2, true)); // Disabled
+    states.push_back(std::make_pair(0, false)); // HighlightedShown
+    states.push_back(std::make_pair(0, true)); // HighlightedHidden
 
     unsigned int sprite_size_px = (unsigned int)m_layout.scaled_icons_size();
 //    // force even size

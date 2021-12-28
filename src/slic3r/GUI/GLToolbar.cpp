@@ -1323,13 +1323,13 @@ bool GLToolbar::generate_icons_texture()
         states.push_back({ 0, false }); // HighlightedHidden
     }
     else { // view toolbar
-        states.push_back({ 2, true }); // Normal
-        states.push_back({ 1, true });  // Pressed
+        states.push_back({ 2, false }); // Normal
+        states.push_back({ 1, false });  // Pressed
         states.push_back({ 2, false }); // Disabled
-        states.push_back({ 0, true }); // Hover
-        states.push_back({ 0, true });  // HoverPressed
+        states.push_back({ 0, false }); // Hover
+        states.push_back({ 0, false });  // HoverPressed
         states.push_back({ 2, false }); // HoverDisabled
-        states.push_back({ 0, true }); // HighlightedShown
+        states.push_back({ 0, false }); // HighlightedShown
         states.push_back({ 0, false }); // HighlightedHidden
     }
 
