@@ -220,7 +220,7 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
         for (int i = 1; i < sprite_n_pixels; ++i) {
             int offset = i * 4;
             if (sprite_white_only_data.data()[offset] != 0)
-                ::memset((void*)&sprite_white_only_data.data()[offset], wxGetApp().dark_mode() ? 192 : 250, 3);
+                ::memset((void*)&sprite_white_only_data.data()[offset], wxGetApp().dark_mode() ? 64 : 240, 3);
         }
 
         // makes gray only copy of the sprite
@@ -228,7 +228,7 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
         for (int i = 1; i < sprite_n_pixels; ++i) {
             int offset = i * 4;
             if (sprite_gray_only_data.data()[offset] != 0)
-                ::memset((void*)&sprite_gray_only_data.data()[offset], wxGetApp().dark_mode() ? 96 : 128, 3);
+                ::memset((void*)&sprite_gray_only_data.data()[offset], wxGetApp().dark_mode() ? 43 : 128, 3);
         }
 
         int sprite_offset_px = sprite_id * (int)sprite_size_px_ex * m_width;
@@ -258,7 +258,7 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
                         output_data.data()[offset + 0] = (unsigned char)(output_data.data()[offset + 0] * alpha);
                         output_data.data()[offset + 1] = (unsigned char)(output_data.data()[offset + 1] * alpha);
                         output_data.data()[offset + 2] = (unsigned char)(output_data.data()[offset + 2] * alpha);
-                        output_data.data()[offset + 3] = (unsigned char)(255 * (1.0f - alpha) + output_data.data()[offset + 3] * alpha);
+                        output_data.data()[offset + 3] = (unsigned char)((wxGetApp().dark_mode() ? 128 : 255) * (1.0f - alpha) + output_data.data()[offset + 3] * alpha);
                     }
                 }
             }
