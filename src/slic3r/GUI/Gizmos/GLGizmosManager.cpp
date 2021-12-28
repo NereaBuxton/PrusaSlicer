@@ -1165,7 +1165,7 @@ bool GLGizmosManager::generate_icons_texture() const
     std::vector<std::pair<int, bool>> states; // gizmos toolbar
     states.push_back(std::make_pair(1, wxGetApp().dark_mode() ? false : true)); // Activable
     states.push_back(std::make_pair(0, wxGetApp().dark_mode() ? false : true)); // Hovered
-    states.push_back(std::make_pair(0, wxGetApp().dark_mode() ? false : true));  // Selected
+    states.push_back(std::make_pair(0, wxGetApp().dark_mode() ? false : true)); // Selected
     states.push_back(std::make_pair(2, wxGetApp().dark_mode() ? true : false)); // Disabled
     states.push_back(std::make_pair(0, wxGetApp().dark_mode() ? false : true)); // HighlightedShown
     states.push_back(std::make_pair(0, wxGetApp().dark_mode() ? true : false)); // HighlightedHidden
