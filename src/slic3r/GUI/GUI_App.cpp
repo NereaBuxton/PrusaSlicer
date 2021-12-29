@@ -1760,6 +1760,7 @@ void GUI_App::update_ui_from_settings()
         mainframe->printhost_queue_dlg()->force_color_changed();
         // to force light/dark selection/generation of icons
         mainframe->plater()->get_view_toolbar().force_dirty_toolbar();
+        mainframe->plater()->get_collapse_toolbar().force_dirty_toolbar();
         mainframe->plater()->canvas3D()->get_gizmos_manager().force_dirty_gizmos();
         mainframe->plater()->canvas3D()->force_dirty_main_toolbar();
 #ifdef _MSW_DARK_MODE
