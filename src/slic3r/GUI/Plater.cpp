@@ -4432,7 +4432,7 @@ bool Plater::priv::init_collapse_toolbar()
     GLToolbarItem::Data item;
 
     item.name = "collapse_sidebar";
-    item.icon_filename = "collapse.svg";
+    item.icon_filename = "add_solid_6.svg";
     item.sprite_id = 0;
     item.left.action_callback = []() {
         wxGetApp().plater()->collapse_sidebar(!wxGetApp().plater()->is_sidebar_collapsed());
