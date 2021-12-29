@@ -228,7 +228,7 @@ bool GLTexture::load_from_svg_files_as_sprites_array(const std::vector<std::stri
         for (int i = 1; i < sprite_n_pixels; ++i) {
             int offset = i * 4;
             if (sprite_gray_only_data.data()[offset] != 0)
-                ::memset((void*)&sprite_gray_only_data.data()[offset], wxGetApp().dark_mode() ? 96 : 245, 3);
+                ::memset((void*)&sprite_gray_only_data.data()[offset], wxGetApp().dark_mode() ? 96 : 220, 3);
         }
 
         int sprite_offset_px = sprite_id * (int)sprite_size_px_ex * m_width;
