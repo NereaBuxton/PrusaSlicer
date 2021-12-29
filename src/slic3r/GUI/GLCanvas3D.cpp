@@ -4488,7 +4488,7 @@ bool GLCanvas3D::_init_main_toolbar()
     m_main_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Right);
     m_main_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
     m_main_toolbar.set_border(0.0f);
-    m_main_toolbar.set_separator_size(1.0f);
+    m_main_toolbar.set_separator_size(0.0f);
     m_main_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
@@ -4520,7 +4520,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "arrange";
-    item.icon_filename = "add_solid_6.svg";
+    item.icon_filename = "arrange_solid_1.svg";
     item.tooltip = _utf8(L("Arrange")) + " [A]\n" + _utf8(L("Arrange selection")) + " [Shift+A]\n" + _utf8(L("Click right mouse button to show arrangement options"));
     item.sprite_id = 3;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_ARRANGE)); };
@@ -4587,7 +4587,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "splitobjects";
-    item.icon_filename = "add_solid_6.svg";
+    item.icon_filename = "split_objects_solid_1.svg";
     item.tooltip = _utf8(L("Split to objects"));
     item.sprite_id = 8;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_SPLIT_OBJECTS)); };
@@ -4705,13 +4705,10 @@ bool GLCanvas3D::_init_undoredo_toolbar()
     m_undoredo_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Left);
     m_undoredo_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
     m_undoredo_toolbar.set_border(0.0f);
-    m_undoredo_toolbar.set_separator_size(1.0f);
+    m_undoredo_toolbar.set_separator_size(0.0f);
     m_undoredo_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
-    
-    if (!m_undoredo_toolbar.add_separator())
-        return false;
 
     item.name = "undo";
     item.icon_filename = "add_solid_6.svg";

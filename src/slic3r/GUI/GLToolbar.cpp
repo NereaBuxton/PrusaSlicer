@@ -1314,23 +1314,23 @@ bool GLToolbar::generate_icons_texture()
     std::vector<std::pair<int, bool>> states;
     if (m_type == Normal) { // main and collapse toolbars
         states.push_back({ 1, wxGetApp().dark_mode() ? false : true }); // Normal
-        states.push_back({ 0, wxGetApp().dark_mode() ? false : true }); // Pressed
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // Pressed
         states.push_back({ 2, wxGetApp().dark_mode() ? true : false }); // Disabled
-        states.push_back({ 0, wxGetApp().dark_mode() ? false : true }); // Hover
-        states.push_back({ 0, wxGetApp().dark_mode() ? false : true }); // HoverPressed
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // Hover
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // HoverPressed
         states.push_back({ 2, wxGetApp().dark_mode() ? true : false }); // HoverDisabled
-        states.push_back({ 0, wxGetApp().dark_mode() ? false : true }); // HighlightedShown
-        states.push_back({ 0, wxGetApp().dark_mode() ? true : false }); // HighlightedHidden
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // HighlightedShown
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // HighlightedHidden
     }
     else { // view toolbar
         states.push_back({ 1, wxGetApp().dark_mode() ? false : true }); // Normal
-        states.push_back({ 0, wxGetApp().dark_mode() ? false : true }); // Pressed
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // Pressed
         states.push_back({ 2, wxGetApp().dark_mode() ? true : false }); // Disabled
-        states.push_back({ 0, wxGetApp().dark_mode() ? false : true }); // Hover
-        states.push_back({ 0, wxGetApp().dark_mode() ? false : true }); // HoverPressed
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // Hover
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // HoverPressed
         states.push_back({ 2, wxGetApp().dark_mode() ? true : false }); // HoverDisabled
-        states.push_back({ 0, wxGetApp().dark_mode() ? false : true }); // HighlightedShown
-        states.push_back({ 0, wxGetApp().dark_mode() ? true : false }); // HighlightedHidden
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // HighlightedShown
+        states.push_back({ 0, wxGetApp().dark_mode() ? false : false }); // HighlightedHidden
     }
 
     unsigned int sprite_size_px = (unsigned int)(m_layout.icons_size * m_layout.scale);
