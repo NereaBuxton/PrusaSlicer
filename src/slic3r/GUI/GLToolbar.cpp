@@ -1357,7 +1357,7 @@ bool GLToolbar::update_items_visibility()
         m_layout.dirty = true;
 
     // updates separators visibility to avoid having two of them consecutive
-    bool any_item_visible = false;
+    bool any_item_visible = true;
     for (GLToolbarItem* item : m_items) {
         if (!item->is_separator())
             any_item_visible |= item->is_visible();

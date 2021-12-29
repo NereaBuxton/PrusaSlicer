@@ -4709,6 +4709,9 @@ bool GLCanvas3D::_init_undoredo_toolbar()
     m_undoredo_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
+    
+    if (!m_undoredo_toolbar.add_separator())
+        return false;
 
     item.name = "undo";
     item.icon_filename = "move_solid_1.svg";
