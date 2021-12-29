@@ -4488,7 +4488,7 @@ bool GLCanvas3D::_init_main_toolbar()
     m_main_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Right);
     m_main_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
     m_main_toolbar.set_border(0.0f);
-    m_main_toolbar.set_separator_size(2.0f);
+    m_main_toolbar.set_separator_size(1.0f);
     m_main_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
@@ -4705,7 +4705,7 @@ bool GLCanvas3D::_init_undoredo_toolbar()
     m_undoredo_toolbar.set_horizontal_orientation(GLToolbar::Layout::HO_Left);
     m_undoredo_toolbar.set_vertical_orientation(GLToolbar::Layout::VO_Top);
     m_undoredo_toolbar.set_border(0.0f);
-    m_undoredo_toolbar.set_separator_size(2.0f);
+    m_undoredo_toolbar.set_separator_size(1.0f);
     m_undoredo_toolbar.set_gap_size(0.0f);
 
     GLToolbarItem::Data item;
