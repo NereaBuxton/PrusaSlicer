@@ -2021,7 +2021,7 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
 
 #ifdef __APPLE__
     // set default view_toolbar icons size equal to GLGizmosManager::Default_Icons_Size
-    view_toolbar.set_icons_size(GLGizmosManager::Default_Icons_Size);
+    view_toolbar.set_icons_size(GLGizmosManager::Default_Icons_Size * 1.25f);
 #endif // __APPLE__
 
     panels.push_back(view3D);

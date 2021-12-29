@@ -5481,7 +5481,7 @@ void GLCanvas3D::_render_view_toolbar() const
 #if __APPLE__
     view_toolbar.set_scale(scale);
 #else // if GTK3
-    const float size = int(GLGizmosManager::Default_Icons_Size * 1.25 * scale);
+    const float size = int(GLGizmosManager::Default_Icons_Size * 1.25f * scale);
     view_toolbar.set_icons_size(size);
 #endif // __APPLE__
 #else
