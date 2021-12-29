@@ -4502,7 +4502,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "delete";
-    item.icon_filename = "add_solid_6.svg";
+    item.icon_filename = "remove_solid_1.svg";
     item.tooltip = _utf8(L("Delete")) + " [Del]";
     item.sprite_id = 1;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_DELETE)); };
@@ -4511,7 +4511,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "deleteall";
-    item.icon_filename = "add_solid_6.svg";
+    item.icon_filename = "delete_all_solid_1.svg";
     item.tooltip = _utf8(L("Delete all")) + " [" + GUI::shortkey_ctrl_prefix() + "Del]";
     item.sprite_id = 2;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_DELETE_ALL)); };
@@ -4597,7 +4597,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "splitvolumes";
-    item.icon_filename = "add_solid_6.svg";
+    item.icon_filename = "split_parts_solid_1.svg";
     item.tooltip = _utf8(L("Split to parts"));
     item.sprite_id = 9;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_SPLIT_VOLUMES)); };
@@ -4649,7 +4649,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "layersediting";
-    item.icon_filename = "add_solid_6.svg";
+    item.icon_filename = "layers_white_solid_1.svg";
     item.tooltip = _utf8(L("Variable layer height"));
     item.sprite_id = 12;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_LAYERSEDITING)); };
