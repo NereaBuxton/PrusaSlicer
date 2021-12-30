@@ -4382,7 +4382,7 @@ bool Plater::priv::init_view_toolbar()
     GLToolbarItem::Data item;
 
     item.name = "3D";
-    item.icon_filename = "editor_solid_5.svg";
+    item.icon_filename = "editor_solid_6.svg";
     item.tooltip = _utf8(L("3D editor view")) + " [" + GUI::shortkey_ctrl_prefix() + "5]";
     item.sprite_id = 0;
     item.left.action_callback = [this]() { if (this->q != nullptr) wxPostEvent(this->q, SimpleEvent(EVT_GLVIEWTOOLBAR_3D)); };
@@ -4390,7 +4390,7 @@ bool Plater::priv::init_view_toolbar()
         return false;
 
     item.name = "Preview";
-    item.icon_filename = "preview_solid_5.svg";
+    item.icon_filename = "preview_solid_6.svg";
     item.tooltip = _utf8(L("Preview")) + " [" + GUI::shortkey_ctrl_prefix() + "6]";
     item.sprite_id = 1;
     item.left.action_callback = [this]() { if (this->q != nullptr) wxPostEvent(this->q, SimpleEvent(EVT_GLVIEWTOOLBAR_PREVIEW)); };
@@ -4432,7 +4432,7 @@ bool Plater::priv::init_collapse_toolbar()
     GLToolbarItem::Data item;
 
     item.name = "collapse_sidebar";
-    item.icon_filename = "collapse_solid_1.svg";
+    item.icon_filename = "collapse_solid_2.svg";
     item.sprite_id = 0;
     item.left.action_callback = []() {
         wxGetApp().plater()->collapse_sidebar(!wxGetApp().plater()->is_sidebar_collapsed());

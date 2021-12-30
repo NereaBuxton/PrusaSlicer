@@ -4494,7 +4494,7 @@ bool GLCanvas3D::_init_main_toolbar()
     GLToolbarItem::Data item;
 
     item.name = "add";
-    item.icon_filename = "add_solid_6.svg";
+    item.icon_filename = "add_solid_7.svg";
     item.tooltip = _utf8(L("Add...")) + " [" + GUI::shortkey_ctrl_prefix() + "I]";
     item.sprite_id = 0;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_ADD)); };
@@ -4542,7 +4542,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "copy";
-    item.icon_filename = "copy_solid_1.svg";
+    item.icon_filename = "copy_solid_2.svg";
     item.tooltip = _utf8(L("Copy")) + " [" + GUI::shortkey_ctrl_prefix() + "C]";
     item.sprite_id = 4;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_COPY)); };
@@ -4551,7 +4551,7 @@ bool GLCanvas3D::_init_main_toolbar()
         return false;
 
     item.name = "paste";
-    item.icon_filename = "paste_solid_1.svg";
+    item.icon_filename = "paste_solid_2.svg";
     item.tooltip = _utf8(L("Paste")) + " [" + GUI::shortkey_ctrl_prefix() + "V]";
     item.sprite_id = 5;
     item.left.action_callback = [this]() { if (m_canvas != nullptr) wxPostEvent(m_canvas, SimpleEvent(EVT_GLTOOLBAR_PASTE)); };
