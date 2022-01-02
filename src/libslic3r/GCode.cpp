@@ -55,7 +55,9 @@
 #include <Shiny/Shiny.h>
 
 #include "miniz_extension.hpp"
-
+#define QOI_IMPLEMENTATION
+#define QOI_NO_STDIO
+#include "qoi.h"
 using namespace std::literals::string_view_literals;
 
 #if 0
@@ -938,7 +940,7 @@ namespace DoExport {
 	}
 
 	template<typename WriteToOutput, typename ThrowIfCanceledCallback>
-	static void export_thumbnails_to_file(ThumbnailsGeneratorCallback &thumbnail_cb, const std::vector<Vec2d> &sizes, WriteToOutput output, ThrowIfCanceledCallback throw_if_canceled)
+	static void export_thumbnails_to_file(ThumbnailsGeneratorCallback &thumbnail_cb, const std::vector<Vec2d> &sizes, WriteToOutput output, ThrowIfCanceledCallback throw_if_canceled, bool qoi)
 	{
 	    // Write thumbnails using base64 encoding
 	    if (thumbnail_cb != nullptr)
@@ -949,31 +951,58 @@ namespace DoExport {
 	        {
 	            if (data.is_valid())
 	            {
-	                size_t png_size = 0;
-	                void* png_data = tdefl_write_image_to_png_file_in_memory_ex((const void*)data.pixels.data(), data.width, data.height, 4, &png_size, MZ_DEFAULT_LEVEL, 1);
-	                if (png_data != nullptr)
-	                {
-	                    std::string encoded;
-	                    encoded.resize(boost::beast::detail::base64::encoded_size(png_size));
-	                    encoded.resize(boost::beast::detail::base64::encode((void*)&encoded[0], (const void*)png_data, png_size));
+                    size_t png_size = 0;
+                    int qoi_size = 0;
+                    void* img_data;
 
-	                    output((boost::format("\n;\n; thumbnail begin %dx%d %d\n") % data.width % data.height % encoded.size()).str().c_str());
+                    if (!qoi) {
+                        img_data = tdefl_write_image_to_png_file_in_memory_ex((const void*)data.pixels.data(), data.width, data.height, 4, &png_size, MZ_DEFAULT_LEVEL, 1);
+                    }
+                    else {
+                        qoi_desc desc;
+                        desc.width = data.width;
+                        desc.height = data.height;
+                        desc.channels = 4;
+                        desc.colorspace = QOI_SRGB;
 
-	                    unsigned int row_count = 0;
-	                    while (encoded.size() > max_row_length)
-	                    {
-	                        output((boost::format("; %s\n") % encoded.substr(0, max_row_length)).str().c_str());
-	                        encoded = encoded.substr(max_row_length);
-	                        ++row_count;
-	                    }
+                        // Take vector of RGBA pixels and flip the image vertically
+                        std::vector<uint8_t> rgba_pixels(data.pixels.size() * 4);
+                        for (size_t y = 0; y < data.height; ++y)
+                            for (size_t x = 0; x < data.width; ++x)
+                                for (size_t c = 0; c < 4; ++c)
+                                    rgba_pixels[(data.height - y - 1) * data.width * 4 + x * 4 + c] = data.pixels[y * data.width * 4 + x * 4 + c];
+                        
+                        img_data = qoi_encode((const void*)rgba_pixels.data(), &desc, &qoi_size);
+                        }
 
-	                    if (encoded.size() > 0)
-	                    	output((boost::format("; %s\n") % encoded).str().c_str());
+                    if (img_data != nullptr)
+                    {
+                        std::string encoded;
+                        encoded.resize(boost::beast::detail::base64::encoded_size(qoi ? qoi_size : png_size));
+                        encoded.resize(boost::beast::detail::base64::encode((void*)&encoded[0], (const void*)img_data, qoi ? qoi_size : png_size));
 
-	                    output("; thumbnail end\n;\n");
+                        const std::string img_format = qoi ? "QOI " : "";
 
-	                    mz_free(png_data);
-	                }
+                        output((boost::format("\n;\n; %sthumbnail begin %dx%d %d\n") % img_format % data.width % data.height % encoded.size()).str().c_str());
+
+                        unsigned int row_count = 0;
+                        while (encoded.size() > max_row_length)
+                        {
+                            output((boost::format("; %s\n") % encoded.substr(0, max_row_length)).str().c_str());
+                            encoded = encoded.substr(max_row_length);
+                            ++row_count;
+                        }
+
+                        if (encoded.size() > 0)
+                            output((boost::format("; %s\n") % encoded).str().c_str());
+
+                        output("; thumbnail end\n;\n");
+
+                        if (!qoi)
+                            mz_free(img_data);
+                        else
+                            free(img_data);
+                    }
 	            }
 	            throw_if_canceled();
 	        }
@@ -1146,7 +1175,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
 
     DoExport::export_thumbnails_to_file(thumbnail_cb, print.full_print_config().option<ConfigOptionPoints>("thumbnails")->values,
         [&file](const char* sz) { file.write(sz); },
-        [&print]() { print.throw_if_canceled(); });
+        [&print]() { print.throw_if_canceled(); }, print.config().gcode_flavor == gcfRepRapFirmware);
 
     // Write notes (content of the Print Settings tab -> Notes)
     {
